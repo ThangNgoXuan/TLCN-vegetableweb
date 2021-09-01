@@ -1,5 +1,5 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcryptjs'
+import mongoose from 'mongoose';
+//import bcrypt from 'bcryptjs';
 
 const userSchema = mongoose.Schema(
   {
@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     role: {
-      type: string,
+      type: String,
       required: true,
       default: 'user'
     },
@@ -29,19 +29,23 @@ const userSchema = mongoose.Schema(
   }
 )
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+// userSchema.methods.matchPassword = async function (enteredPassword) {
+//   return await bcrypt.compare(enteredPassword, this.password);
+// }
+
+// userSchema.pre('save', async function (next) {
+//   if (!this.isModified('password')) {
+//     next();
+//   }
+
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+// })
+
+//Check if email is taken
+userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!user;
 }
 
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
-    next();
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-})
-
-const User = mongoose.model('User', userSchema);
-
-export default User;
+export const User = mongoose.model('User', userSchema);
