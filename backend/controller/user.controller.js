@@ -8,11 +8,12 @@ const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
     if (!users) {
+      res.status(HttpStatusCode.NOT_FOUND);
       throw new Error('Không tìm thấy users');
     }
     res.json(users);
   } catch (error) {
-    res.status(HttpStatusCode.NOT_FOUND).send({ message: error.message });
+    res.send({ message: error.message });
   }
 };
 
@@ -28,10 +29,11 @@ const registUser = async (req, res) => {
   try {
     const userExists = await User.findOne({ email: email });
     if (userExists) {
+      res.status(HttpStatusCode.BAD_REQUEST);
       throw new Error('Email này đã tồn tại!');
     }
   } catch (error) {
-    res.status(HttpStatusCode.BAD_REQUEST).send({ message: error.message });
+    res.send({ message: error.message });
   }
 
   try {
@@ -58,11 +60,11 @@ const registUser = async (req, res) => {
 }
 
 //@desc     Get info user by id
-//@route    GET /v1/user/profile/:userId
+//@route    GET /v1/user/profile/:id
 //@access   private/ user
 const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.params.id);// error: nếu truyen ko dung objectid se bi loi
     if (user) {
       res.json({
         _id: user._id,
@@ -72,10 +74,11 @@ const getUserProfile = async (req, res) => {
       });
     }
     else {
+      res.status(HttpStatusCode.BAD_REQUEST);
       throw new Error('User not found!');
     };
   } catch (error) {
-    res.status(HttpStatusCode.NOT_FOUND).send({ message: error.message });
+    res.send({ message: error.message });
   }
 }
 
@@ -87,10 +90,12 @@ const updateUserProfile = async (req, res) => {
     const user = await User.findById(req.body._id);
 
     if (!user) {
+      res.status(HttpStatusCode.NOT_FOUND);
       throw new Error('Không tìm thấy user!');
     }
 
     if (req.body.email && (await User.isEmailTaken(req.body.email, req.body._id))) {
+      res.status(HttpStatusCode.BAD_REQUEST);
       throw new Error('Email này đã được sử dụng!');
     }
 
@@ -108,11 +113,88 @@ const updateUserProfile = async (req, res) => {
   }
 }
 
+// @desc    Delete user
+// @route   DELETE /api/user/:id
+// @access  Private/Admin
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+      await user.remove();
+      res.json({ message: 'Xóa tài khoản thành công!' });
+    }
+    else {
+      res.status(HttpStatusCode.NOT_FOUND);
+      throw new Error('Không tìm thấy tài khoản này!');
+    }
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+}
+
+// @desc    Get user by ID
+// @route   GET /api/user/:id
+// @access  Private/Admin
+
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+
+    if (user) {
+      res.json(user);
+    }
+    else {
+      res.status(HttpStatusCode.NOT_FOUND);
+      throw new Error('Không tìm thấy tài khoản!')
+    }
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+}
+
+// @desc    Update user
+// @route   PUT /api/user/:id
+// @access  Private/Admin
+const updateUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+
+      if (req.body.email && (await User.isEmailTaken(req.body.email, req.body._id))) {
+        res.status(HttpStatusCode.BAD_REQUEST);
+        throw new Error('Email này đã được sử dụng!');
+      }
+
+      user.name = req.body.name;
+      user.email = req.body.email;
+      user.role = req.body.role;
+
+      const updatedUser = await user.save();
+
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+      });
+    } else {
+      res.status(HttpStatusCode.NOT_FOUND);
+      throw new Error('User not found');
+    }
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+}
 
 export const userController =
 {
   getUsers,
   registUser,
   getUserProfile,
-  updateUserProfile
+  updateUserProfile,
+  deleteUser,
+  updateUser,
+  getUserById
 };
