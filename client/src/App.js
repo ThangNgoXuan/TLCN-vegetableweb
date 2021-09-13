@@ -1,9 +1,19 @@
-
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import PageRender from './customRouter/PageRender';
 
 function App() {
   return (
-    <div>Hello</div>
+    <Router>
+      <div className="App">
+        <div className="main">
+          <Route exact path="/:page" component={PageRender} />
+          <Route exact path="/:page/:id" component={PageRender} />
+        </div>
+      </div>
+    </Router>
   );
 }
 
 export default App;
+
+
