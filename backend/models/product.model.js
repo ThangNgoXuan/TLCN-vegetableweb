@@ -1,10 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const reviewSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     comment: { type: String, required: true },
-    rating: { type: Number, required: true },
+    star: { type: Number, required: true, min: 0, max: 5, default: 0 },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
   },
   {
     timestamps: true,
@@ -12,16 +16,17 @@ const reviewSchema = new mongoose.Schema(
 );
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true, unique: true },
-    seller: { type: mongoose.Schema.Types.ObjectID, ref: 'User' },
-    image: { type: String, required: true },
+    name: { type: String, required: true },
+    images: [{ type: String, required: true }],
     brand: { type: String, required: true },
-    category: { type: String, required: true },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductCategory'
+    },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    countInStock: { type: Number, required: true },
-    rating: { type: Number, required: true },
-    numReviews: { type: Number, required: true },
+    qtyInStock: { type: Number, required: true },
+    starAVg: { type: Number, required: true, default: 0 },
     reviews: [reviewSchema],
   },
   {

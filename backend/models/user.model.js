@@ -18,6 +18,14 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    avatar: {
+      type: String,
+      default: 'https://img.icons8.com/officel/260/000000/person-male.png'
+    },
+    address: {
+      type: String,
+      trim: true
+    },
     role: {
       type: String,
       required: true,
