@@ -1,8 +1,12 @@
 import React from 'react'
 import {} from '../styles/login.css'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import Helmet from '../components/Helmet'
 
 const Register = () => {
     return (
+        <Helmet title="Đăng nhập">
         <div className="login">
           <form action="" >
               <h3>Đăng kí tài khoản</h3>
@@ -38,7 +42,8 @@ const Register = () => {
               <div className="rules">Tôi đồng ý với <a>Bảo mật</a> và <a>Điều khoản</a> hoạt động của chúng tôi.</div>
               <button className="btn btn-fb">Đăng nhập với facebook <i class="fab fa-facebook fa-2x"></i></button>
           </form>
-        </div>
+          </div>
+    </Helmet>
     )
 }
 

@@ -1,19 +1,18 @@
-import {BrowserRouter as Router, Route} from 'react-router-dom'
-import PageRender from './customRouter/PageRender';
+import {BrowserRouter , Router, Route} from 'react-router-dom'
+import {} from './images/profile.jpg';
+import Layoutuser from './pages/Layoutuser';
+import Layoutadmin from './pages/admin/Layoutadmin';
+
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <div className="main">
-          <Route exact path="/:page" component={PageRender} />
-          <Route exact path="/:page/:id" component={PageRender} />
-        </div>
-      </div>
-    </Router>
+    <BrowserRouter>
+    <Route exact path="/" component={Layoutuser}/>
+    <Route path="/admin" component={Layoutadmin}/>
+    </BrowserRouter>
   );
 }
 
-export default App;
+export default App
 
 

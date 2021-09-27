@@ -1,5 +1,5 @@
 import React from 'react'
-// import {} from '../styles/global.css'
+import {Link} from 'react-router-dom'
 
 import {} from '../styles/notfound.css'
 
@@ -9,7 +9,7 @@ const NotFound = () => {
           <h1>404</h1>
           <span>Ooops!!</span>
           <p>KHÔNG TÌM THẤY TRANG NÀY.</p>
-          <a>Trở về Trang chủ</a>
+          <Link to="">Trở về trang chủ</Link>
         </div>
     )
 }
