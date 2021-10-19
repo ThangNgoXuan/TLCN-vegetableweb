@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -6,8 +6,9 @@ const reviewSchema = new mongoose.Schema(
     comment: { type: String, required: true },
     star: { type: Number, required: true, min: 0, max: 5, default: 0 },
     author: {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
     }
   },
   {
@@ -20,14 +21,20 @@ const productSchema = new mongoose.Schema(
     images: [{ type: String, required: true }],
     brand: { type: String, required: true },
     category: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'ProductCategory'
     },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    qtyInStock: { type: Number, required: true },
-    starAVg: { type: Number, required: true, default: 0 },
-    reviews: [reviewSchema],
+    qtyInStock: { type: Number, required: true, default: 0 },
+    sold: { type: Number, required: true, default: 0 },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    certification: [{ type: String }],
+    protype: [{ type: String }],
   },
   {
     timestamps: true,

@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import { Product } from '../models/product.model';
+import Product from '../models/product.model.js';
 import { HttpStatusCode } from '../utils/constants.js';
 
 // @desc    Fetch all products
@@ -7,7 +7,52 @@ import { HttpStatusCode } from '../utils/constants.js';
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = 10;
-  const page = Number(req.query)
+  const page = Number(req.query.pageNumber) || 1;
+  const name = req.query.name || '';
+  const category = req.query.category || '';
+  const certification = req.query.certification || '';
+  const protype = req.query.protype || '';
+  const order = req.query.order || '';
+  const min =
+    req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
+  const max =
+    req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
+
+  const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
+  const categoryFilter = category ? { category } : {};
+  const certificationFilter = certification ? { certification } : {};
+  const protypeFilter = protype ? { protype } : {};
+  const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
+  const sortOrder =
+    order === 'lowest'
+      ? { price: 1 }
+      : order === 'highest'
+        ? { price: -1 }
+        : { _id: -1 };
+
+  const count = await Product.count({
+    ...nameFilter,
+    ...categoryFilter,
+    ...certificationFilter,
+    ...protypeFilter,
+    ...priceFilter,
+  });
+
+  const products = await Product.find({
+    ...nameFilter,
+    ...categoryFilter,
+    ...priceFilter,
+  })
+    .sort(sortOrder)
+    .skip(pageSize * (page - 1))
+    .limit(pageSize);
+
+  if (products) {
+    res.send({ products, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    res.json({}).status(HttpStatusCode.NOT_FOUND);
+    throw new Error('Không tìm thấy sản phẩm');
+  }
 })
 
 // @desc    Fetch single product
@@ -51,10 +96,12 @@ const createProduct = asyncHandler(async (req, res) => {
   product.images = req.body.images;
   product.brand = req.body.brand;
   product.category = req.body.category;
-  product.staff = req.body.staff;
+  product.creator = req.body.creator;
   product.description = req.body.description;
   product.price = req.body.price;
-  product.qtyInStock = req.body.qtyInStock;
+  product.qtyInStock = req.body.qtyInStock || 0;
+  product.certification = req.body.certification;
+  product.protype = req.body.protype;
 
   const createdProduct = await product.save();
   res.status(HttpStatusCode.CREATED_SUCCESS).json(createdProduct);
@@ -71,10 +118,12 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.images = req.body.images;
     product.brand = req.body.brand;
     product.category = req.body.category;
-    product.staff = req.body.staff;
+    product.creator = req.body.creator;
     product.description = req.body.description;
     product.price = req.body.price;
     product.qtyInStock = req.body.qtyInStock;
+    product.certification = req.body.certification;
+    product.protype = req.body.protype;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -85,15 +134,60 @@ const updateProduct = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    add new reviews
-// @route   POST /v1/products/:id/reviews
-// @access  user/ private
-const reviewProduct = asyncHandler(async (req, res) => {
-  const product = await product.findById(req.params.id);
+//@desc   search product
+//@route  get /v1/products/search/:text
+//@access public
+const searchProduct = asyncHandler(async (req, res) => {
 
-  if (product) {
-    const existReview = await product.reviews.find(
+  const text = req.params.text;
 
-    );
+  const products = await Product.find({ name: { $regex: text, $options: '$i' } });
+
+  if (products) {
+    res.json(products);
+  } else {
+    throw new Error('Khong tim thay san pham');
+  }
+
+});
+
+//@desc   get top 10 products
+//@route  get /v1/products/top-product
+//@access public
+const getTopProduct = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ sold: -1 }).limit(10)
+
+  if (products) {
+    res.send({ products });
+  } else {
+    throw new Error('Khong tim thay san pham');
   }
 })
+
+//@desc   get top products related
+//@route  get /v1/products/product-related/:categoryId
+//@access public
+const getTopProductRelate = asyncHandler(async (req, res) => {
+
+  // const id = isValidObjectId(req.params.categoryId)
+  // var c = new isValidObjectId()
+  const products = await Product.find({ category: req.params.categoryId }).sort({ sold: -1 }).limit(10)
+
+  if (products) {
+    res.send({ products });
+  } else {
+    throw new Error('Khong tim thay san pham');
+  }
+})
+
+export const productController = {
+  searchProduct,
+  updateProduct,
+  createProduct,
+  getProductById,
+  getProducts,
+  deleteProduct,
+  getTopProduct,
+  getTopProductRelate,
+};
+

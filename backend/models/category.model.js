@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
 const productCategorySchema = new mongoose.Schema(
   {
@@ -7,11 +7,6 @@ const productCategorySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    categorySlug: {
-      type: String,
-      required: true,
-      trim: true,
-    }
   }
 );
 
