@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Helmet from '../components/Helmet'
 import HeroSlider from '../components/HeroSlider'
@@ -14,6 +15,8 @@ import heroSliderData from '../fakedata/heroslide'
 import policy from '../fakedata/policy'
 import productData from '../fakedata/product'
 
+import { listProducts } from '../redux/actions/productActions'
+
 import banner from '../images/sale1.png'
 
 
@@ -24,6 +27,16 @@ const bannerStyle = {
 }
 
 const Home = () => {
+    const dispatch = useDispatch();
+    const productList = useSelector(state => state.productList);
+    const { loading, error, products } = productList;
+
+    useEffect(() => {
+        dispatch(listProducts({}))
+
+    }, [dispatch])
+
+
     return (
         <Helmet title="Trang chủ">
             {/* hero slider */}
@@ -44,6 +57,7 @@ const Home = () => {
                         smCol={1}
                         gap={20}
                     >
+
                         {
                             policy.map((item, index) => <Link key={index} to="/policy">
                                 <PolicyCard
@@ -63,27 +77,36 @@ const Home = () => {
                 <SectionTitle>
                     Sản phẩm mới thu hoạch
                 </SectionTitle>
-                <SectionBody>
-                    <Grid
-                        col={4}
-                        mdCol={2}
-                        smCol={1}
-                        gap={20}
-                    >
-                        {
-                            productData.getProducts(4).map((item, index) => (
-                                <ProductCard
-                                    key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
-                                    price={Number(item.price)}
-                                    slug={item.slug}
-                                />
-                            ))
-                        }
-                    </Grid>
-                </SectionBody>
+                {
+                    loading ? <div>Loading...</div>
+                        : error ? <div>{error}</div> :
+                            <SectionBody>
+                                {
+                                    products === undefined || products.length === 0 ?
+                                        <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào</div> :
+                                        <Grid
+                                            col={4}
+                                            mdCol={2}
+                                            smCol={1}
+                                            gap={20}
+                                        >
+                                            {
+                                                products.map((item) => (
+                                                    <ProductCard
+                                                        key={item._id}
+                                                        img01={item.images[0]}
+                                                        img02={item.images[1]}
+                                                        name={item.name}
+                                                        price={item.price}
+                                                        id={item._id}
+                                                    />
+                                                )
+                                                )
+                                            }
+                                        </Grid>
+                                }
+                            </SectionBody>
+                }
             </Section>
             {/* end best selling section */}
 
@@ -115,12 +138,12 @@ const Home = () => {
                 </SectionBody>
             </Section>
             {/* end new arrival section */}
-            
+
             {/* banner */}
             <Section>
                 <SectionBody>
                     <Link to="/catalog">
-                        <img src={banner} alt="" style={bannerStyle}/>
+                        <img src={banner} alt="" style={bannerStyle} />
                     </Link>
                 </SectionBody>
             </Section>
