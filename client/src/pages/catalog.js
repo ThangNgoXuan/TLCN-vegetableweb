@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Helmet from '../components/Helmet'
 import CheckBox from '../components/CheckBox'
@@ -12,7 +13,14 @@ import certification from '../fakedata/product-certification'
 import Button from '../components/Button'
 import InfinityList from '../components/InfinityList'
 
+import { listProducts } from '../redux/actions/productActions'
+
 const Catalog = () => {
+    console.log('user-route')
+
+    const dispatch = useDispatch();
+    const productsList = useSelector(state => state.productList)
+    const { loading, error, products, page, pages } = productsList
 
     const initFilter = {
         category: [],
@@ -20,39 +28,39 @@ const Catalog = () => {
         certification: []
     }
 
-    const productList = productData.getAllProducts()
+    // const productList = productData.getAllProducts()
 
-    const [products, setProducts] = useState(productList)
+    // const [products, setProducts] = useState(productList)
 
     const [filter, setFilter] = useState(initFilter)
 
     const filterSelect = (type, checked, item) => {
         if (checked) {
-            switch(type) {
+            switch (type) {
                 case "CATEGORY":
-                    setFilter({...filter, category: [...filter.category, item.categorySlug]})
+                    setFilter({ ...filter, category: [...filter.category, item.categorySlug] })
                     break
                 case "PROTYPE":
-                    setFilter({...filter, protype: [...filter.protype, item.protype]})
+                    setFilter({ ...filter, protype: [...filter.protype, item.protype] })
                     break
                 case "CERTIFICATION":
-                    setFilter({...filter, certification: [...filter.certification, item.certification]})
+                    setFilter({ ...filter, certification: [...filter.certification, item.certification] })
                     break
                 default:
             }
         } else {
-            switch(type) {
+            switch (type) {
                 case "CATEGORY":
                     const newCategory = filter.category.filter(e => e !== item.categorySlug)
-                    setFilter({...filter, category: newCategory})
+                    setFilter({ ...filter, category: newCategory })
                     break
                 case "PROTYPE":
                     const newProtype = filter.protype.filter(e => e !== item.protype)
-                    setFilter({...filter, protype: newProtype})
+                    setFilter({ ...filter, protype: newProtype })
                     break
                 case "CERTIFICATION":
                     const newCertification = filter.certification.filter(e => e !== item.certification)
-                    setFilter({...filter, certification: newCertification})
+                    setFilter({ ...filter, certification: newCertification })
                     break
                 default:
             }
@@ -61,36 +69,37 @@ const Catalog = () => {
 
     const clearFilter = () => setFilter(initFilter)
 
-    const updateProducts = useCallback(
-        () => {
-            let temp = productList
+    // const updateProducts = useCallback(
+    //     () => {
+    //         let temp = productList
 
-            if (filter.category.length > 0) {
-                temp = temp.filter(e => filter.category.includes(e.categorySlug))
-            }
+    //         if (filter.category.length > 0) {
+    //             temp = temp.filter(e => filter.category.includes(e.categorySlug))
+    //         }
 
-            if (filter.protype.length > 0) {
-                temp = temp.filter(e => {
-                    const check = e.protype.find(protype => filter.protype.includes(protype))
-                    return check !== undefined
-                })
-            }
+    //         if (filter.protype.length > 0) {
+    //             temp = temp.filter(e => {
+    //                 const check = e.protype.find(protype => filter.protype.includes(protype))
+    //                 return check !== undefined
+    //             })
+    //         }
 
-            if (filter.certification.length > 0) {
-                temp = temp.filter(e => {
-                    const check = e.certification.find(certification => filter.certification.includes(certification))
-                    return check !== undefined
-                })
-            }
+    //         if (filter.certification.length > 0) {
+    //             temp = temp.filter(e => {
+    //                 const check = e.certification.find(certification => filter.certification.includes(certification))
+    //                 return check !== undefined
+    //             })
+    //         }
 
-            setProducts(temp)
-        },
-        [filter, productList],
-    )
+    //         setProducts(temp)
+    //     },
+    //     [filter, productList],
+    // )
 
     useEffect(() => {
-        updateProducts()
-    }, [updateProducts])
+        // updateProducts()
+        dispatch(listProducts({}))
+    }, [dispatch])
 
     const filterRef = useRef(null)
 
@@ -171,7 +180,11 @@ const Catalog = () => {
                 </div>
                 <div className="catalog__content">
                     <InfinityList
-                        data={products}
+                        products={products}
+                        loading={loading}
+                        error={error}
+                        page={page}
+                        pages={pages}
                     />
                 </div>
             </div>

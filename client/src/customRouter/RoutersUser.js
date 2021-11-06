@@ -11,19 +11,18 @@ import Contact from '../pages/contact'
 import Login from '../pages/login'
 import Register from '../pages/register'
 
-
 const RoutesUser = () => {
     return (
         <Switch>
-            <Route path='/' exact component={Home}/>
-            <Route path='/catalog/:slug' component={Product}/>
-            <Route path='/catalog' component={Catalog}/>
-            <Route path='/cart' component={Cart}/>
-            <Route path='/intro' component={Intro}/>
-            <Route path='/contact' component={Contact}/>
-            <Route path='/cart' component={Cart}/>
-            <Route path='/login' component={Login}/>
-            <Route path='/register' component={Register}/>
+            <Route path='/product/:id' exact component={Product} />
+            <Route path='/catalog' exact component={Catalog} />
+            <Route path='/cart' component={Cart} />
+            <Route path='/intro' component={Intro} />
+            <Route path='/contact' component={Contact} />
+            <Route path='/cart' component={Cart} />
+            <Route path='/login' component={Login} />
+            <Route path='/register' component={Register} />
+            <Route path='/' exact component={Home} />
         </Switch>
     )
 }

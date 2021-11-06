@@ -12,15 +12,15 @@ const Layoutadmin = () => {
         <BrowserRouter>
             <Route render={(props) => (
                 <div>
-                    <Sidebar {...props}/>
+                    <Sidebar {...props} />
                     <div className="layout__content">
-                        <Topnav/>
+                        <Topnav />
                         <div className="layout__content-main">
-                            <RouterAdmin/>
+                            <RouterAdmin />
                         </div>
                     </div>
                 </div>
-            )}/>
+            )} />
         </BrowserRouter>
     )
 }

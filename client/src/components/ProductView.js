@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
-import { withRouter } from 'react-router'
-
 import { useDispatch } from 'react-redux'
+import { withRouter } from 'react-router'
 
 import { addItem } from '../redux/cartItemsSlide'
 import { remove } from '../redux/productModalSlice'
@@ -17,19 +16,21 @@ const ProductView = props => {
 
     let product = props.product
 
-    if (product === undefined) product = {
-        title: "",
-        price: '',
-        image01: null,
-        image02: null,
-        categorySlug: "",
-        protype: [],
-        slug: "",
-        certification: [],
-        description: ""
+    if (product === undefined) {
+        product = {
+            title: "",
+            price: '',
+            image01: null,
+            image02: null,
+            categorySlug: "",
+            protype: [],
+            slug: "",
+            certification: [],
+            description: ""
+        }
     }
 
-    const [previewImg, setPreviewImg] = useState(product.image01)
+    const [previewImg, setPreviewImg] = useState(product.images[0])
 
     const [descriptionExpand, setDescriptionExpand] = useState(false)
 
@@ -48,7 +49,7 @@ const ProductView = props => {
     }
 
     useEffect(() => {
-        setPreviewImg(product.image01)
+        setPreviewImg(product.images[0])
         setQuantity(1)
         setProtype(undefined)
         setCertification(undefined)
@@ -107,11 +108,11 @@ const ProductView = props => {
         <div className="product">
             <div className="product__images">
                 <div className="product__images__list">
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.image01)}>
-                        <img src={product.image01} alt="" />
+                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.images[0])}>
+                        <img src={product.images[0]} alt="" />
                     </div>
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.image02)}>
-                        <img src={product.image02} alt="" />
+                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.images[1])}>
+                        <img src={product.images[1]} alt="" />
                     </div>
                 </div>
                 <div className="product__images__main">
@@ -121,7 +122,7 @@ const ProductView = props => {
                     <div className="product-description__title">
                         Chi tiết sản phẩm
                     </div>
-                    <div className="product-description__content" dangerouslySetInnerHTML={{__html: product.description}}></div>
+                    <div className="product-description__content" dangerouslySetInnerHTML={{ __html: product.description }}></div>
                     <div className="product-description__toggle">
                         <Button size="sm" onClick={() => setDescriptionExpand(!descriptionExpand)}>
                             {
@@ -137,36 +138,6 @@ const ProductView = props => {
                     <span className="product__info__item__price">
                         {numberWithCommas(product.price)}
                     </span>
-                </div>
-                <div className="product__info__item">
-                    <div className="product__info__item__title">
-                        chủng loại
-                    </div>
-                    <div className="product__info__item__list">
-                        {
-                            product.protype.map((item, index) => (
-                                <div key={index} className={`product__info__item__list__item ${protype === item ? 'active' : ''}`} onClick={() => setProtype(item)}>
-                                    <div className={`circle bg-${item}`}></div>
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div>
-                <div className="product__info__item">
-                    <div className="product__info__item__title">
-                        Kích cỡ
-                    </div>
-                    <div className="product__info__item__list">
-                        {
-                            product.certification.map((item, index) => (
-                                <div key={index} className={`product__info__item__list__item ${certification === item ? 'active' : ''}`} onClick={() => setCertification(item)}>
-                                    <span className="product__info__item__list__item__size">
-                                        {item}
-                                    </span>
-                                </div>
-                            ))
-                        }
-                    </div>
                 </div>
                 <div className="product__info__item">
                     <div className="product__info__item__title">
@@ -193,7 +164,7 @@ const ProductView = props => {
                 <div className="product-description__title">
                     Chi tiết sản phẩm
                 </div>
-                <div className="product-description__content" dangerouslySetInnerHTML={{__html: product.description}}></div>
+                <div className="product-description__content" dangerouslySetInnerHTML={{ __html: product.description }}></div>
                 <div className="product-description__toggle">
                     <Button size="sm" onClick={() => setDescriptionExpand(!descriptionExpand)}>
                         {

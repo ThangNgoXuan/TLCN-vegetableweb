@@ -15,7 +15,8 @@ import heroSliderData from '../fakedata/heroslide'
 import policy from '../fakedata/policy'
 import productData from '../fakedata/product'
 
-import { listProducts } from '../redux/actions/productActions'
+import { listProducts, topProductAction } from '../redux/actions/productActions'
+import { listSlides } from '../redux/actions/slideAction'
 
 import banner from '../images/sale1.png'
 
@@ -28,10 +29,30 @@ const bannerStyle = {
 
 const Home = () => {
     const dispatch = useDispatch();
+
     const productList = useSelector(state => state.productList);
-    const { loading, error, products } = productList;
+    const { loading, error, products, page, pages } = productList;
+
+
+
+    const topProducts = useSelector(state => state.topProducts);
+    const {
+        loading: loadingTopProducts,
+        error: errorTopProducts,
+        topProducts: topProducts1,
+    } = topProducts;
+
+    const slideList = useSelector(state => state.slideList);
+    const {
+        loading: loadingSlides,
+        error: errorSlides,
+        slides,
+    } = slideList;
 
     useEffect(() => {
+
+        dispatch(listSlides())
+        dispatch(topProductAction())
         dispatch(listProducts({}))
 
     }, [dispatch])
@@ -40,12 +61,14 @@ const Home = () => {
     return (
         <Helmet title="Trang chủ">
             {/* hero slider */}
-            <HeroSlider
-                data={heroSliderData}
-                control={true}
-                auto={true}
-                timeOut={5000}
-            />
+            {loadingSlides ? <div>Loading...</div> : errorSlides ? <div>{errorSlides}</div> :
+                <HeroSlider
+                    data={slides}
+                    control={true}
+                    auto={true}
+                    timeOut={5000}
+                />
+            }
             {/* end hero slider */}
 
             {/* policy section */}
@@ -98,7 +121,7 @@ const Home = () => {
                                                         img02={item.images[1]}
                                                         name={item.name}
                                                         price={item.price}
-                                                        id={item._id}
+                                                        _id={item._id}
                                                     />
                                                 )
                                                 )
@@ -131,6 +154,7 @@ const Home = () => {
                                     name={item.title}
                                     price={Number(item.price)}
                                     slug={item.slug}
+                                    _id={item._id}
                                 />
                             ))
                         }
@@ -170,6 +194,7 @@ const Home = () => {
                                     name={item.title}
                                     price={Number(item.price)}
                                     slug={item.slug}
+                                    _id={item._id}
                                 />
                             ))
                         }

@@ -6,7 +6,7 @@ import { HttpStatusCode } from '../utils/constants.js';
 // @route   GET /v1/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 10;
+  const pageSize = 18;
   const page = Number(req.query.pageNumber) || 1;
   const name = req.query.name || '';
   const category = req.query.category || '';
@@ -171,13 +171,19 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
 
   // const id = isValidObjectId(req.params.categoryId)
   // var c = new isValidObjectId()
-  const products = await Product.find({ category: req.params.categoryId }).sort({ sold: -1 }).limit(10)
+  const product = await Product.findById(req.params.id);
 
-  if (products) {
-    res.send({ products });
+  if (product) {
+    const products = await Product.find({ category: product.category }).sort({ sold: -1 }).limit(10)
+    if (products) {
+      res.send({ products });
+    } else {
+      throw new Error('Không tìm thấy sản phẩm liên quan');
+    }
   } else {
-    throw new Error('Khong tim thay san pham');
+    throw new Error('Không tìm thấy sản phẩm liên quan');
   }
+
 })
 
 export const productController = {

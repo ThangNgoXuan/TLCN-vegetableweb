@@ -40,7 +40,7 @@ const HeroSlider = props => {
         <div className="hero-slider">
             {
                 data.map((item, index) => (
-                    <HeroSliderItem key={index} item={item} active={index === activeSlide}/>
+                    <HeroSliderItem key={index} item={item} active={index === activeSlide} />
                 ))
             }
             {
@@ -75,7 +75,7 @@ const HeroSliderItem = props => (
     <div className={`hero-slider__item ${props.active ? 'active' : ''}`}>
         <div className="hero-slider__item__info">
             <div className={`hero-slider__item__info__title color-${props.item.color}`}>
-                <span>{props.item.title}</span>
+                <span>{props.item.name}</span>
             </div>
             <div className="hero-slider__item__info__description">
                 <span>{props.item.description}</span>
@@ -94,7 +94,7 @@ const HeroSliderItem = props => (
         </div>
         <div className="hero-slider__item__image">
             <div className={`shape bg-${props.item.color}`}></div>
-            <img src={props.item.img} alt="" />
+            <img src={props.item.image} alt="images" />
         </div>
     </div>
 )

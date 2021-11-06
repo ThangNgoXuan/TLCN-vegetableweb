@@ -1,59 +1,92 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Helmet from '../components/Helmet'
-import Section, {SectionBody, SectionTitle} from '../components/Section'
+import Section, { SectionBody, SectionTitle } from '../components/Section'
 import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
 import ProductView from '../components/ProductView'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import { detailsProduct, topProductsRelate } from '../redux/actions/productActions'
 
 import productData from '../fakedata/product'
 
 const Product = props => {
+    const dispatch = useDispatch()
+    const productDetail = useSelector(state => state.productDetail)
+    const { loading, error, product } = productDetail
 
-    const product = productData.getProductBySlug(props.match.params.slug)
+    const listProductsRelate = useSelector(state => state.topProductsRelate)
+    const {
+        loading: loadingTopProductRelate,
+        error: errorTopProductRelate,
+        topProductsRelate: productsRelate,
+    } = listProductsRelate
 
-    const relatedProducts = productData.getProducts(8)
+    console.log(listProductsRelate)
+
+    // const product = productData.getProductBySlug(props.match.params.id)
+    const productId = props.match.params.id
+
 
     React.useEffect(() => {
-        window.scrollTo(0,0)
-    }, [product])
+        window.scrollTo(0, 0)
+
+        dispatch(detailsProduct(productId))
+        dispatch(topProductsRelate(productId))
+    }, [dispatch, productId])
 
     return (
-        <Helmet title={product.title}>
-            <Section>
-                <SectionBody>
-                    <ProductView product={product}/>
-                </SectionBody>
-            </Section>
-            <Section>
-                <SectionTitle>
-                    Khám phá thêm
-                </SectionTitle>
-                <SectionBody>
-                    <Grid
-                        col={4}
-                        mdCol={2}
-                        smCol={1}
-                        gap={20}
-                    >
-                        {
-                            relatedProducts.map((item, index) => (
-                                <ProductCard
-                                    key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
-                                    price={Number(item.price)}
-                                    slug={item.slug}
-                                />   
-                            ))
-                        }
-                    </Grid>
-                </SectionBody>
-            </Section>
-        </Helmet>
+
+        <>
+            {loading ? <div>Loading...</div> : error ?
+                (<>
+                    <Link to="/">Quay về trang chủ</Link>
+                    <div>{error}</div>
+                </>) :
+                <Helmet title={product.title}>
+                    <Section>
+                        <SectionBody>
+                            <ProductView product={product} />
+                        </SectionBody>
+                    </Section>
+                    {
+                        loadingTopProductRelate ? <div>Loading...</div>
+                            : errorTopProductRelate ? <div>{errorTopProductRelate}</div> :
+                                <Section>
+                                    <SectionTitle>
+                                        Khám phá thêm
+                                    </SectionTitle>
+                                    {!productsRelate || productsRelate.length === 0
+                                        ? <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào liên quan</div> :
+
+                                        <SectionBody>
+                                            <Grid
+                                                col={4}
+                                                mdCol={2}
+                                                smCol={1}
+                                                gap={20}
+                                            >
+                                                {
+                                                    productsRelate.map((item, index) => (
+                                                        <ProductCard
+                                                            key={index}
+                                                            img01={item.images[0]}
+                                                            img02={item.images[1]}
+                                                            name={item.title}
+                                                            price={Number(item.price)}
+                                                            id={item._id}
+                                                        />
+                                                    ))}
+                                            </Grid>
+                                        </SectionBody>
+                                    }
+                                </Section>
+                    }
+                </Helmet>
+            }
+        </>
+
     )
 }
 

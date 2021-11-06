@@ -7,28 +7,25 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import ProductViewModal from '../components/ProductViewModal';
 
-import Routes from '../customRouter/RoutersUser';
+import RoutesUser from '../customRouter/RoutersUser';
 
 const Layoutuser = () => {
     return (
-        <BrowserRouter>
-        H
-        <Route render={props => (
-            <div>
-                <Header {...props} />
-                <div className="container">
-                    <div className="main">
-                        <Routes/>
+        <BrowserRouter  >
+            <Route render={props => (
+                <div>
+                    <Header {...props} />
+                    <div className="container">
+                        <div className="main">
+                            <RoutesUser />
+                        </div>
                     </div>
+                    <Footer />
+                    <ProductViewModal />
                 </div>
-                <Footer/>
-                <ProductViewModal/>
-            </div>
-        )}/>
-        </BrowserRouter>
-    
-    
-      );
+            )} />
+        </BrowserRouter >
+    );
 }
 
 export default Layoutuser
