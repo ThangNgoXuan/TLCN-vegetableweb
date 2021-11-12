@@ -34,7 +34,7 @@ const productSchema = new mongoose.Schema(
       required: true
     },
     certification: [{ type: String }],
-    protype: [{ type: String }],
+    discount: { type: Number }
   },
   {
     timestamps: true,

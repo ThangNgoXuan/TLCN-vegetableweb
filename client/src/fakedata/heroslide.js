@@ -1,4 +1,3 @@
-import HeroSlider from "../components/HeroSlider"
 
 const img1 = require("../images/slider/cam.png").default
 const img2 = require("../images/slider/Cabbage.jpg").default

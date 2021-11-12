@@ -15,8 +15,7 @@ const userSchema = mongoose.Schema(
       trim: true
     },
     password: {
-      type: String,
-      required: true,
+      type: String
     },
     avatar: {
       type: String,
@@ -31,6 +30,12 @@ const userSchema = mongoose.Schema(
       required: true,
       default: 'user'
     },
+    googleId: {
+      type: String,
+    },
+    passwordReset: {
+      type: String,
+    }
   },
   {
     timestamps: true,

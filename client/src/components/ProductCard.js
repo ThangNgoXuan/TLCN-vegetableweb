@@ -3,17 +3,9 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 
-import { useDispatch } from 'react-redux'
-
-import { set } from '../redux/productModalSlice'
-
-import Button from './Button'
-
 import numberWithCommas from '../utils/numberWithCommas'
 
 const ProductCard = props => {
-
-    const dispatch = useDispatch()
 
     return (
         <div className="product-card">
@@ -31,7 +23,7 @@ const ProductCard = props => {
                     </span>
                 </div>
             </Link>
-            <div className="product-card__btn">
+            {/* <div className="product-card__btn">
                 <Button
                     size="sm"
                     icon="bx bx-cart"
@@ -40,17 +32,17 @@ const ProductCard = props => {
                 >
                     chọn mua
                 </Button>
-            </div>
+            </div> */}
         </div>
     )
 }
 
 ProductCard.propTypes = {
-    img01: PropTypes.string.isRequired,
-    img02: PropTypes.string.isRequired,
+    // img01: PropTypes.string.isRequired,
+    // img02: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
-    slug: PropTypes.string.isRequired,
+
 }
 
 export default ProductCard

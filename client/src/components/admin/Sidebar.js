@@ -25,7 +25,7 @@ const Sidebar = (props) => {
     return (
         <div className="sidebar">
             <div className="sidebar__logo">
-                <img src={logo} className="company logo" />
+                <img src={logo} className="company logo" alt="logo" />
             </div>
             {
                 sidebar.map((item, index) => (

@@ -1,5 +1,9 @@
+import bcrypt from 'bcryptjs'
+import { OAuth2Client } from 'google-auth-library'
 import { User } from '../models/user.model.js';
 import { HttpStatusCode } from '../utils/constants.js';
+import asyncHandler from 'express-async-handler';
+import generateToken from '../utils/generateToken.js';
 
 // @desc    Get all users
 // @route   GET /v1/user
@@ -16,6 +20,79 @@ const getUsers = async (req, res) => {
     res.send({ message: error.message });
   }
 };
+
+// @desc    Login 
+// @route   Post /v1/user/login
+// @access  Public
+const signinUser = asyncHandler(async (req, res) => {
+
+  const user = await User.findOne({ email: req.body.email });
+  if (user) {
+    if (bcrypt.compareSync(req.body.password, user.password)) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user._id),
+      })
+      console.log(user.name)
+    }
+    res.status(401);
+    throw new Error('Sai mật khẩu!');
+  } else {
+    res.status(401);
+    throw new Error('Email bạn nhập không chính xác!');
+  }
+});
+
+const googleLogin = asyncHandler(async (req, res) => {
+  const { token, ggId } = req.body;
+  const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_CLIENT_ID);
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    //audience: process.env
+  })
+
+  if (ticket) {
+    const { email, name, picture } = ticket.payload;
+    const oldAccount = await User.findOne({ email: email });
+    let user;
+    if (oldAccount) {
+      user = {
+        _id: oldAccount._id,
+        name: oldAccount.name,
+        email: oldAccount.email,
+        role: oldAccount.role,
+      };
+    } else {
+
+      const userCreate = await User.create({
+        name,
+        email,
+        googleId: ggId,
+        avatar: picture
+      });
+      if (userCreate) {
+        user = {
+          _id: userCreate._id,
+          name: userCreate.name,
+          email: userCreate.email,
+          role: userCreate.role,
+        };
+      } else {
+        res.status(401)
+        throw new Error('Đăng nhập không thành công');
+      }
+    }
+    if (user) {
+      user.token = generateToken(user._id);
+      res.status(200).json(user);
+    } else {
+      res.status(401)
+      throw new Error('Đăng nhập không thành công');
+    }
+  }
+});
 
 // @desc    Register a new user
 // @route   POST /v1/user
@@ -196,5 +273,7 @@ export const userController =
   updateUserProfile,
   deleteUser,
   updateUser,
-  getUserById
+  getUserById,
+  signinUser,
+  googleLogin
 };

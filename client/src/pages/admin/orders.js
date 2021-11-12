@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import Table from '../../components/admin/Table'
 
@@ -34,28 +33,28 @@ const renderBody = (item, index) => (
 const Orders = () => {
     return (
         <div>
-        <div className="row">
-            <div className="col-10">
-                <h2 className="page-header">
-                Orders
-                </h2>
+            <div className="row">
+                <div className="col-10">
+                    <h2 className="page-header">
+                        Orders
+                    </h2>
+                </div>
             </div>
-        </div>
-        <div className="row">
-            <div className="col-12">
-                <div className="card">
-                    <div className="card__body">
-                        <Table
-                            limit='10'
-                            headData={customerTableHead}
-                            renderHead={(item, index) => renderHead(item, index)}
-                            bodyData={customerList}
-                            renderBody={(item, index) => renderBody(item, index)}
-                        />
+            <div className="row">
+                <div className="col-12">
+                    <div className="card">
+                        <div className="card__body">
+                            <Table
+                                limit='10'
+                                headData={customerTableHead}
+                                renderHead={(item, index) => renderHead(item, index)}
+                                bodyData={customerList}
+                                renderBody={(item, index) => renderBody(item, index)}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     )
 }

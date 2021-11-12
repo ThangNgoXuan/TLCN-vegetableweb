@@ -6,11 +6,11 @@ import { HttpStatusCode } from '../utils/constants.js';
 // @route   GET /v1/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 18;
+  const pageSize = 12;
   const page = Number(req.query.pageNumber) || 1;
   const name = req.query.name || '';
   const category = req.query.category || '';
-  const certification = req.query.certification || '';
+  const certification = req.query.certificate || '';
   const protype = req.query.protype || '';
   const order = req.query.order || '';
   const min =
@@ -42,6 +42,7 @@ const getProducts = asyncHandler(async (req, res) => {
     ...nameFilter,
     ...categoryFilter,
     ...priceFilter,
+    ...certificationFilter,
   })
     .sort(sortOrder)
     .skip(pageSize * (page - 1))
@@ -155,10 +156,10 @@ const searchProduct = asyncHandler(async (req, res) => {
 //@route  get /v1/products/top-product
 //@access public
 const getTopProduct = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ sold: -1 }).limit(10)
+  const products = await Product.find().sort({ sold: -1 }).limit(8)
 
   if (products) {
-    res.send({ products });
+    res.json(products);
   } else {
     throw new Error('Khong tim thay san pham');
   }
@@ -174,7 +175,7 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    const products = await Product.find({ category: product.category }).sort({ sold: -1 }).limit(10)
+    const products = await Product.find({ category: product.category }).sort({ sold: -1 }).limit(6)
     if (products) {
       res.send({ products });
     } else {

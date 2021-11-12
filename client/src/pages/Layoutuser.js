@@ -5,7 +5,6 @@ import '../styles/index.scss'
 
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import ProductViewModal from '../components/ProductViewModal';
 
 import RoutesUser from '../customRouter/RoutersUser';
 
@@ -21,7 +20,7 @@ const Layoutuser = () => {
                         </div>
                     </div>
                     <Footer />
-                    <ProductViewModal />
+                    {/* <ProductViewModal /> */}
                 </div>
             )} />
         </BrowserRouter >

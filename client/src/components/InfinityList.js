@@ -6,17 +6,16 @@ import ProductCard from './ProductCard'
 
 const InfinityList = ({ loading, error, products, page, pages }) => {
 
-    const perLoad = 6 // items each load
+    // const perLoad = 6 // items each load
 
     const listRef = useRef(null)
 
-    const [data, setData] = useState([])
+    // const [data, setData] = useState([])
 
     const [load, setLoad] = useState(true)
 
-    const [index, setIndex] = useState(0)
+    // const [index, setIndex] = useState(0)
 
-    console.log(products)
 
     // useEffect(() => {
     //     setData(products.slice(0, perLoad))
@@ -62,16 +61,17 @@ const InfinityList = ({ loading, error, products, page, pages }) => {
             >
                 {
                     loading ? <div>Loading...</div> : error ? <div>{error}</div> :
-                        products.map((item) => (
-                            <ProductCard
-                                key={item._id}
-                                img01={item.images[0]}
-                                img02={item.images[1]}
-                                name={item.name}
-                                price={item.price}
-                                _id={item._id}
-                            />
-                        ))
+                        products.length === 0 ? <div>Không có sản phẩm nào</div> :
+                            products.map((item) => (
+                                <ProductCard
+                                    key={item._id}
+                                    img01={item.images[0]}
+                                    img02={item.images[1]}
+                                    name={item.name}
+                                    price={item.price}
+                                    _id={item._id}
+                                />
+                            ))
                 }
             </Grid>
         </div>

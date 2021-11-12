@@ -21,9 +21,7 @@ export const listProducts = ({
   pageNumber = '',
   name = '',
   category = '',
-  order = '',
   certification = '',
-  protype = '',
   min = '',
   max = '',
 }) => async (dispatch) => {
@@ -32,7 +30,7 @@ export const listProducts = ({
   });
   try {
     const { data } = await Axios.get(
-      `/v1/products?pageNumber=${pageNumber}&name=${name}&category=${category}&order=${order}&protype=${protype}&certification=${certification}&min=${min}&max=${max}`
+      `/v1/products?pageNumber=${pageNumber}&name=${name}&category=${category}&certification=${certification}&min=${min}&max=${max}`
     );
     dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
   } catch (error) {

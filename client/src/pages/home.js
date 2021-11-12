@@ -8,10 +8,7 @@ import Section, { SectionTitle, SectionBody } from '../components/Section'
 import PolicyCard from '../components/PolicyCard'
 import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 
-import heroSliderData from '../fakedata/heroslide'
 import policy from '../fakedata/policy'
 import productData from '../fakedata/product'
 
@@ -41,6 +38,8 @@ const Home = () => {
         error: errorTopProducts,
         topProducts: topProducts1,
     } = topProducts;
+
+    console.log(products)
 
     const slideList = useSelector(state => state.slideList);
     const {
@@ -98,7 +97,7 @@ const Home = () => {
             {/* best selling section */}
             <Section>
                 <SectionTitle>
-                    Sản phẩm mới thu hoạch
+                    Sản phẩm mới
                 </SectionTitle>
                 {
                     loading ? <div>Loading...</div>
@@ -138,28 +137,36 @@ const Home = () => {
                 <SectionTitle>
                     Sản phẩm bán chạy
                 </SectionTitle>
-                <SectionBody>
-                    <Grid
-                        col={4}
-                        mdCol={2}
-                        smCol={1}
-                        gap={20}
-                    >
-                        {
-                            productData.getProducts(8).map((item, index) => (
-                                <ProductCard
-                                    key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
-                                    price={Number(item.price)}
-                                    slug={item.slug}
-                                    _id={item._id}
-                                />
-                            ))
-                        }
-                    </Grid>
-                </SectionBody>
+                {
+                    loadingTopProducts ? <div>Loading...</div>
+                        : errorTopProducts ? <div>{errorTopProducts}</div> :
+                            <SectionBody>
+                                {
+                                    topProducts1 === undefined || topProducts1.length === 0 ?
+                                        <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào</div> :
+                                        <Grid
+                                            col={4}
+                                            mdCol={2}
+                                            smCol={1}
+                                            gap={20}
+                                        >
+                                            {
+                                                topProducts1.map((item) => (
+                                                    <ProductCard
+                                                        key={item._id}
+                                                        img01={item.images[0]}
+                                                        img02={item.images[1]}
+                                                        name={item.name}
+                                                        price={item.price}
+                                                        _id={item._id}
+                                                    />
+                                                )
+                                                )
+                                            }
+                                        </Grid>
+                                }
+                            </SectionBody>
+                }
             </Section>
             {/* end new arrival section */}
 
