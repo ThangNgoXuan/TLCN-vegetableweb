@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    certification: [{ type: String }],
+    certification: { type: String },
     discount: { type: Number }
   },
   {

@@ -1,0 +1,24 @@
+/* You can remove these code below*/
+
+.simple-search {
+  width: 100%;
+  display: flex;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 12px 2px rgba(0, 0, 0, 0.05);
+}
+.simple-search button {
+  padding: 10px 20px;
+  color: white;
+  flex-shrink: 0;
+  background-color: #2cccff;
+}
+.simple-search input {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  -webkit-appearance: none;
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+}

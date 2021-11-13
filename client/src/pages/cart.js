@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import Helmet from '../components/Helmet'
-import CartItem from '../components/CartItem'
 import Button from '../components/Button'
 
 import numberWithCommas from '../utils/numberWithCommas'
@@ -19,6 +18,18 @@ const Cart = (props) => {
         : 1;
     const cart = useSelector((state) => state.cart);
     const { cartItems, error } = cart;
+
+    let itemCount = (cartItems && cartItems.length) || 0;
+
+
+    const caculateMoney = () => {
+        let money = 0;
+        cartItems.map(x =>
+            money += x.price * x.quantity
+        )
+        return money || 0;
+    }
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -48,10 +59,10 @@ const Cart = (props) => {
                 <div className="cart__info">
                     <div className="cart__info__txt">
                         <p>
-                            Bạn đang có {0} sản phẩm trong giỏ hàng
+                            Bạn đang có {itemCount} sản phẩm trong giỏ hàng
                         </p>
                         <div className="cart__info__txt__price">
-                            <span>Thành tiền:</span> <span>{numberWithCommas(Number(0))}</span>
+                            <span>Thành tiền:</span> <span>{numberWithCommas(Number(caculateMoney()))}</span>
                         </div>
                     </div>
                     <div className="cart__info__btn">
@@ -99,7 +110,7 @@ const Cart = (props) => {
                                                 </div>
                                             </div>
                                             <div className="cart__item__del">
-                                                <i className='bx bx-trash' onClick={() => removeFromCartHandler()}></i>
+                                                <i className='bx bx-trash' onClick={() => removeFromCartHandler(item._id)}></i>
                                             </div>
                                         </div>
                                     </div>

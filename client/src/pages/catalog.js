@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Helmet from '../components/Helmet'
 import Button from '../components/Button'
 import InfinityList from '../components/InfinityList'
-import Pagination from '../components/Pagination'
 
 import { listProducts } from '../redux/actions/productActions'
 import { categoryAction } from '../redux/actions/categoryActions'
 import { Link, useParams } from 'react-router-dom'
+import SearchPriceBox from '../components/SearchPriceBox'
 
 const Catalog = () => {
 
@@ -17,7 +17,7 @@ const Catalog = () => {
         category = 'all',
         min = 0,
         max = 0,
-        certification = 'all',
+        certificate = 'all',
         pageNumber = 1,
     } = useParams();
 
@@ -28,7 +28,7 @@ const Catalog = () => {
     const categoriesList = useSelector(state => state.categoriesList)
     const { loading: loadingCategories, error: errorCategories, categories } = categoriesList
 
-    const certificate = ['Hữu cơ', 'VietGAP', 'GlobalGAP']
+    const certificates = ['Hữu cơ', 'VietGAP', 'GlobalGAP']
 
     useEffect(() => {
         // updateProducts()
@@ -37,25 +37,31 @@ const Catalog = () => {
             pageNumber,
             name: name !== 'all' ? name : '',
             category: category !== 'all' ? category : '',
-            certification: certification !== 'all' ? certification : '',
+            certificate: certificate !== 'all' ? certificate : '',
             min,
             max,
         }))
-    }, [dispatch, category, name, pageNumber, certification, min, max])
+    }, [dispatch, category, name, pageNumber, certificate, min, max])
 
     const filterRef = useRef(null)
 
     const showHideFilter = () => filterRef.current.classList.toggle('active')
-
     const getFilterUrl = (filter) => {
         const filterPage = filter.page || pageNumber;
         const filterCategory = filter.category || category;
         const filterName = filter.name || name;
-        const filterCertificate = filter.certification || certification;
+        const filterCertificate = filter.certificate || certificate;
         const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
         const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
-        return `catalog/category/${filterCategory}/name/${filterName}/certificate/${filterCertificate}/min/${filterMin}/max/${filterMax}/pageNumber/${filterPage}`;
+        return `/catalog/category/${filterCategory}/name/${filterName}/certificate/${filterCertificate}/min/${filterMin}/max/${filterMax}/pageNumber/${filterPage}`;
     };
+
+    const pageNumberArr = [];
+    if (pages) {
+        for (let i = 1; i <= pages; i++) {
+            pageNumberArr.push(i);
+        }
+    }
 
     return (
         <Helmet title="Sản phẩm">
@@ -75,7 +81,7 @@ const Catalog = () => {
                                         categories.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
                                                 <Link className={item._id === category ? 'active' : ''}
-                                                    to={getFilterUrl({ category: item._id })}>
+                                                    to={() => getFilterUrl({ category: item._id })}>
                                                     {item.name}
                                                 </Link>
                                             </div>
@@ -88,12 +94,12 @@ const Catalog = () => {
                         <div className="catalog__filter__widget__title">
                             Chứng nhận
                         </div>
-                        {!certificate ? <div></div> :
-                            certificate.map(x =>
+                        {!certificates ? <div></div> :
+                            certificates.map(x =>
                                 <div className="catalog__filter__widget__content">
                                     <div className="catalog__filter__widget__content__item">
-                                        <Link className={certification === 'x' ? 'active' : ''}
-                                            to={getFilterUrl({ certification: x })}>
+                                        <Link className={certificate === 'x' ? 'active' : ''}
+                                            to={() => getFilterUrl({ certificate: x })}>
                                             {x}</Link>
                                     </div>
                                 </div>
@@ -101,19 +107,7 @@ const Catalog = () => {
                         }
                     </div>
 
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            Khoảng Giá
-                        </div>
-                        <input placeholder="Từ" type="number"></input>
-                        <input placeholder="Đến" type="number"></input>
-                    </div>
-
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__content">
-                            <Button size="sm" >Áp dụng</Button>
-                        </div>
-                    </div>
+                    <SearchPriceBox getFilterUrl={getFilterUrl} />
                 </div>
                 <div className="catalog__filter__toggle">
                     <Button size="sm" onClick={() => showHideFilter()}>bộ lọc</Button>
@@ -128,7 +122,52 @@ const Catalog = () => {
                     />
                 </div>
             </div>
-            <Pagination page={page} pages={pages} />
+            {/* <Pagination page={page} pages={pages} getFilterUrl={getFilterUrl} /> */}
+
+            <div className="paginate">
+                <ul className="paginate__list">
+                    {page === 1 ?
+                        <li className="paginate__list-item">
+                            <Link to="" style={{ cursor: 'default', backgroundColor: "#f5f5f5" }}
+                            >Trang trước</Link>
+                        </li>
+                        :
+                        <li className="paginate__list-item">
+
+                            <Link to={getFilterUrl({ page: pageNumber - 1 })}>Trang trước</Link>
+                        </li>
+                    }
+                    {pageNumberArr.map((number) => {
+                        if (number === page) {
+                            return <li className="paginate__list-item">
+                                <button className="active">{number}</button>
+                            </li>
+                        } else {
+                            return <li className="paginate__list-item">
+                                {/* <button onClick={() => handlePageChange(number)}>{number}</button> */}
+                                {/* <Link to={`/catalog/pageNumber/${number}`}>{number}</Link> */}
+                                <Link to={getFilterUrl({ page: number })}>{number}</Link>
+
+                            </li>
+                        }
+                    })
+                    }
+                    <li className="paginate__list-item">
+                        <button>...</button>
+                    </li>
+                    {page >= pages ?
+                        <li className="paginate__list-item">
+                            <Link to="" style={{ cursor: 'default', backgroundColor: "#f5f5f5" }}
+                            >Trang sau</Link>
+                        </li>
+                        :
+                        <li className="paginate__list-item">
+
+                            <Link to={getFilterUrl({ page: +pageNumber + 1 })}>Trang sau</Link>
+                        </li>
+                    }
+                </ul>
+            </div>
         </Helmet>
     )
 }

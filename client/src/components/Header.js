@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, Route } from 'react-router-dom'
 import { userLogOutAction } from '../redux/actions/userAction'
 
 import logo from '../images/logo__txt.PNG'
+import Search from './Search'
 
 const mainNav = [
     {
@@ -29,6 +30,8 @@ const Header = () => {
     const userSignin = useSelector(state => state.userSignin);
     const dispatch = useDispatch();
     const { userInfo } = userSignin;
+    const cart = useSelector((state) => state.cart);
+    const { cartItems, error } = cart;
 
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
@@ -86,11 +89,20 @@ const Header = () => {
                     </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bx-search"></i>
+                            {/* <i className="bx bx-search"></i> */}
+
+                            <Route render={({ history }) => <Search history={history} />}></Route>
                         </div>
+
                         <div className="header__menu__item header__menu__right__item">
                             <Link to="/cart">
-                                <i className="bx bx-shopping-bag"></i>
+                                <span className="cart-icon-wrap">
+                                    {cartItems ? cartItems.length > 0 ?
+                                        <span className="cart-icon-amout">{cartItems.length}</span>
+                                        : false : false
+                                    }
+                                    <i className="bx bx-shopping-bag"></i>
+                                </span>
                             </Link>
                         </div>
                         <div className="header__menu__item header__menu__right__item">

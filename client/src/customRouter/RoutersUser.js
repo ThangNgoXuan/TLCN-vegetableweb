@@ -15,10 +15,9 @@ const RoutesUser = () => {
     return (
         <Switch>
             <Route path='/product/:id' exact component={Product} />
-            <Route path='/cart' component={Cart} />
+            <Route path='/cart/:id?' component={Cart} />
             <Route path='/intro' component={Intro} />
             <Route path='/contact' component={Contact} />
-            <Route path='/cart' component={Cart} />
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
 
@@ -31,6 +30,10 @@ const RoutesUser = () => {
                 component={Catalog}
             />
             <Route path='/catalog/category/:category/certificate/:certificate'
+                exact
+                component={Catalog}
+            />
+            <Route path='/catalog/pageNumber/:pageNumber'
                 exact
                 component={Catalog}
             />

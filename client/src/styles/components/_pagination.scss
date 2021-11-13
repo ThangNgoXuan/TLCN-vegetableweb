@@ -21,6 +21,23 @@
           background-color: #dfdfdf;
         }
       }
+      a {
+        height: 46px;
+        padding: 16px;
+        font-size: 1.4rem;
+        font-weight: 600;
+        border-radius: 2px;
+        display: block;
+
+        &:hover {
+          background-color: #dfdfdf;
+        }
+
+        &.active {
+          background-color: #dfdfdf;
+          cursor: default;
+        }
+      }
     }
   }
 }

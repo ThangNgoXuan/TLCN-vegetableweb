@@ -20,7 +20,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
   const categoryFilter = category ? { category } : {};
-  const certificationFilter = certification ? { certification } : {};
+  const certificationFilter = certification ? { certification: { $regex: certification, $options: 'i' } } : {};
   const protypeFilter = protype ? { protype } : {};
   const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
   const sortOrder =

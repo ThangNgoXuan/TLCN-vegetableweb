@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Pagination = ({ page, pages }) => {
+const Pagination = ({ page, pages, getFilterUrl }) => {
 
   const pageNumber = [];
   if (pages) {
@@ -9,9 +10,13 @@ const Pagination = ({ page, pages }) => {
     }
   }
 
-  const handlePageChange = (number) => {
-
-  }
+  // const handlePageChange = (number) => {
+  //   // return (
+  //   //   <Link to={`/catalog/pageNumber/${number}`}></Link>
+  //   // )
+  //   props.history.push(`/catalog/pageNumber/${number}`)
+  // }
+  console.log('render')
 
   return (
     <div className="paginate">
@@ -32,7 +37,8 @@ const Pagination = ({ page, pages }) => {
             </li>
           } else {
             return <li className="paginate__list-item">
-              <button onClick={handlePageChange(number)}>{number}</button>
+              {/* <button onClick={() => handlePageChange(number)}>{number}</button> */}
+              <Link to={`/catalog/pageNumber/${number}`}>{number}</Link>
             </li>
           }
         })
