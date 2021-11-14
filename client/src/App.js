@@ -7,8 +7,8 @@ import Layoutadmin from './pages/admin/Layoutadmin';
 function App() {
   return (
     <BrowserRouter>
-      <Route path="/" component={Layoutuser} />
       <Route path="/admin" component={Layoutadmin} />
+      <Route path="/" component={Layoutuser} />
     </BrowserRouter>
   );
 }

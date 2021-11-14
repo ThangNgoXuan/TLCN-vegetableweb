@@ -56,6 +56,53 @@ const getProducts = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Fetch all products
+// @route   GET /v1/products
+// @access  Private / admin/staff
+const getProductsAdmin = asyncHandler(async (req, res) => {
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword || '';
+
+  const searchFilter = keyword ? {
+    $or: [
+      {
+        name: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        brand: {
+          $regex: keyword,
+        }
+      },
+
+    ]
+  } : {}
+
+  console.log(keyword)
+
+  const count = await Product.count({
+    ...searchFilter
+  });
+
+  const products = await Product.find({
+    ...searchFilter
+  })
+    .populate({ path: 'category', select: 'name' })
+    .populate({ path: 'creator', select: 'name' })
+    .skip(pageSize * (page - 1))
+    .limit(pageSize);
+
+  if (products) {
+    res.send({ products, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    res.json({}).status(HttpStatusCode.NOT_FOUND);
+    throw new Error('Không tìm thấy sản phẩm');
+  }
+})
+
 // @desc    Fetch single product
 // @route   GET /v1/products/:id
 // @access  Public
@@ -196,5 +243,6 @@ export const productController = {
   deleteProduct,
   getTopProduct,
   getTopProductRelate,
+  getProductsAdmin,
 };
 

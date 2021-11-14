@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 
 import { productListReducer, topProductsReducer, topProductsRelateReducer, productDetailReducer } from './reducers/productReducer';
 import { slideListReducer } from './reducers/slideReducer';
-import { userSigninReducer } from './reducers/userReducer';
+import { userSigninReducer, userListReducer, userDetailsReducer } from './reducers/userReducer';
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList } from './reducers/categoryReducers';
 
@@ -29,6 +29,8 @@ const reducer = combineReducers({
     userSignin: userSigninReducer,
     cart: cartReducer,
     categoriesList: categoryList,
+    userList: userListReducer,
+    userDetail: userDetailsReducer,
 
 });
 

@@ -17,6 +17,9 @@ router.route('/:id')
   .delete(productController.deleteProduct)
   .put(productController.updateProduct)
 
+router.route('/admin/search')
+  .get(productController.getProductsAdmin)
+
 router.route('/')
   .get(productController.getProducts)
   .post(productController.createProduct)

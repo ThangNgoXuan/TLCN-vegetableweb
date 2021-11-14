@@ -13,18 +13,16 @@ import NewProduct from '../pages/admin/newproduct'
 const RouterAdmin = () => {
     return (
         <Switch>
-            <Route  path='/admin' exact component={Dashboard}/>
-            <Route path='/admin/products' component={Products}/>
-            <Route path='/admin/newproduct' component={NewProduct}/>
-            <Route path='/admin/customers' component={Customers}/>
-            <Route path='/admin/newuser' component={NewUser}/>
-            <Route path='/admin/user' component={User}/>
-            <Route path='/admin/setting' component={Setting}/>
-            <Route path='/admin/categories' component={Categories}/>
-            <Route path='/admin/analytics' component={Analytics}/>
-            <Route path='/admin/orders' component={Orders}/>
-
-
+            <Route path='/admin/products' component={Products} />
+            <Route path='/admin/newproduct' component={NewProduct} />
+            <Route path='/admin/customers' component={Customers} />
+            <Route path='/admin/newuser' component={NewUser} />
+            <Route path='/admin/user' component={User} />
+            <Route path='/admin/setting' component={Setting} />
+            <Route path='/admin/categories' component={Categories} />
+            <Route path='/admin/analytics' component={Analytics} />
+            <Route path='/admin/orders' component={Orders} />
+            <Route path='/admin/dashboard' exact component={Dashboard} />
         </Switch>
     )
 }

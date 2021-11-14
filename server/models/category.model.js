@@ -9,6 +9,14 @@ const productCategorySchema = new mongoose.Schema(
     },
     image: {
       type: String
+    },
+    displayOrder: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: Boolean,
+      default: true
     }
   }
 );

@@ -88,4 +88,21 @@ export const topProductsRelate = (productId) => async (dispatch) => {
   } catch (error) {
     dispatch({ type: TOP_PRODUCTS_RELATE_FAIL, payload: error.message })
   }
-}
+};
+
+export const listProductsAdmin = ({
+  pageNumber = '',
+  keyword = ''
+}) => async (dispatch) => {
+  dispatch({
+    type: PRODUCT_LIST_REQUEST,
+  });
+  try {
+    const { data } = await Axios.get(
+      `/v1/products/admin/search?pageNumber=${pageNumber}&keyword=${keyword}`
+    );
+    dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: PRODUCT_LIST_FAIL, payload: error.message });
+  }
+};

@@ -1,7 +1,7 @@
 const sidebar = [
     {
         "display_name": "Dashboard",
-        "route": "/admin",
+        "route": "/admin/dashboard",
         "icon": "bx bx-category-alt"
     },
     {
