@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 
 import { productListReducer, topProductsReducer, topProductsRelateReducer, productDetailReducer } from './reducers/productReducer';
 import { slideListReducer } from './reducers/slideReducer';
-import { userSigninReducer, userListReducer, userDetailsReducer } from './reducers/userReducer';
+import { userSigninReducer, userListReducer, userDetailsReducer, userRegisterReducer, userUpdateProfileReducer } from './reducers/userReducer';
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList } from './reducers/categoryReducers';
 
@@ -21,16 +21,18 @@ const initialState = {
 };
 
 const reducer = combineReducers({
+    slideList: slideListReducer,
     productList: productListReducer,
     productDetail: productDetailReducer,
-    slideList: slideListReducer,
     topProducts: topProductsReducer,
     topProductsRelate: topProductsRelateReducer,
-    userSignin: userSigninReducer,
     cart: cartReducer,
     categoriesList: categoryList,
+    userSignin: userSigninReducer,
     userList: userListReducer,
     userDetail: userDetailsReducer,
+    userRegister: userRegisterReducer,
+    userUpdateProfile: userUpdateProfileReducer,
 
 });
 

@@ -10,6 +10,7 @@ import Intro from '../pages/intro'
 import Contact from '../pages/contact'
 import Login from '../pages/login'
 import Register from '../pages/register'
+import UserProfile from '../pages/userProfile'
 
 const RoutesUser = () => {
     return (
@@ -20,6 +21,7 @@ const RoutesUser = () => {
             <Route path='/contact' component={Contact} />
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
+            <Route path='/my-profile' component={UserProfile} />
 
             <Route path='/catalog/category/:category'
                 exact
@@ -49,7 +51,6 @@ const RoutesUser = () => {
                 exact
                 component={Catalog}
             />
-
 
             <Route path='/' exact component={Home} />
         </Switch>

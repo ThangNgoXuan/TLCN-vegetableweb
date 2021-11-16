@@ -47,7 +47,7 @@ const Categories = () => {
                     </h2>
                 </div>
                 <div className="col-2">
-                    <Link to='/admin/newuser'>
+                    <Link to='/admin/newCategory'>
                         <div className="slide__item">
                             <div className="sidebar__item-inner active flexcenter">
                                 <span>Thêm mới</span>

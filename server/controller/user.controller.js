@@ -24,26 +24,49 @@ const getUsers = async (req, res) => {
 // @desc    Login 
 // @route   Post /v1/user/login
 // @access  Public
-const signinUser = asyncHandler(async (req, res) => {
+// const signinUser = asyncHandler(async (req, res) => {
 
-  const user = await User.findOne({ email: req.body.email });
-  if (user) {
-    if (bcrypt.compareSync(req.body.password, user.password)) {
+//   const user = await User.findOne({ email: req.body.email });
+//   if (user) {
+//     if (await user.matchPassword(req.body.password)) {
+//       res.json({
+//         _id: user._id,
+//         name: user.name,
+//         email: user.email,
+//         token: generateToken(user._id),
+//       })
+//     } else {
+//       res.status(401);
+//       throw new Error('Sai mật khẩu!');
+//     }
+//   } else {
+//     res.status(401);
+//     res.send('Email bạn nhập không chính xác')
+//     throw new Error('Email bạn nhập không chính xác!');
+//   }
+// });
+
+const signinUser = async (req, res) => {
+  try {
+
+    const user = await User.findOne({ email: req.body.email });
+
+    if (user && await user.matchPassword(req.body.password)) {
       res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
         token: generateToken(user._id),
       })
-      console.log(user.name)
+    } else {
+      res.status(401);
+      throw new Error('Sai tài khoản hoặc mật khẩu');
     }
-    res.status(401);
-    throw new Error('Sai mật khẩu!');
-  } else {
-    res.status(401);
-    throw new Error('Email bạn nhập không chính xác!');
+
+  } catch (error) {
+    res.send({ message: error.message });
   }
-});
+};
 
 const googleLogin = asyncHandler(async (req, res) => {
   const { token, ggId } = req.body;
@@ -95,7 +118,7 @@ const googleLogin = asyncHandler(async (req, res) => {
 });
 
 // @desc    Register a new user
-// @route   POST /v1/user
+// @route   POST /v1/user/register
 // @access  Public
 const registUser = async (req, res) => {
   //const { email, password } = req.body;
@@ -147,6 +170,8 @@ const getUserProfile = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        phone: user.phone,
+        address: user.address,
         role: user.role
       });
     }
@@ -155,7 +180,7 @@ const getUserProfile = async (req, res) => {
       throw new Error('User not found!');
     };
   } catch (error) {
-    res.send({ message: error.message });
+    res.json({ message: error.message });
   }
 }
 
@@ -183,6 +208,8 @@ const updateUserProfile = async (req, res) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      phone: user.phone,
+      address: user.address,
       role: updatedUser.role,
     });
   } catch (error) {
@@ -247,6 +274,8 @@ const updateUser = async (req, res) => {
       user.name = req.body.name;
       user.email = req.body.email;
       user.role = req.body.role;
+      user.phone = req.body.phone;
+      user.address = req.body.address;
 
       const updatedUser = await user.save();
 
@@ -254,6 +283,8 @@ const updateUser = async (req, res) => {
         _id: updatedUser._id,
         name: updatedUser.name,
         email: updatedUser.email,
+        phone: user.phone,
+        address: user.address,
         role: updatedUser.role,
       });
     } else {

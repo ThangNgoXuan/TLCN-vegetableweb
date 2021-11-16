@@ -10,7 +10,7 @@ import RoutesUser from '../customRouter/RoutersUser';
 
 const Layoutuser = () => {
     return (
-        <BrowserRouter  >
+        <BrowserRouter>
             <Route render={props => (
                 <div>
                     <Header {...props} />

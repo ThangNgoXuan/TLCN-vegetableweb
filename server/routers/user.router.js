@@ -16,9 +16,12 @@ router.route('/:id')
   .put(userController.updateUser)
   .delete(userController.deleteUser)
 
+router.route('/register')
+  .post(userController.registUser);
+
+
 router.route('/')
   .get(userController.getUsers)
-  .post(userController.registUser);
 
 
 export const userRouter = router;
