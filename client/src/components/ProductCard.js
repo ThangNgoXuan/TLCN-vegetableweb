@@ -7,7 +7,9 @@ import numberWithCommas from '../utils/numberWithCommas'
 
 const ProductCard = props => {
 
+    const price = props.discount ? (props.price - props.discount * props.price) : props.price;
     return (
+
         <div className="product-card">
             <Link to={`/product/${props._id}`}>
                 <div className="product-card__image">
@@ -17,9 +19,9 @@ const ProductCard = props => {
                 <h3 className="product-card__name">{props.name}</h3>
                 <div className="product-card__price">
                     {/* {numberWithCommas(props.price)} */}
-                    {props.price}
+                    {numberWithCommas(price)}đ
                     <span className="product-card__price__old">
-                        <del>{numberWithCommas(399000)}</del>
+                        <del>{numberWithCommas(props.price)}đ</del>
                     </span>
                 </div>
             </Link>

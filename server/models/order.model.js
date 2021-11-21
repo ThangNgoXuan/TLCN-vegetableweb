@@ -15,9 +15,11 @@ const orderSchema = mongoose.Schema(
           required: true,
           ref: 'Product',
         },
+        price: { type: Number, required: true },
+        discount: { type: Number, default: 0 }
       },
     ],
-    name: {
+    title: {
       type: String,
       required: true,
       trim: true
@@ -35,11 +37,12 @@ const orderSchema = mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
+      default: 'COD'
     },
     paymentResult: {
       id: { type: String },
       status: { type: String },
-      update_time: { type: String },
+      update_time: { type: Date },
       email_address: { type: String },
     },
     totalPrice: {

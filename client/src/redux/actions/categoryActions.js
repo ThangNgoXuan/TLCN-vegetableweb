@@ -1,6 +1,9 @@
 import Axios from 'axios';
 import {
   CATEGORY_LIST_SUCCESS, CATEGORY_LIST_REQUEST, CATEGORY_LIST_FAIL,
+  CATEGORY_ADD_REQUEST, CATEGORY_ADD_SUCCESS, CATEGORY_ADD_FAIL,
+  CATEGORY_UPDATE_FAIL, CATEGORY_UPDATE_REQUEST, CATEGORY_UPDATE_SUCCESS,
+  CATEGORY_DELETE_REQUEST, CATEGORY_DELETE_SUCCESS, CATEGORY_DELETE_FAIL,
 
 } from "../constants/categoryConstants";
 
@@ -17,5 +20,64 @@ export const categoryAction = () => async (dispatch) => {
         ? error.response.data.message
         : error.message;
     dispatch({ type: CATEGORY_LIST_FAIL, payload: message })
+  }
+}
+
+export const addCategoryAction = (category) => async (dispatch, getState) => {
+  dispatch({ type: CATEGORY_ADD_REQUEST })
+  const {
+    userSignin: { userInfo }
+  } = getState();
+
+  try {
+    const { data } = await Axios.post(`/v1/category/${category._id}`, category, {
+      headers: { Authorization: `Bearer ${userInfo.token}` }
+    });
+
+    dispatch({ type: CATEGORY_ADD_SUCCESS, payload: data })
+  } catch (error) {
+    const message = error.response && error.response.data.message ? error.response.data.message : error.message;
+    dispatch({ type: CATEGORY_ADD_FAIL, payload: message })
+  }
+}
+
+export const updateCategoryAction = (category) => async (dispatch, getState) => {
+  dispatch({ type: CATEGORY_UPDATE_REQUEST, payload: category })
+  const {
+    userSignin: { userInfo }
+  } = getState()
+  try {
+    const { data } = await Axios.put(`/v1/category/${category._id}`, category, {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    })
+    dispatch({ type: CATEGORY_UPDATE_SUCCESS, payload: data })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+
+    dispatch({ type: CATEGORY_UPDATE_FAIL, payload: message })
+  }
+}
+
+export const deleteCategoryAction = (id) => async (dispatch, getState) => {
+  dispatch({ type: CATEGORY_DELETE_REQUEST })
+  const { userSignin: { userInfo } } = getState();
+
+  try {
+    const { data } = await Axios.delete(`/v1/category/${id}`, {
+      headers: { Authorization: `Bearer ${userInfo.token}` }
+    })
+    dispatch({ type: CATEGORY_DELETE_SUCCESS })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+
+    dispatch({ type: CATEGORY_DELETE_FAIL, payload: message })
   }
 }

@@ -10,7 +10,7 @@ import Categories from '../pages/admin/categories'
 import Analytics from '../pages/admin/analytics'
 import Orders from '../pages/admin/orders'
 import NewProduct from '../pages/admin/newproduct'
-import newCategory from '../pages/admin/newCategory'
+import NewCategory from '../pages/admin/NewCategory'
 
 const RouterAdmin = () => {
     return (
@@ -25,7 +25,7 @@ const RouterAdmin = () => {
             <Route path='/admin/analytics' component={Analytics} />
             <Route path='/admin/orders' component={Orders} />
             <Route path='/admin/dashboard' exact component={Dashboard} />
-            <Route path='/admin/newCategory' exact component={newCategory} />
+            <Route path='/admin/newCategory' exact component={NewCategory} />
         </Switch>
     )
 }

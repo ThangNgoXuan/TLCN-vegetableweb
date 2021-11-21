@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 import '../styles/index.scss'
 
@@ -10,20 +10,17 @@ import RoutesUser from '../customRouter/RoutersUser';
 
 const Layoutuser = () => {
     return (
-        <BrowserRouter>
-            <Route render={props => (
-                <div>
-                    <Header {...props} />
-                    <div className="container">
-                        <div className="main">
-                            <RoutesUser />
-                        </div>
+        <Route render={props => (
+            <div>
+                <Header {...props} />
+                <div className="container">
+                    <div className="main">
+                        <RoutesUser />
                     </div>
-                    <Footer />
-                    {/* <ProductViewModal /> */}
                 </div>
-            )} />
-        </BrowserRouter >
+                <Footer />
+            </div>
+        )} />
     );
 }
 

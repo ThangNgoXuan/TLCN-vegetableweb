@@ -35,12 +35,14 @@ const userSchema = mongoose.Schema(
       required: true,
       default: 'user'
     },
+    status: {
+      type: Boolean,
+      default: true,
+      required: true
+    },
     googleId: {
       type: String,
     },
-    passwordReset: {
-      type: String,
-    }
   },
   {
     timestamps: true,
