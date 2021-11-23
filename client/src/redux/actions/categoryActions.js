@@ -4,6 +4,7 @@ import {
   CATEGORY_ADD_REQUEST, CATEGORY_ADD_SUCCESS, CATEGORY_ADD_FAIL,
   CATEGORY_UPDATE_FAIL, CATEGORY_UPDATE_REQUEST, CATEGORY_UPDATE_SUCCESS,
   CATEGORY_DELETE_REQUEST, CATEGORY_DELETE_SUCCESS, CATEGORY_DELETE_FAIL,
+  CATEGORY_DETAILS_FAIL, CATEGORY_DETAILS_SUCCESS, CATEGORY_DETAILS_REQUEST,
 
 } from "../constants/categoryConstants";
 
@@ -80,4 +81,26 @@ export const deleteCategoryAction = (id) => async (dispatch, getState) => {
 
     dispatch({ type: CATEGORY_DELETE_FAIL, payload: message })
   }
-}
+};
+
+export const detailCategoryAction = (id) => async (dispatch, getState) => {
+  dispatch({ type: CATEGORY_DETAILS_REQUEST })
+  const {
+    userSignin: { userInfo }
+  } = getState()
+  try {
+    const { data } = await Axios.get(`/v1/category/${id}`, {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    })
+    dispatch({ type: CATEGORY_DETAILS_SUCCESS, payload: data })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+
+    dispatch({ type: CATEGORY_DETAILS_FAIL, payload: message })
+  }
+};

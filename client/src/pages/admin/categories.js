@@ -24,7 +24,7 @@ const renderBody = (item, index) => (
         <td>{item.image}</td>
         <td>{item.name}</td>
         <td>{item.status + ''}</td>
-        <td>chưa có</td>
+        <td><Link to={`/admin/categories/${item._id}`} ><i class="bx bx-cog"></i></Link> </td>
         <td>chưa có</td>
     </tr>
 )

@@ -6,6 +6,7 @@ import { categoryRouter } from './category.route.js';
 import { uploadsRouter } from './upload.route.js';
 import { orderRouter } from './order.route.js';
 
+
 const router = express.Router();
 
 router.use('/user', userRouter);

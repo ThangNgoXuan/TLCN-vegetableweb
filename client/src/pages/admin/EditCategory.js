@@ -1,10 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-const NewCategory = ({ match, history }) => {
+import { updateCategoryAction, detailCategoryAction } from '../../redux/actions/categoryActions'
+
+
+const EditCategory = ({ match, history }) => {
 
   const categoryId = match.params.id;
+
+  const categoryDetail = useSelector(state => state.detailCategory)
+  const { loading, error, category } = categoryDetail;
+
+  const updateCategory = useSelector(state => state.updateCategory)
+  const { loading: loadingUpdate, error: erorUpdate, success } = updateCategory;
 
   const [name, setName] = useState('')
   const [image, setImage] = useState('')
@@ -14,6 +23,18 @@ const NewCategory = ({ match, history }) => {
   const [uploading, setUploading] = useState(false)
 
   const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (!category) {
+      dispatch(detailCategoryAction(categoryId))
+    } else {
+      setName(category.name)
+      setImage(category.image)
+      setPath(category.path)
+      setDisplayOrder(category.displayOrder)
+      setStatus(category.status)
+    }
+  }, [dispatch, categoryId, category])
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0]
@@ -40,31 +61,43 @@ const NewCategory = ({ match, history }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch()
+    dispatch(updateCategoryAction({
+      _id: category._id,
+      name,
+      status,
+      displayOrder,
+      image,
+      path,
+    }))
   }
 
   return (
     <div>
-      <h2 className="page-header">New user</h2>
+      <h2 className="page-header">Chỉnh sửa danh mục</h2>
       <div className="row">
         <div className="col-10">
           <div className="card full-height">
+            {loadingUpdate && <div>Cập nhật...</div>}
+            {erorUpdate && <div>{erorUpdate}</div>}
+            {loading && <div>Loading...</div>}
+            {error && <div>{error}</div>}
             <form action="" className="userUpdateForm" onSubmit={handleSubmit}>
               <div className="userUpdateLeft">
                 <div className="userUpdateItem">
-                  <label>Tên</label>
+                  <label>Tên danh mục</label>
                   <input
                     type="text"
                     placeholder="Rau củ quả"
                     className="userUpdateInput"
                     onChange={e => setName(e.target.value)}
+                    value={name}
                   />
                 </div>
                 <div className="userUpdateItem">
                   <label>Trạng thái</label>
-                  <select onChange={e => setStatus(e.target.value)}>
+                  <select defaultValue={status} onChange={e => setStatus(e.target.value)}>
                     <option value='true'>Hiển thị</option>
-                    <option value='false'>Ẩn đi</option>
+                    <option value='false' >Ẩn đi</option>
                   </select>
                 </div>
                 <div className="userUpdateItem">
@@ -74,10 +107,12 @@ const NewCategory = ({ match, history }) => {
                     placeholder="VD: 1"
                     className="userUpdateInput"
                     onChange={e => setDisplayOrder(e.target.value)}
+                    value={displayOrder}
                   />
                 </div>
                 <div className="userUpdateItem">
                   <label>Hình ảnh</label>
+                  <img src={image} alt="hình ảnh" />
                   <input
                     type="text"
                     placeholder="Nhập url hình ảnh"
@@ -85,24 +120,14 @@ const NewCategory = ({ match, history }) => {
                     value={image}
                     onChange={e => setImage(e.target.value)}
                   />
+                  <div>Tải hình ảnh từ máy tính</div>
                   <input type="file" id="file"
                     onChange={uploadFileHandler}
                   />
                   {uploading && <div>Loading...</div>}
                 </div>
-                <button className="userUpdateButton">Tạo</button>
+                <button className="userUpdateButton">Lưu</button>
               </div>
-              {/* <div className="userUpdateLeft">
-                  <div className="userUpdateItem">
-                    <label>Username</label>
-                    <input
-                      type="text"
-                      placeholder="Thang Ngo"
-                      className="userUpdateInput"
-                    />
-                  </div>
-                </div> */}
-
             </form>
           </div>
         </div>
@@ -111,5 +136,5 @@ const NewCategory = ({ match, history }) => {
   )
 }
 
-export default NewCategory
+export default EditCategory
 

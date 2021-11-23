@@ -1,6 +1,6 @@
 import * as c from '../constants/brandConstants'
 
-export const productDetailReducer = (state = { loading: true, product: {} }, action) => {
+export const brandDetailReducer = (state = { loading: true, product: {} }, action) => {
   switch (action.type) {
     case c.BRAND_DETAILS_REQUEST:
       return { loading: true }
@@ -13,7 +13,7 @@ export const productDetailReducer = (state = { loading: true, product: {} }, act
   }
 };
 
-export const productCreateReducer = (state = {}, action) => {
+export const brandCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case c.BRAND_CREATE_REQUEST:
       return { loading: true };
@@ -27,7 +27,7 @@ export const productCreateReducer = (state = {}, action) => {
       return state;
   }
 };
-export const productUpdateReducer = (state = {}, action) => {
+export const brandUpdateReducer = (state = {}, action) => {
   switch (action.type) {
     case c.BRAND_UPDATE_REQUEST:
       return { loading: true };
@@ -41,7 +41,7 @@ export const productUpdateReducer = (state = {}, action) => {
       return state;
   }
 };
-export const productDeleteReducer = (state = {}, action) => {
+export const brandDeleteReducer = (state = {}, action) => {
   switch (action.type) {
     case c.BRAND_DELETE_REQUEST:
       return { loading: true };
@@ -57,7 +57,7 @@ export const productDeleteReducer = (state = {}, action) => {
 };
 
 
-export const productListReducer = (
+export const brandListReducer = (
   state = { loading: true, products: [] },
   action
 ) => {
