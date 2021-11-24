@@ -9,6 +9,7 @@ import { slideListReducer } from './reducers/slideReducer';
 import { userSigninReducer, userListReducer, userDetailsReducer, userRegisterReducer, userUpdateProfileReducer } from './reducers/userReducer';
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList, addCategoryReducer, updateCategoryReducer, deleteCategoryReducer, detailCategoryReducer } from './reducers/categoryReducers';
+import { brandListReducer, brandCreateReducer, brandDeleteReducer, brandUpdateReducer, brandDetailReducer } from './reducers/brandReducer';
 
 const initialState = {
     userSignin: {
@@ -47,6 +48,12 @@ const reducer = combineReducers({
     updateCategory: updateCategoryReducer,
     deleteCategory: deleteCategoryReducer,
     detailCategory: detailCategoryReducer,
+
+    brandsList: brandListReducer,
+    addBrand: brandCreateReducer,
+    updateBrand: brandUpdateReducer,
+    deleteBrand: brandDeleteReducer,
+    detailBrand: brandDetailReducer,
 
 });
 

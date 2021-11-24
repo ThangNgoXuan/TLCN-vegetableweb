@@ -5,30 +5,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import Table from '../../components/admin/Table'
 import { categoryAction } from '../../redux/actions/categoryActions'
 
-const tableHead = [
-    'STT',
-    'Thứ tự hiển thị',
-    'Hình ảnh',
-    'Tên',
-    'Trạng thái',
-    'Sửa',
-    'Xóa',
-]
-
-const renderHead = (item, index) => <th key={index}>{item}</th>
-
-const renderBody = (item, index) => (
-    <tr key={index}>
-        <td>{index}</td>
-        <td>{item.displayOrder}</td>
-        <td>{item.image}</td>
-        <td>{item.name}</td>
-        <td>{item.status + ''}</td>
-        <td><Link to={`/admin/categories/${item._id}`} ><i class="bx bx-cog"></i></Link> </td>
-        <td>chưa có</td>
-    </tr>
-)
-
 const Categories = () => {
     const dispatch = useDispatch();
     const categoriesList = useSelector(state => state.categoriesList)
@@ -37,6 +13,31 @@ const Categories = () => {
     useEffect(() => {
         dispatch(categoryAction())
     }, [dispatch])
+
+    const tableHead = [
+        'STT',
+        'Thứ tự hiển thị',
+        'Hình ảnh',
+        'Tên',
+        'Trạng thái',
+        'Sửa',
+        'Xóa',
+    ]
+
+    const renderHead = (item, index) => <th key={index}>{item}</th>
+
+    const renderBody = (item, index) => (
+        <tr key={index}>
+            <td>{index}</td>
+            <td>{item.displayOrder}</td>
+            <td><img src={item.image} alt="ảnh" /></td>
+            <td>{item.name}</td>
+            <td>{item.status + ''}</td>
+            <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+            <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bx-trash'></i></Link></td>
+        </tr>
+    )
+
 
     return (
         <div>

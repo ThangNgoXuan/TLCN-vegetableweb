@@ -69,4 +69,41 @@ export const deleteBrandAction = (id) => async (dispatch, getState) => {
         : error.message
     dispatch({ type: b.BRAND_DELETE_FAIL, payload: message })
   }
-}
+};
+export const listBrandAction = () => async (dispatch) => {
+  dispatch({ type: b.BRAND_LIST_REQUEST });
+
+  try {
+    const { data } = await Axios.get('/v1/brand');
+    dispatch({ type: b.BRAND_LIST_SUCCESS, payload: data })
+
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: b.BRAND_LIST_FAIL, payload: message })
+  }
+};
+
+export const detailBrandAction = (id) => async (dispatch, getState) => {
+  dispatch({ type: b.BRAND_DETAILS_REQUEST })
+  const {
+    userSignin: { userInfo }
+  } = getState()
+  try {
+    const { data } = await Axios.get(`/v1/brand/${id}`, {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`
+      }
+    })
+    dispatch({ type: b.BRAND_DETAILS_SUCCESS, payload: data })
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+
+    dispatch({ type: b.BRAND_DETAILS_FAIL, payload: message })
+  }
+};

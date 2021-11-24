@@ -5,6 +5,7 @@ import { slideRouter } from './slide.route.js';
 import { categoryRouter } from './category.route.js';
 import { uploadsRouter } from './upload.route.js';
 import { orderRouter } from './order.route.js';
+import { brandRouter } from './brand.router.js';
 
 
 const router = express.Router();
@@ -20,6 +21,8 @@ router.use('/category', categoryRouter);
 router.use('/upload', uploadsRouter);
 
 router.use('/order', orderRouter);
+
+router.use('/brand', brandRouter);
 
 export const apiv1 = router;
 

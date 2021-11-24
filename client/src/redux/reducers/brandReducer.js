@@ -1,11 +1,11 @@
 import * as c from '../constants/brandConstants'
 
-export const brandDetailReducer = (state = { loading: true, product: {} }, action) => {
+export const brandDetailReducer = (state = { loading: true, brand: {} }, action) => {
   switch (action.type) {
     case c.BRAND_DETAILS_REQUEST:
       return { loading: true }
     case c.BRAND_DETAILS_SUCCESS:
-      return { loading: false, product: action.payload }
+      return { loading: false, brand: action.payload }
     case c.BRAND_DETAILS_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -18,7 +18,8 @@ export const brandCreateReducer = (state = {}, action) => {
     case c.BRAND_CREATE_REQUEST:
       return { loading: true };
     case c.BRAND_CREATE_SUCCESS:
-      return { loading: false, success: true, product: action.payload };
+      console.log(action.payload)
+      return { loading: false, success: true, brand: action.payload };
     case c.BRAND_CREATE_FAIL:
       return { loading: false, error: action.payload };
     case c.BRAND_CREATE_RESET:
@@ -58,7 +59,7 @@ export const brandDeleteReducer = (state = {}, action) => {
 
 
 export const brandListReducer = (
-  state = { loading: true, products: [] },
+  state = { loading: true, brands: [] },
   action
 ) => {
   switch (action.type) {
@@ -67,9 +68,7 @@ export const brandListReducer = (
     case c.BRAND_LIST_SUCCESS:
       return {
         loading: false,
-        products: action.payload.products,
-        pages: action.payload.pages,
-        page: action.payload.page,
+        brands: action.payload,
       };
     case c.BRAND_LIST_FAIL:
       return { loading: false, error: action.payload };

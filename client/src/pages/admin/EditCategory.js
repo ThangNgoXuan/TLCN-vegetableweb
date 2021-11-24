@@ -25,7 +25,7 @@ const EditCategory = ({ match, history }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (!category) {
+    if (!category || category._id !== categoryId) {
       dispatch(detailCategoryAction(categoryId))
     } else {
       setName(category.name)
