@@ -11,17 +11,21 @@ import Contact from '../pages/contact'
 import Login from '../pages/login'
 import Register from '../pages/register'
 import UserProfile from '../pages/userProfile'
+import Order from '../pages/Order'
+import OrderHistory from '../pages/OrderHistory'
 
 const RoutesUser = () => {
     return (
         <Switch>
             <Route path='/product/:id' exact component={Product} />
-            <Route path='/cart/:id?' component={Cart} />
+            <Route path='/cart/:id?' exact component={Cart} />
             <Route path='/intro' component={Intro} />
             <Route path='/contact' component={Contact} />
             <Route path='/login' component={Login} />
             <Route path='/register' component={Register} />
             <Route path='/my-profile' component={UserProfile} />
+            <Route path='/order' exact component={Order} />
+            <Route path='/order-history' exact component={OrderHistory} />
 
             <Route path='/catalog/category/:category'
                 exact

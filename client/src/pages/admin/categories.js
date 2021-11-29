@@ -38,7 +38,6 @@ const Categories = () => {
         </tr>
     )
 
-
     return (
         <div>
             <div className="row">

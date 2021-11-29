@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation, Route } from 'react-router-dom'
 import { userLogOutAction } from '../redux/actions/userAction'
 
-import logo from '../images/logo__txt.PNG'
+import logo from '../images/main-logo.png'
+
 import Search from './Search'
 
 const mainNav = [
@@ -63,7 +64,7 @@ const Header = () => {
         <div className="header" ref={headerRef}>
             <div className="container">
                 <div className="header__logo" style={{ height: '100%' }}>
-                    <img src={logo} alt="#" style={{ width: '180px' }} />
+                    <img src={logo} alt="#" style={{ width: '60px', borderRadius: '50%' }} />
                 </div>
                 <div className="header__menu">
                     <div className="header__menu__mobile-toggle" onClick={menuToggle}>

@@ -54,8 +54,12 @@ const signinUser = async (req, res) => {
     if (user && await user.matchPassword(req.body.password)) {
       res.json({
         _id: user._id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        phone: user.phone,
+        email: user.email,
+        address: user.address,
         token: generateToken(user._id),
       })
     } else {
@@ -75,30 +79,36 @@ const googleLogin = asyncHandler(async (req, res) => {
     idToken: token,
     //audience: process.env
   })
-
+  console.log(ticket)
   if (ticket) {
-    const { email, name, picture } = ticket.payload;
+    const { email, given_name, family_name, picture } = ticket.payload;
     const oldAccount = await User.findOne({ email: email });
     let user;
     if (oldAccount) {
       user = {
         _id: oldAccount._id,
-        name: oldAccount.name,
+        firstName: oldAccount.firstName,
+        lastName: oldAccount.lastName,
         email: oldAccount.email,
         role: oldAccount.role,
+        phone: oldAccount.phone,
+        email: oldAccount.email,
+        address: oldAccount.address
       };
     } else {
 
       const userCreate = await User.create({
-        name,
-        email,
+        firstName: given_name,
+        lastName: family_name,
         googleId: ggId,
-        avatar: picture
+        avatar: picture,
+        email: email
       });
       if (userCreate) {
         user = {
           _id: userCreate._id,
-          name: userCreate.name,
+          firstName: userCreate.firstName,
+          lastName: userCreate.lastName,
           email: userCreate.email,
           role: userCreate.role,
         };
@@ -122,7 +132,8 @@ const googleLogin = asyncHandler(async (req, res) => {
 // @access  Public
 const registUser = async (req, res) => {
   //const { email, password } = req.body;
-  const name = req.body.name;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
   const email = req.body.email;
   const password = req.body.password;
 
@@ -138,7 +149,8 @@ const registUser = async (req, res) => {
 
   try {
     const userCreate = await User.create({
-      name,
+      firstName,
+      lastName,
       email,
       password
     });
@@ -146,7 +158,8 @@ const registUser = async (req, res) => {
     if (userCreate) {
       res.status(HttpStatusCode.CREATED_SUCCESS).json({
         _id: userCreate._id,
-        name: userCreate.name,
+        firstName: userCreate.firstName,
+        lastName: userCreate.lastName,
         email: userCreate.email,
         role: userCreate.role
       });
@@ -168,7 +181,8 @@ const getUserProfile = async (req, res) => {
     if (user) {
       res.json({
         _id: user._id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         phone: user.phone,
         address: user.address,
@@ -207,6 +221,8 @@ const updateUserProfile = async (req, res) => {
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
       email: updatedUser.email,
       phone: user.phone,
       address: user.address,
@@ -271,7 +287,8 @@ const updateUser = async (req, res) => {
         throw new Error('Email này đã được sử dụng!');
       }
 
-      user.name = req.body.name;
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
       user.email = req.body.email;
       user.role = req.body.role;
       user.phone = req.body.phone;
@@ -281,7 +298,8 @@ const updateUser = async (req, res) => {
 
       res.json({
         _id: updatedUser._id,
-        name: updatedUser.name,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
         email: updatedUser.email,
         phone: user.phone,
         address: user.address,

@@ -27,7 +27,7 @@ const updateBrand = asyncHandler(async (req, res) => {
   if (brand) {
     brand.name = name;
 
-    const updatedBrand = await Brand.save();
+    const updatedBrand = await brand.save();
     res.json(updatedBrand);
   } else {
     res.status(404)

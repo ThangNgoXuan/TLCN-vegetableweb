@@ -62,6 +62,7 @@ export const deleteBrandAction = (id) => async (dispatch, getState) => {
     const { data } = await Axios.delete(`/v1/brand/${id}`, config)
 
     dispatch({ type: b.BRAND_DELETE_SUCCESS, payload: data });
+    dispatch(listBrandAction());
   } catch (error) {
     const message =
       error.response && error.response.data.message

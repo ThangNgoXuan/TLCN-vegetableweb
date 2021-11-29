@@ -9,7 +9,7 @@ const orderSchema = mongoose.Schema(
     },
     orderItems: [
       {
-        qty: { type: Number, required: true },
+        quantity: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
@@ -19,7 +19,17 @@ const orderSchema = mongoose.Schema(
         discount: { type: Number, default: 0 }
       },
     ],
-    title: {
+    firstName: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    mail: {
       type: String,
       required: true,
       trim: true
@@ -40,10 +50,11 @@ const orderSchema = mongoose.Schema(
       default: 'COD'
     },
     paymentResult: {
-      id: { type: String },
-      status: { type: String },
-      update_time: { type: Date },
-      email_address: { type: String },
+      type: Boolean,
+      default: false
+    },
+    paidAt: {
+      type: Date,
     },
     totalPrice: {
       type: Number,
@@ -54,12 +65,10 @@ const orderSchema = mongoose.Schema(
       type: String,
       trim: true
     },
-    paidAt: {
-      type: Date,
-    },
     status: {
       type: String,
-      required: true
+      required: true,
+      default: 'pending'
     }
   },
   {

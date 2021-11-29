@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Table from '../../components/admin/Table'
-import { listBrandAction } from '../../redux/actions/brandActions'
+import { listBrandAction, deleteBrandAction } from '../../redux/actions/brandActions'
 
 const Brands = () => {
   const dispatch = useDispatch();
@@ -29,11 +29,16 @@ const Brands = () => {
       <td>{index}</td>
       <td>{item._id}</td>
       <td>{item.name}</td>
-      <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
-      <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bx-trash'></i></Link></td>
+      <td><Link to={`/admin/brand/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+      <td><button onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></button></td>
     </tr>
   )
 
+  const handleDelete = (id) => {
+    if (window.confirm('Bạn có muốn xóa thương hiệu này không?')) {
+      dispatch(deleteBrandAction(id));
+    }
+  }
 
   return (
     <div>

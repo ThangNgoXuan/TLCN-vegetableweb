@@ -7,7 +7,7 @@ const NewBrand = ({ match, history }) => {
 
   const [name, setName] = useState('')
   const brandCreate = useSelector(state => state.addBrand);
-  const { loading: loadingCreate, error: errorCreate, brand: createdBrand } = brandCreate;
+  const { loading: loadingCreate, error: errorCreate, success: createdBrand } = brandCreate;
 
   const dispatch = useDispatch()
 

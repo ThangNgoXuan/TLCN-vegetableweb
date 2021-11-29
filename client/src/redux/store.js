@@ -10,6 +10,7 @@ import { userSigninReducer, userListReducer, userDetailsReducer, userRegisterRed
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList, addCategoryReducer, updateCategoryReducer, deleteCategoryReducer, detailCategoryReducer } from './reducers/categoryReducers';
 import { brandListReducer, brandCreateReducer, brandDeleteReducer, brandUpdateReducer, brandDetailReducer } from './reducers/brandReducer';
+import { findUserOrderReducer } from './reducers/orderReducer';
 
 const initialState = {
     userSignin: {
@@ -54,6 +55,8 @@ const reducer = combineReducers({
     updateBrand: brandUpdateReducer,
     deleteBrand: brandDeleteReducer,
     detailBrand: brandDetailReducer,
+
+    myOrders: findUserOrderReducer,
 
 });
 

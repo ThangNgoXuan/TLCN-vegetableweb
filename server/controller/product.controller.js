@@ -13,6 +13,7 @@ const getProducts = asyncHandler(async (req, res) => {
   const certification = req.query.certificate || '';
   const protype = req.query.protype || '';
   const order = req.query.order || '';
+  const brand = req.query.brand || '';
   const min =
     req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
   const max =
@@ -20,6 +21,7 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
   const categoryFilter = category ? { category } : {};
+  const brandFilter = brand ? { brand } : {};
   const certificationFilter = certification ? { certification: { $regex: certification, $options: 'i' } } : {};
   const protypeFilter = protype ? { protype } : {};
   const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
@@ -31,6 +33,7 @@ const getProducts = asyncHandler(async (req, res) => {
         : { _id: -1 };
 
   const count = await Product.count({
+    ...categoryFilter,
     ...nameFilter,
     ...categoryFilter,
     ...certificationFilter,
@@ -44,6 +47,7 @@ const getProducts = asyncHandler(async (req, res) => {
     ...priceFilter,
     ...certificationFilter,
   })
+    .populate('brand')
     .sort(sortOrder)
     .skip(pageSize * (page - 1))
     .limit(pageSize);
@@ -73,15 +77,20 @@ const getProductsAdmin = asyncHandler(async (req, res) => {
         }
       },
       {
-        brand: {
+        description: {
           $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        certification: {
+          $regex: keyword,
+          $options: "$i"
         }
       },
 
     ]
   } : {}
-
-  console.log(keyword)
 
   const count = await Product.count({
     ...searchFilter
@@ -91,6 +100,7 @@ const getProductsAdmin = asyncHandler(async (req, res) => {
     ...searchFilter
   })
     .populate({ path: 'category', select: 'name' })
+    .populate({ path: 'brand', select: 'name' })
     .populate({ path: 'creator', select: 'name' })
     .skip(pageSize * (page - 1))
     .limit(pageSize);
@@ -107,7 +117,10 @@ const getProductsAdmin = asyncHandler(async (req, res) => {
 // @route   GET /v1/products/:id
 // @access  Public
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id)
+    .populate({ path: 'category', select: 'name' })
+    .populate({ path: 'brand', select: 'name' })
+    .populate({ path: 'creator', select: 'name' })
 
   if (product) {
     res.json(product);
@@ -172,6 +185,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.qtyInStock = req.body.qtyInStock;
     product.certification = req.body.certification;
     product.protype = req.body.protype;
+    product.sold = req.body.sold;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -203,7 +217,8 @@ const searchProduct = asyncHandler(async (req, res) => {
 //@route  get /v1/products/top-product
 //@access public
 const getTopProduct = asyncHandler(async (req, res) => {
-  const products = await Product.find().sort({ sold: -1 }).limit(8)
+  const products = await Product.find()
+    .populate('category', 'id name').populate('brand').sort({ sold: -1 }).limit(8)
 
   if (products) {
     res.json(products);
@@ -222,7 +237,9 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    const products = await Product.find({ category: product.category }).sort({ sold: -1 }).limit(6)
+    const products = await Product.find({ category: product.category })
+      .populate('category', 'id name').populate('brand')
+      .sort({ sold: -1 }).limit(6)
     if (products) {
       res.send({ products });
     } else {
@@ -232,7 +249,29 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
     throw new Error('Không tìm thấy sản phẩm liên quan');
   }
 
-})
+});
+
+export const updateProductQuantity = async (orderItems) => {
+  if (orderItems) {
+
+    for (let i = 0; i < orderItems.length; i++) {
+      let product = await Product.findById(orderItems[i].product)
+
+      if (orderItems.quantity > product.qtyInStock) {
+        throw new Error(`${product.name} không có đủ số lượng bạn yêu cầu`)
+      }
+    }
+    for (let i = 0; i < orderItems.length; i++) {
+      let product = await Product.findById(orderItems[i].product)
+      let newQty = product.qtyInStock - orderItems[i].quantity;
+      product.qtyInStock = newQty
+      product.sold += newQty
+      await product.save();
+    }
+    console.log('update product ok')
+
+  }
+}
 
 export const productController = {
   searchProduct,

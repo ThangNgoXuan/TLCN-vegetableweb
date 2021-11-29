@@ -1,9 +1,10 @@
-import { orderController } from '../controller/order.controller.js'
 import express from 'express'
+import { orderController } from '../controller/order.controller.js'
 
 const router = express.Router();
 
-router.route('/myOrder').get(orderController.getMyOrders);
+router.route('/myOrder/:id').get(orderController.getMyOrders);
+router.route('/sendmail').post(orderController.sendMailOrder);
 router.route('/:id').get(orderController.getOrderById)
 router.route('/')
   .get(orderController.getOrders)

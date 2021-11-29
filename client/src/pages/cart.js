@@ -18,6 +18,8 @@ const Cart = (props) => {
         : 1;
     const cart = useSelector((state) => state.cart);
     const { cartItems, error } = cart;
+    const userSignin = useSelector(state => state.userSignin);
+    const { userInfo } = userSignin;
 
     let itemCount = (cartItems && cartItems.length) || 0;
 
@@ -51,6 +53,15 @@ const Cart = (props) => {
             dispatch(addToCart(productId, qty - 1 === 0 ? 1 : qty - 1))
         }
     }
+    const checkoutHandler = () => {
+        if (userInfo != null) {
+            props.history.push('/order');
+        }
+        else {
+            props.history.push('/login?redirect=order');
+        }
+
+    }
 
     return (
 
@@ -66,9 +77,10 @@ const Cart = (props) => {
                         </div>
                     </div>
                     <div className="cart__info__btn">
-                        <Button size="block">
+                        <Button onClick={checkoutHandler} size="block">
                             Đặt hàng
                         </Button>
+
                         <Link to="/catalog">
                             <Button size="block">
                                 Tiếp tục mua hàng

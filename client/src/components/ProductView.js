@@ -8,6 +8,8 @@ import { addToCart } from '../redux/actions/cartActions'
 
 import Button from './Button'
 import numberWithCommas from '../utils/numberWithCommas'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductView = props => {
 
@@ -51,7 +53,7 @@ const ProductView = props => {
 
     const handleAddToCart = () => {
         if (dispatch(addToCart(product._id, quantity))) {
-            alert('Đã thêm vào giỏ hàng')
+            toast.success("Đã thêm vào giỏ hàng");
         }
     }
 
@@ -61,14 +63,27 @@ const ProductView = props => {
 
     return (
         <div className="product">
+            <ToastContainer
+                position="top-left"
+                autoClose={1200}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             <div className="product__images">
                 <div className="product__images__list">
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.images[0])}>
-                        <img src={product.images[0]} alt="" />
-                    </div>
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.images[1])}>
-                        <img src={product.images[1]} alt="" />
-                    </div>
+                    {
+                        product.images.map(item => (
+                            <div className="product__images__list__item" onClick={() => setPreviewImg(item)}>
+                                <img src={item} alt="" />
+                            </div>
+
+                        ))
+                    }
                 </div>
                 <div className="product__images__main">
                     <img src={previewImg} alt="" />

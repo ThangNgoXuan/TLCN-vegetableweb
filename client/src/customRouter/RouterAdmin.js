@@ -14,6 +14,7 @@ import NewCategory from '../pages/admin/NewCategory'
 import EditCategory from '../pages/admin/EditCategory'
 import Brand from '../pages/admin/Brands'
 import NewBrand from '../pages/admin/NewBrand'
+import EditBrand from '../pages/admin/EditBrand'
 
 const RouterAdmin = () => {
     return (
@@ -24,13 +25,14 @@ const RouterAdmin = () => {
             <Route path='/admin/newuser' component={NewUser} />
             <Route path='/admin/user' component={User} />
             <Route path='/admin/setting' component={Setting} />
-            <Route path='/admin/categories/:id' component={EditCategory} />
+            <Route path='/admin/categories/:id' exact component={EditCategory} />
             <Route path='/admin/categories' component={Categories} />
             <Route path='/admin/analytics' component={Analytics} />
             <Route path='/admin/orders' component={Orders} />
             <Route path='/admin/newCategory' exact component={NewCategory} />
             <Route path='/admin/brands' exact component={Brand} />
             <Route path='/admin/newBrand' exact component={NewBrand} />
+            <Route path='/admin/brand/:id' exact component={EditBrand} />
             <Route path='/admin' exact component={Dashboard} />
         </Switch>
     )
