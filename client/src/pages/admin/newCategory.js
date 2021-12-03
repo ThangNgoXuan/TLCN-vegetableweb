@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Axios from 'axios'
 import { useDispatch } from 'react-redux'
+import axios from 'axios';
 
 const NewCategory = ({ match, history }) => {
 
@@ -15,29 +16,23 @@ const NewCategory = ({ match, history }) => {
 
   const dispatch = useDispatch()
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('image', file)
-    setUploading(true)
+  const uploadImage = (e) => {
+    const cloundName = 'dl02ow13v';
+    const uploadPreset = 'oj8a39rm';
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    formData.append("upload_preset", uploadPreset);
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+    console.log(formData)
 
-      const { data } = await Axios.post('/v1/upload/category', formData, config)
+    axios.post(`https://api.cloudinary.com/v1_1/${cloundName}/upload`, formData)
+      .then(res => {
+        setImage(res.data.url)
 
-      setImage(data)
-      setUploading(false)
-    } catch (error) {
-      console.error(error)
-      setUploading(false)
-    }
+      }).catch(error =>
+        console.log(error)
+      )
   }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch()
@@ -78,15 +73,16 @@ const NewCategory = ({ match, history }) => {
                 </div>
                 <div className="userUpdateItem">
                   <label>Hình ảnh</label>
-                  <input
+                  {/* <input
                     type="text"
                     placeholder="Nhập url hình ảnh"
                     className="userUpdateInput"
                     value={image}
                     onChange={e => setImage(e.target.value)}
-                  />
+                  /> */}
+                  <img src={image} alt="Hình ảnh" />
                   <input type="file" id="file"
-                    onChange={uploadFileHandler}
+                    onChange={uploadImage}
                   />
                   {uploading && <div>Loading...</div>}
                 </div>

@@ -2,53 +2,48 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import Table from '../../components/admin/Table'
-import { listBrandAction, deleteBrandAction } from '../../redux/actions/brandActions'
+import { listSlides, deleteSlideAction } from '../../redux/actions/slideAction'
+import Loading from '../../components/Loading'
 
-const Brands = () => {
+const Slides = () => {
   const dispatch = useDispatch();
-  const brandsList = useSelector(state => state.brandsList)
-  const { loading, error, brands } = brandsList
+  const slideList = useSelector(state => state.slideList);
+  const { loading, error, slides } = slideList;
 
   useEffect(() => {
-    dispatch(listBrandAction())
+    dispatch(listSlides())
   }, [dispatch])
 
   const tableHead = [
     'STT',
-    'ID',
+    'Hình ảnh',
     'Tên',
+    'Trạng thái',
     'Sửa',
     'Xóa',
   ]
 
   const renderHead = (item, index) => <th key={index}>{item}</th>
 
-  const renderBody = (item, index) => (
-    <tr key={index}>
-      <td>{index}</td>
-      <td>{item._id}</td>
-      <td>{item.name}</td>
-      <td><Link to={`/admin/brand/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
-      <td><button onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></button></td>
-    </tr>
-  )
-
   const handleDelete = (id) => {
-    if (window.confirm('Bạn có muốn xóa thương hiệu này không?')) {
-      dispatch(deleteBrandAction(id));
+    if (window.confirm('Xác nhận xóa')) {
+      dispatch(deleteSlideAction(id));
     }
   }
 
+  const renderBody = (item, index) => (
+    <tr key={index}>
+      <td>{index + 1}</td>
+      <td><img src={item.image} alt="ảnh" /></td>
+      <td>{item.name}</td>
+      <td>{item.status ? 'Active' : 'Dissable'}</td>
+      <td><Link to={`/admin/slides/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+      <td><div onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></div></td>
+    </tr>
+  )
   return (
     <div>
-      <ToastContainer
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-      />
       <div className="row">
         <div className="col-10">
           <h2 className="page-header">
@@ -56,7 +51,7 @@ const Brands = () => {
           </h2>
         </div>
         <div className="col-2">
-          <Link to='/admin/newBrand'>
+          <Link to='/admin/newSlide'>
             <div className="slide__item">
               <div className="sidebar__item-inner active flexcenter">
                 <span>Thêm mới</span>
@@ -70,14 +65,13 @@ const Brands = () => {
           <div className="card">
             <div className="card__body">
               {
-                loading ? <div>Loading...</div> : error ? <div>{error}</div>
-
-                  : brands.length === 0 ? <div>Không có thương hiệu nào</div> :
+                loading ? <Loading /> : error ? <div>{error}</div>
+                  : slides.length === 0 ? <div>Không có slide nào</div> :
                     <Table
                       limit='10'
                       headData={tableHead}
                       renderHead={(item, index) => renderHead(item, index)}
-                      bodyData={brands}
+                      bodyData={slides}
                       renderBody={(item, index) => renderBody(item, index)}
                     />
               }
@@ -89,4 +83,4 @@ const Brands = () => {
   )
 }
 
-export default Brands
+export default Slides;

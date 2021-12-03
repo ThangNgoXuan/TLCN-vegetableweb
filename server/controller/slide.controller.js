@@ -78,9 +78,24 @@ const createSlide = asyncHandler(async (req, res) => {
   res.status(HttpStatusCode.CREATED_SUCCESS).json(createdSlide);
 });
 
+// @desc    Get  slide 
+// @route   GET /v1/slide/:id
+// @access  Public
+const getSlide = asyncHandler(async (req, res) => {
+  const slide = await Slide.findById(req.params.id);
+
+  if (slide) {
+    res.json(slide);
+  } else {
+    res.status(404)
+    throw new Error('Slide not found!');
+  }
+});
+
 export const slideController = {
   createSlide,
   slides,
   updateSlide,
   deleteSlide,
+  getSlide,
 };

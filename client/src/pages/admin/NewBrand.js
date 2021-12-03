@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addBrandAction } from '../../redux/actions/brandActions'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NewBrand = ({ match, history }) => {
 
@@ -19,13 +21,17 @@ const NewBrand = ({ match, history }) => {
 
   return (
     <div>
+      <ToastContainer
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+      />
       <h2 className="page-header">Thêm thương hiệu mới</h2>
       <div className="row">
         <div className="col-10">
           <div className="card full-height">
             {loadingCreate && <div>Đang tạo...</div>}
             {errorCreate && <div>{errorCreate}</div>}
-            {createdBrand && <div>Tạo thành công</div>}
             <form className="userUpdateForm" onSubmit={handleSubmit}>
               <div className="userUpdateLeft">
                 <div className="userUpdateItem">

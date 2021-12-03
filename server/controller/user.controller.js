@@ -176,6 +176,7 @@ const registUser = async (req, res) => {
 //@route    GET /v1/user/profile/:id
 //@access   private/ user
 const getUserProfile = async (req, res) => {
+
   try {
     const user = await User.findById(req.params.id);// error: nếu truyen ko dung objectid se bi loi
     if (user) {
@@ -186,6 +187,7 @@ const getUserProfile = async (req, res) => {
         email: user.email,
         phone: user.phone,
         address: user.address,
+        avatar: user.avatar,
         role: user.role
       });
     }
@@ -224,12 +226,16 @@ const updateUserProfile = async (req, res) => {
       firstName: updatedUser.firstName,
       lastName: updatedUser.lastName,
       email: updatedUser.email,
-      phone: user.phone,
-      address: user.address,
+      phone: updatedUser.phone,
+      address: updatedUser.address,
+      avatar: updatedUser.avatar,
       role: updatedUser.role,
     });
+    console.log("user update")
+
   } catch (error) {
-    res.send({ message: error.message });
+    res.json({ message: error.message });
+    console.log(error.message)
   }
 }
 

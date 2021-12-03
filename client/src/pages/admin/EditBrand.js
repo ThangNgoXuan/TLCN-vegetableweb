@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { updateBrandAction, detailBrandAction } from '../../redux/actions/brandActions'
 import { BRAND_UPDATE_RESET } from '../../redux/constants/brandConstants'
 
@@ -34,13 +37,17 @@ const EditBrand = ({ match, history }) => {
 
   return (
     <div>
+      <ToastContainer
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+      />
       <h2 className="page-header">Cập nhật thương hiệu</h2>
       <div className="row">
         <div className="col-10">
           <div className="card full-height">
             {loadingUpdate && <div>Đang cập nhật...</div>}
             {errorUpdate && <div>{errorUpdate}</div>}
-            {updatedBrand && <div>Cập nhật thành công</div>}
 
             {loading ? <div>Đang tải dữ liệu...</div> : error ? <div>{error}</div>
 

@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { toast } from 'react-toastify';
 
 import * as b from '../constants/brandConstants'
 
@@ -16,12 +17,14 @@ export const addBrandAction = (brand) => async (dispatch, getState) => {
     const { data } = await Axios.post('/v1/brand', brand, config)
 
     dispatch({ type: b.BRAND_CREATE_SUCCESS, payload: data });
+    toast.success('Thêm thành công')
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message
     dispatch({ type: b.BRAND_CREATE_FAIL, payload: message })
+    toast.error(message)
   }
 };
 
@@ -37,6 +40,7 @@ export const updateBrandAction = (brand) => async (dispatch, getState) => {
     }
 
     const { data } = await Axios.put(`/v1/brand/${brand._id}`, brand, config)
+    toast.success('Cập nhật thành công')
 
     dispatch({ type: b.BRAND_UPDATE_SUCCESS, payload: data });
   } catch (error) {
@@ -45,6 +49,7 @@ export const updateBrandAction = (brand) => async (dispatch, getState) => {
         ? error.response.data.message
         : error.message
     dispatch({ type: b.BRAND_UPDATE_FAIL, payload: message })
+    toast.error('Cập nhật thất bại')
   }
 };
 
@@ -63,12 +68,14 @@ export const deleteBrandAction = (id) => async (dispatch, getState) => {
 
     dispatch({ type: b.BRAND_DELETE_SUCCESS, payload: data });
     dispatch(listBrandAction());
+    toast.success('Xóa thành công')
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message
     dispatch({ type: b.BRAND_DELETE_FAIL, payload: message })
+    toast.error('Xóa thất bại')
   }
 };
 export const listBrandAction = () => async (dispatch) => {

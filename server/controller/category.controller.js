@@ -64,7 +64,7 @@ const createCategory = asyncHandler(async (req, res) => {
   category.name = req.body.name;
 
   const createdCategory = await category.save();
-  res.status(HttpStatusCode.CREATED_SUCCESS).json(createdSlide);
+  res.status(HttpStatusCode.CREATED_SUCCESS).json(createdCategory);
 });
 
 // @desc    Get  category 

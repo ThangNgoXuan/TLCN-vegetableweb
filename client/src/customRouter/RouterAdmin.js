@@ -15,6 +15,9 @@ import EditCategory from '../pages/admin/EditCategory'
 import Brand from '../pages/admin/Brands'
 import NewBrand from '../pages/admin/NewBrand'
 import EditBrand from '../pages/admin/EditBrand'
+import Slides from '../pages/admin/Slides'
+import EditSlide from '../pages/admin/EditSlides'
+import NewSlide from '../pages/admin/NewSlide'
 
 const RouterAdmin = () => {
     return (
@@ -33,6 +36,9 @@ const RouterAdmin = () => {
             <Route path='/admin/brands' exact component={Brand} />
             <Route path='/admin/newBrand' exact component={NewBrand} />
             <Route path='/admin/brand/:id' exact component={EditBrand} />
+            <Route path='/admin/slides' exact component={Slides} />
+            <Route path='/admin/slides/:id' exact component={EditSlide} />
+            <Route path='/admin/newSlide' exact component={NewSlide} />
             <Route path='/admin' exact component={Dashboard} />
         </Switch>
     )

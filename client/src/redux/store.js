@@ -5,7 +5,7 @@ import {
     productListReducer, topProductsReducer, topProductsRelateReducer, productDetailReducer,
     productCreateReducer, productDeleteReducer, productUpdateReducer
 } from './reducers/productReducer';
-import { slideListReducer } from './reducers/slideReducer';
+import { slideListReducer, addSlideReducer, updateSlideReducer, deleteSlideReducer, detailSlideReducer } from './reducers/slideReducer';
 import { userSigninReducer, userListReducer, userDetailsReducer, userRegisterReducer, userUpdateProfileReducer } from './reducers/userReducer';
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList, addCategoryReducer, updateCategoryReducer, deleteCategoryReducer, detailCategoryReducer } from './reducers/categoryReducers';
@@ -26,7 +26,6 @@ const initialState = {
 };
 
 const reducer = combineReducers({
-    slideList: slideListReducer,
 
     productList: productListReducer,
     productDetail: productDetailReducer,
@@ -55,6 +54,12 @@ const reducer = combineReducers({
     updateBrand: brandUpdateReducer,
     deleteBrand: brandDeleteReducer,
     detailBrand: brandDetailReducer,
+
+    slideList: slideListReducer,
+    addSlide: addSlideReducer,
+    updateSlide: updateSlideReducer,
+    deleteSlide: deleteSlideReducer,
+    detailSlide: detailSlideReducer,
 
     myOrders: findUserOrderReducer,
 

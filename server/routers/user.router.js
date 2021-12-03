@@ -6,10 +6,10 @@ const router = express.Router();
 router.route('/login').post(userController.signinUser);
 router.route('/googleLogin').post(userController.googleLogin);
 
+router.route('/profile').put(userController.updateUserProfile);
+
 router.route('/profile/:id')
   .get(userController.getUserProfile);
-
-router.route('/profile').put(userController.updateUserProfile);
 
 router.route('/:id')
   .get(userController.getUserById)

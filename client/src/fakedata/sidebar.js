@@ -31,6 +31,11 @@ const sidebar = [
         "icon": "bx bx-package"
     },
     {
+        "display_name": "Quản lý Slide",
+        "route": "/admin/slides",
+        "icon": "bx bx-package"
+    },
+    {
         "display_name": "Tài khoản admin",
         "route": "/admin/setting",
         "icon": "bx bx-cog"

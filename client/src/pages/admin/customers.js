@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -15,8 +15,8 @@ const customerTableHead = [
     'Email',
     'SĐT',
     'Địa chỉ',
-    'Sửa',
-    'Xóa'
+    'Trạng thái',
+    'chỉnh sửa',
 ]
 
 const renderHead = (item, index) => <th key={index}>{item}</th>
@@ -30,8 +30,11 @@ const renderBody = (item, index) => (
         <td>{item.email}</td>
         <td>{item.phone}</td>
         <td>{item.address}</td>
-        <td>chưa làm</td>
-        <td>chưa làm</td>
+        <td>{item.status ? 'Hoạt động' : 'Đang khóa'}</td>
+        <td><select>
+            <option value="false">Block</option>
+            <option value="true">Active</option>
+        </select></td>
     </tr>
 )
 
@@ -39,12 +42,18 @@ const Customers = () => {
 
     const userList = useSelector(state => state.userList)
     const { loading, error, users } = userList;
+    const [status, setStatus] = useState('true');
 
     const dispatch = useDispatch();
+    console.log(users)
 
     useEffect(() => {
         dispatch(listUserAction())
     }, [dispatch])
+
+    const handleBlock = () => {
+
+    }
     return (
         <div>
             <div className="row">
