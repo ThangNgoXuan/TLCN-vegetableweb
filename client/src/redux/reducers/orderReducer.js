@@ -12,12 +12,12 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_PAYMENT_METHOD,
-  ORDER_LIST_WAIT_DELIVERY_FAIL,
-  ORDER_LIST_WAIT_DELIVERY_REQUEST,
-  ORDER_LIST_WAIT_DELIVERY_SUCCESS,
-  ORDER_UPDATE_STATUS_REQUEST,
-  ORDER_UPDATE_STATUS_SUCCESS,
-  ORDER_UPDATE_STATUS_FAIL,
+  ORDER_LIST_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_UPDATE_REQUEST,
+  ORDER_UPDATE_SUCCESS,
+  ORDER_UPDATE_FAIL,
   GET_ORDER_BY_STATUS_REQUEST,
   GET_ORDER_BY_STATUS_SUCCESS,
   GET_ORDER_BY_STATUS_FAIL,
@@ -80,14 +80,14 @@ const OrderDetailReducer = (state = { order: { billDetail: [] } }, action) => {
       return state;
   }
 }
-//lay danh sach order dang chờ giao cho shipper
-const OrderListWaitDeliveryReducer = (state = { orders: [] }, action) => {
+//lay danh sach order cho admin
+const OrderListReducer = (state = { orders: [] }, action) => {
   switch (action.type) {
-    case ORDER_LIST_WAIT_DELIVERY_REQUEST:
+    case ORDER_LIST_REQUEST:
       return { loading: true };
-    case ORDER_LIST_WAIT_DELIVERY_SUCCESS:
+    case ORDER_LIST_SUCCESS:
       return { loading: false, orders: action.payload };
-    case ORDER_LIST_WAIT_DELIVERY_FAIL:
+    case ORDER_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -101,13 +101,13 @@ const accountReducer = (state = {}, action) => {
       return state;
   }
 }
-const updateStatusOrderShipperReducer = (state = { orders: [] }, action) => {
+const updateOrderReducer = (state = { orders: [] }, action) => {
   switch (action.type) {
-    case ORDER_UPDATE_STATUS_REQUEST:
+    case ORDER_UPDATE_REQUEST:
       return { loading: true };
-    case ORDER_UPDATE_STATUS_SUCCESS:
-      return { loading: false, orders: action.payload };
-    case ORDER_UPDATE_STATUS_FAIL:
+    case ORDER_UPDATE_SUCCESS:
+      return { loading: false, success: true };
+    case ORDER_UPDATE_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
@@ -130,6 +130,6 @@ const getOrderByDeliveryStatusReducer = (state = { orders: [] }, action) => {
 
 export {
   createOrderReducer, findUserOrderReducer,
-  OrderApprove, OrderDetailReducer, OrderListWaitDeliveryReducer,
-  accountReducer, updateStatusOrderShipperReducer, getOrderByDeliveryStatusReducer,
+  OrderApprove, OrderDetailReducer, OrderListReducer,
+  accountReducer, updateOrderReducer, getOrderByDeliveryStatusReducer,
 };

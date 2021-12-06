@@ -32,7 +32,7 @@ const Brands = () => {
       <td>{item._id}</td>
       <td>{item.name}</td>
       <td><Link to={`/admin/brand/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
-      <td><button onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></button></td>
+      <td><div style={{ cursor: 'pointer' }} onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></div></td>
     </tr>
   )
 

@@ -77,15 +77,9 @@ const EditSlide = ({ match, history }) => {
   return (
     <div>
       <ToastContainer
-        position="top-left"
-        autoClose={1400}
+        autoClose={2000}
         hideProgressBar={true}
         newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
       />
 
       <h2 className="page-header">Chỉnh sửa Slide</h2>

@@ -83,7 +83,10 @@ const getMyOrders = asyncHandler(async (req, res) => {
 // @route   GET /v1/orders
 // @access  Private/Admin
 const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate('user', 'id name')
+  const orders = await Order.find({})
+    .populate('user', 'id name')
+    .populate('orderItems.product')
+
   res.json(orders)
 })
 
@@ -130,10 +133,36 @@ const sendMailOrder = (req, res, next) => {
   }
 }
 
+const adminUpdateOrder = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+      if (status === 'DA_GIAO') {
+        order.paymentResult = true;
+        order.paidAt = Date.now();
+        order.status = status;
+      } else {
+        order.status = status;
+      }
+      const updatedOrder = await order.save();
+
+      res.status(200).json(updatedOrder);
+    } else {
+      res.status(404);
+      throw new Error('Không tìm thấy đơn hàng');
+    }
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+}
+
 export const orderController = {
   getOrders,
   getOrderById,
   getMyOrders,
   newOrder,
-  sendMailOrder
+  sendMailOrder,
+  adminUpdateOrder,
 };

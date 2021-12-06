@@ -59,7 +59,6 @@ const orderSchema = mongoose.Schema(
     totalPrice: {
       type: Number,
       required: true,
-      default: 0.0,
     },
     message: {
       type: String,
@@ -68,7 +67,7 @@ const orderSchema = mongoose.Schema(
     status: {
       type: String,
       required: true,
-      default: 'pending'
+      default: 'DANG_XU_LY'
     }
   },
   {

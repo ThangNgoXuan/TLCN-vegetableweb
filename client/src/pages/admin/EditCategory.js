@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { updateCategoryAction, detailCategoryAction } from '../../redux/actions/categoryActions'
+import { Link } from 'react-router-dom';
 
 
 const EditCategory = ({ match, history }) => {
@@ -13,14 +16,12 @@ const EditCategory = ({ match, history }) => {
   const { loading, error, category } = categoryDetail;
 
   const updateCategory = useSelector(state => state.updateCategory)
-  const { loading: loadingUpdate, error: erorUpdate, success } = updateCategory;
+  const { loading: loadingUpdate, error: erorUpdate } = updateCategory;
 
   const [name, setName] = useState('')
   const [image, setImage] = useState('')
-  const [path, setPath] = useState('')
   const [displayOrder, setDisplayOrder] = useState('')
   const [status, setStatus] = useState(0)
-  const [uploading, setUploading] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -30,33 +31,25 @@ const EditCategory = ({ match, history }) => {
     } else {
       setName(category.name)
       setImage(category.image)
-      setPath(category.path)
       setDisplayOrder(category.displayOrder)
       setStatus(category.status)
     }
   }, [dispatch, categoryId, category])
 
-  const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('image', file)
-    setUploading(true)
+  const handleUploadImage = (e) => {
+    const cloundName = 'dl02ow13v';
+    const uploadPreset = 'oj8a39rm';
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    formData.append("upload_preset", uploadPreset);
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
+    Axios.post(`https://api.cloudinary.com/v1_1/${cloundName}/upload`, formData)
+      .then(res => {
+        setImage(res.data.url)
 
-      const { data } = await Axios.post('/v1/upload/category', formData, config)
-
-      setImage(data)
-      setUploading(false)
-    } catch (error) {
-      console.error(error)
-      setUploading(false)
-    }
+      }).catch(error =>
+        console.log(error)
+      )
   }
 
   const handleSubmit = (e) => {
@@ -67,12 +60,15 @@ const EditCategory = ({ match, history }) => {
       status,
       displayOrder,
       image,
-      path,
     }))
   }
 
   return (
     <div>
+      <ToastContainer
+        autoClose={2000}
+        hideProgressBar={true}
+      />
       <h2 className="page-header">Chỉnh sửa danh mục</h2>
       <div className="row">
         <div className="col-10">
@@ -113,19 +109,12 @@ const EditCategory = ({ match, history }) => {
                 <div className="userUpdateItem">
                   <label>Hình ảnh</label>
                   <img src={image} alt="hình ảnh" />
-                  <input
-                    type="text"
-                    placeholder="Nhập url hình ảnh"
-                    className="userUpdateInput"
-                    value={image}
-                    onChange={e => setImage(e.target.value)}
-                  />
                   <div>Tải hình ảnh từ máy tính</div>
                   <input type="file" id="file"
-                    onChange={uploadFileHandler}
+                    onChange={handleUploadImage}
                   />
-                  {uploading && <div>Loading...</div>}
                 </div>
+                <Link to="/admin/categories" className="userUpdateButton">Trở về</Link>
                 <button className="userUpdateButton">Lưu</button>
               </div>
             </form>

@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   ORDER_MINE_LIST_FAIL,
   ORDER_MINE_LIST_SUCCESS,
@@ -13,12 +14,12 @@ import {
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
   ORDER_PAYMENT_METHOD,
-  ORDER_LIST_WAIT_DELIVERY_FAIL,
-  ORDER_LIST_WAIT_DELIVERY_REQUEST,
-  ORDER_LIST_WAIT_DELIVERY_SUCCESS,
-  ORDER_UPDATE_STATUS_REQUEST,
-  ORDER_UPDATE_STATUS_SUCCESS,
-  ORDER_UPDATE_STATUS_FAIL,
+  ORDER_LIST_FAIL,
+  ORDER_LIST_REQUEST,
+  ORDER_LIST_SUCCESS,
+  ORDER_UPDATE_REQUEST,
+  ORDER_UPDATE_SUCCESS,
+  ORDER_UPDATE_FAIL,
   GET_ORDER_BY_STATUS_REQUEST,
   GET_ORDER_BY_STATUS_SUCCESS,
   GET_ORDER_BY_STATUS_FAIL,
@@ -123,72 +124,52 @@ const paymentMethod = (action, userID) => async (dispatch, getState) => {
 
 }
 
-export const orderListWaitDelivery = () => async (dispatch, getState) => {
-  // console.log("toi action");
-  dispatch({ type: ORDER_LIST_WAIT_DELIVERY_REQUEST });
-  // const { userSignin: { userInfo } } = getState();
+export const orderListAction = () => async (dispatch, getState) => {
+
+  dispatch({ type: ORDER_LIST_REQUEST });
+  const { userSignin: { userInfo } } = getState();
   try {
-    const { data } = await Axios.get('/api/orders/shipper/ChoGiao');
-    console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_SUCCESS, payload: data });
+    const { data } = await Axios.get('/v1/order');
+
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_FAIL, payload: message });
+    dispatch({ type: ORDER_LIST_FAIL, payload: message });
   }
 };
 
 export const orderDelivery = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_WAIT_DELIVERY_REQUEST });
+  dispatch({ type: ORDER_LIST_REQUEST });
   // const { userSignin: { userInfo } } = getState();
   try {
     const { data } = await Axios.get('/api/orders/shipper/DangGiao');
     console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_SUCCESS, payload: data });
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_FAIL, payload: message });
+    dispatch({ type: ORDER_LIST_FAIL, payload: message });
   }
 };
 
-//[patch] /api/orders/shipper/:orderID/:status
-export const updateStatusOrderShipper = (orderID, action) => async (dispatch) => {
+export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getState) => {
   try {
-    dispatch({ type: ORDER_UPDATE_STATUS_REQUEST });
-    if (action == 'NhanDon') {
-      const { data } = await Axios.patch('/api/orders/shipper/' + orderID + "/NhanDon");
-      if (data) {
-        dispatch({
-          type: ORDER_UPDATE_STATUS_SUCCESS,
-          payload: data
-        });
+    dispatch({ type: ORDER_UPDATE_REQUEST });
+    const { userSignin: { userInfo } } = getState();
 
-      }
-    }
-    else if (action == 'Huy') {
-      const { data } = await Axios.patch('/api/orders/shipper/' + orderID + "/Huy");
-      if (data) {
-        dispatch({
-          type: ORDER_UPDATE_STATUS_SUCCESS,
-          payload: data
-        });
-
-      }
-    }
-    else if (action == 'DaGiao') {
-      const { data } = await Axios.patch('/api/orders/shipper/' + orderID + "/DaGiao");
-      if (data) {
-        dispatch({
-          type: ORDER_UPDATE_STATUS_SUCCESS,
-          payload: data
-        });
-
-      }
+    const { data } = await Axios.put('/v1/order/' + id, { status });
+    if (data) {
+      dispatch({
+        type: ORDER_UPDATE_SUCCESS,
+        payload: data
+      });
+      dispatch(orderListAction())
+      toast.success('Cập nhật đơn hàng thành công')
     }
 
   } catch (error) {
@@ -196,7 +177,8 @@ export const updateStatusOrderShipper = (orderID, action) => async (dispatch) =>
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: ORDER_UPDATE_STATUS_FAIL, payload: message });
+    dispatch({ type: ORDER_UPDATE_FAIL, payload: message });
+    toast.error(message);
   }
 };
 
@@ -216,34 +198,34 @@ const getOrderByDeliveryStatus = (diliveryStatus) => async (dispatch) => {
 }
 
 export const orderDeliverySuccess = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_WAIT_DELIVERY_REQUEST });
+  dispatch({ type: ORDER_LIST_REQUEST });
   // const { userSignin: { userInfo } } = getState();
   try {
     const { data } = await Axios.get('/api/orders/shipper/DaGiao');
     // console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_SUCCESS, payload: data });
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_FAIL, payload: message });
+    dispatch({ type: ORDER_LIST_FAIL, payload: message });
   }
 };
 
 export const orderDeliveryFail = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_WAIT_DELIVERY_REQUEST });
+  dispatch({ type: ORDER_LIST_REQUEST });
   // const { userSignin: { userInfo } } = getState();
   try {
     const { data } = await Axios.get('/api/orders/shipper/fail');
     // console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_SUCCESS, payload: data });
+    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
-    dispatch({ type: ORDER_LIST_WAIT_DELIVERY_FAIL, payload: message });
+    dispatch({ type: ORDER_LIST_FAIL, payload: message });
   }
 };
 

@@ -73,4 +73,5 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   return !!user;
 }
 
-export const User = mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+export default User;

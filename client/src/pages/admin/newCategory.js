@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import Axios from 'axios'
+import axios from 'axios'
 import { useDispatch } from 'react-redux'
-import axios from 'axios';
+import { addCategoryAction } from '../../redux/actions/categoryActions';
+import { Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NewCategory = ({ match, history }) => {
 
-  const categoryId = match.params.id;
-
   const [name, setName] = useState('')
   const [image, setImage] = useState('')
-  const [path, setPath] = useState('')
   const [displayOrder, setDisplayOrder] = useState('')
   const [status, setStatus] = useState(0)
-  const [uploading, setUploading] = useState(false)
 
   const dispatch = useDispatch()
 
@@ -22,8 +21,6 @@ const NewCategory = ({ match, history }) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
     formData.append("upload_preset", uploadPreset);
-
-    console.log(formData)
 
     axios.post(`https://api.cloudinary.com/v1_1/${cloundName}/upload`, formData)
       .then(res => {
@@ -35,12 +32,22 @@ const NewCategory = ({ match, history }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch()
+    dispatch(addCategoryAction({
+      name,
+      status,
+      displayOrder,
+      image,
+    }))
   }
 
   return (
     <div>
-      <h2 className="page-header">New user</h2>
+      <ToastContainer
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+      />
+      <h2 className="page-header">Thêm danh mục</h2>
       <div className="row">
         <div className="col-10">
           <div className="card full-height">
@@ -53,6 +60,7 @@ const NewCategory = ({ match, history }) => {
                     placeholder="Rau củ quả"
                     className="userUpdateInput"
                     onChange={e => setName(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="userUpdateItem">
@@ -69,6 +77,7 @@ const NewCategory = ({ match, history }) => {
                     placeholder="VD: 1"
                     className="userUpdateInput"
                     onChange={e => setDisplayOrder(e.target.value)}
+                    required
                   />
                 </div>
                 <div className="userUpdateItem">
@@ -84,8 +93,8 @@ const NewCategory = ({ match, history }) => {
                   <input type="file" id="file"
                     onChange={uploadImage}
                   />
-                  {uploading && <div>Loading...</div>}
                 </div>
+                <Link to="/admin/categories" className="userUpdateButton">Trở về</Link>
                 <button className="userUpdateButton">Tạo</button>
               </div>
               {/* <div className="userUpdateLeft">

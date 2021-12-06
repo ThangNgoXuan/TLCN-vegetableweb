@@ -6,6 +6,7 @@ import { categoryRouter } from './category.route.js';
 import { uploadsRouter } from './upload.route.js';
 import { orderRouter } from './order.route.js';
 import { brandRouter } from './brand.router.js';
+import { statisticRouter } from './statistic.router.js';
 
 
 const router = express.Router();
@@ -23,6 +24,8 @@ router.use('/upload', uploadsRouter);
 router.use('/order', orderRouter);
 
 router.use('/brand', brandRouter);
+
+router.use('/statistic', statisticRouter);
 
 export const apiv1 = router;
 

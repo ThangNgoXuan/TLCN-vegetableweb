@@ -3,14 +3,15 @@ import thunk from 'redux-thunk';
 
 import {
     productListReducer, topProductsReducer, topProductsRelateReducer, productDetailReducer,
-    productCreateReducer, productDeleteReducer, productUpdateReducer
+    productCreateReducer, productDeleteReducer, productUpdateReducer, producListtWithConditionReducer
 } from './reducers/productReducer';
 import { slideListReducer, addSlideReducer, updateSlideReducer, deleteSlideReducer, detailSlideReducer } from './reducers/slideReducer';
 import { userSigninReducer, userListReducer, userDetailsReducer, userRegisterReducer, userUpdateProfileReducer } from './reducers/userReducer';
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList, addCategoryReducer, updateCategoryReducer, deleteCategoryReducer, detailCategoryReducer } from './reducers/categoryReducers';
 import { brandListReducer, brandCreateReducer, brandDeleteReducer, brandUpdateReducer, brandDetailReducer } from './reducers/brandReducer';
-import { findUserOrderReducer } from './reducers/orderReducer';
+import { findUserOrderReducer, OrderListReducer, updateOrderReducer } from './reducers/orderReducer';
+import { statisticAll, getRevenueByReducer, getTopCustomersReducer } from './reducers/statisticReducer';
 
 const initialState = {
     userSignin: {
@@ -28,6 +29,7 @@ const initialState = {
 const reducer = combineReducers({
 
     productList: productListReducer,
+    productListWithContidion: producListtWithConditionReducer,
     productDetail: productDetailReducer,
     topProducts: topProductsReducer,
     topProductsRelate: topProductsRelateReducer,
@@ -62,6 +64,12 @@ const reducer = combineReducers({
     detailSlide: detailSlideReducer,
 
     myOrders: findUserOrderReducer,
+    orderList: OrderListReducer,
+    updateOrder: updateOrderReducer,
+
+    statisticAll: statisticAll,
+    revenueBy: getRevenueByReducer,
+    topCustomers: getTopCustomersReducer,
 
 });
 

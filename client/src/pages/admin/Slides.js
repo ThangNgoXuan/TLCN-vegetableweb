@@ -35,11 +35,17 @@ const Slides = () => {
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{index + 1}</td>
-      <td><img src={item.image} alt="ảnh" /></td>
+      <td><img src={item.image} alt="ảnh"
+        style={{ maxWidth: '40px' }}
+      /></td>
       <td>{item.name}</td>
       <td>{item.status ? 'Active' : 'Dissable'}</td>
       <td><Link to={`/admin/slides/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
-      <td><div onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></div></td>
+      <td>
+        <div style={{ cursor: 'pointer' }} onClick={() => handleDelete(item._id)} >
+          <i class='bx bx-trash'></i>
+        </div>
+      </td>
     </tr>
   )
   return (
@@ -47,7 +53,7 @@ const Slides = () => {
       <div className="row">
         <div className="col-10">
           <h2 className="page-header">
-            Danh mục
+            Slides
           </h2>
         </div>
         <div className="col-2">

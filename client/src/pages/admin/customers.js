@@ -1,48 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+import { updateUserProfile } from '../../redux/actions/userAction'
 import Table from '../../components/admin/Table'
 import { listUserAction } from '../../redux/actions/userAction'
-
-import customerList from '../../fakedata/customers-list.json'
-
-const customerTableHead = [
-    'STT',
-    'Phân loại',
-    'Avatar',
-    'Tên',
-    'Email',
-    'SĐT',
-    'Địa chỉ',
-    'Trạng thái',
-    'chỉnh sửa',
-]
-
-const renderHead = (item, index) => <th key={index}>{item}</th>
-
-const renderBody = (item, index) => (
-    <tr key={index}>
-        <td>{index}</td>
-        <td>{item.role}</td>
-        <td><img src={item.avatar} alt='Hình ảnh' style={{ width: '30px' }} /></td>
-        <td>{item.name}</td>
-        <td>{item.email}</td>
-        <td>{item.phone}</td>
-        <td>{item.address}</td>
-        <td>{item.status ? 'Hoạt động' : 'Đang khóa'}</td>
-        <td><select>
-            <option value="false">Block</option>
-            <option value="true">Active</option>
-        </select></td>
-    </tr>
-)
 
 const Customers = () => {
 
     const userList = useSelector(state => state.userList)
     const { loading, error, users } = userList;
-    const [status, setStatus] = useState('true');
 
     const dispatch = useDispatch();
     console.log(users)
@@ -51,11 +20,53 @@ const Customers = () => {
         dispatch(listUserAction())
     }, [dispatch])
 
-    const handleBlock = () => {
+    const customerTableHead = [
+        'STT',
+        'Phân loại',
+        'Avatar',
+        'Tên',
+        'Email',
+        'SĐT',
+        'Địa chỉ',
+        'Trạng thái',
+        'chỉnh sửa',
+    ]
 
+    const renderHead = (item, index) => <th key={index}>{item}</th>
+
+    const handleChangeStatus = (status, id) => {
+        dispatch(updateUserProfile({
+            status: status,
+            _id: id,
+        }))
     }
+
+    const renderBody = (item, index) => (
+        <tr key={index}>
+            <td>{index}</td>
+            <td>{item.role}</td>
+            <td><img src={item.avatar} alt='Hình ảnh' style={{ width: '30px' }} /></td>
+            <td>{item.lastName + ' ' + item.firstName}</td>
+            <td>{item.email}</td>
+            <td>{item.phone}</td>
+            <td>{item.address}</td>
+            <td>{item.status ? 'Hoạt động' : 'Đang khóa'}</td>
+            <td>
+                <select onChange={(e) => handleChangeStatus(e.target.value, item._id)}>
+                    <option selected={item.status} value="false">Block</option>
+                    <option selected={item.status} value="true">Active</option>
+                </select>
+            </td>
+        </tr>
+    )
+
     return (
         <div>
+            <ToastContainer
+                autoClose={2000}
+                hideProgressBar={true}
+                newestOnTop={false}
+            />
             <div className="row">
                 <div className="col-10">
                     <h2 className="page-header">

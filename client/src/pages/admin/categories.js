@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Table from '../../components/admin/Table'
-import { categoryAction } from '../../redux/actions/categoryActions'
+import { categoryAction, deleteCategoryAction } from '../../redux/actions/categoryActions'
 
 const Categories = () => {
     const dispatch = useDispatch();
@@ -16,8 +18,8 @@ const Categories = () => {
 
     const tableHead = [
         'STT',
-        'Thứ tự hiển thị',
         'Hình ảnh',
+        'Thứ tự hiển thị',
         'Tên',
         'Trạng thái',
         'Sửa',
@@ -26,20 +28,39 @@ const Categories = () => {
 
     const renderHead = (item, index) => <th key={index}>{item}</th>
 
+    const handleDelete = (id) => {
+        if (window.confirm('Xác nhận xóa')) {
+            dispatch(deleteCategoryAction(id));
+        }
+    }
+
     const renderBody = (item, index) => (
         <tr key={index}>
             <td>{index}</td>
-            <td>{item.displayOrder}</td>
-            <td><img src={item.image} alt="ảnh" /></td>
+            <td><img src={item.image} alt="ảnh"
+                style={{ maxWidth: '40px' }}
+            /></td>
+            <td style={{ width: '90px' }}>{item.displayOrder}</td>
             <td>{item.name}</td>
-            <td>{item.status + ''}</td>
+            <td>{item.status ? 'active' : 'disable'}</td>
             <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
-            <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bx-trash'></i></Link></td>
+            <td>
+                <nav style={{ cursor: 'pointer' }}
+                    onClick={() => handleDelete(item._id)}
+                >
+                    <i class='bx bx-trash'></i>
+                </nav>
+            </td>
         </tr>
     )
 
     return (
         <div>
+            <ToastContainer
+                autoClose={2000}
+                hideProgressBar={true}
+                newestOnTop={false}
+            />
             <div className="row">
                 <div className="col-10">
                     <h2 className="page-header">

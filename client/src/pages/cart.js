@@ -110,19 +110,19 @@ const Cart = (props) => {
                                             </div>
                                             <div className="cart__item__info__quantity">
                                                 <div className="product__info__item__quantity">
-                                                    <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('-', item._id, item.quantity)}>
+                                                    <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('-', item.product, item.quantity)}>
                                                         <i className="bx bx-minus"></i>
                                                     </div>
                                                     <div className="product__info__item__quantity__input">
                                                         {item.quantity}
                                                     </div>
-                                                    <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('+', item._id, item.quantity)}>
+                                                    <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('+', item.product, item.quantity)}>
                                                         <i className="bx bx-plus"></i>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="cart__item__del">
-                                                <i className='bx bx-trash' onClick={() => removeFromCartHandler(item._id)}></i>
+                                                <i className='bx bx-trash' onClick={() => removeFromCartHandler(item.product)}></i>
                                             </div>
                                         </div>
                                     </div>

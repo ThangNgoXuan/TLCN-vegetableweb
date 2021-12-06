@@ -47,7 +47,7 @@ const RoutesUser = () => {
                 exact
                 component={Catalog}
             />
-            <Route path='/catalog/category/:category/name/:name/certificate/:certificate/min/:min/max/:max/pageNumber/:pageNumber'
+            <Route path='/catalog/category/:category/name/:name/certificate/:certificate/min/:min/max/:max/pageNumber/:pageNumber/brand/:brand'
                 exact
                 component={Catalog}
             />

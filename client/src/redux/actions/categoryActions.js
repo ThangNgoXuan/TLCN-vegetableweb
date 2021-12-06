@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { toast } from 'react-toastify';
 import {
   CATEGORY_LIST_SUCCESS, CATEGORY_LIST_REQUEST, CATEGORY_LIST_FAIL,
   CATEGORY_ADD_REQUEST, CATEGORY_ADD_SUCCESS, CATEGORY_ADD_FAIL,
@@ -31,14 +32,16 @@ export const addCategoryAction = (category) => async (dispatch, getState) => {
   } = getState();
 
   try {
-    const { data } = await Axios.post(`/v1/category/${category._id}`, category, {
+    const { data } = await Axios.post('/v1/category', category, {
       headers: { Authorization: `Bearer ${userInfo.token}` }
     });
 
     dispatch({ type: CATEGORY_ADD_SUCCESS, payload: data })
+    toast.success('Thêm thành công')
   } catch (error) {
     const message = error.response && error.response.data.message ? error.response.data.message : error.message;
     dispatch({ type: CATEGORY_ADD_FAIL, payload: message })
+    toast.error(error)
   }
 }
 
@@ -54,6 +57,7 @@ export const updateCategoryAction = (category) => async (dispatch, getState) => 
       }
     })
     dispatch({ type: CATEGORY_UPDATE_SUCCESS, payload: data })
+    toast.success('Cập nhật thành công')
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -61,6 +65,7 @@ export const updateCategoryAction = (category) => async (dispatch, getState) => 
         : error.message;
 
     dispatch({ type: CATEGORY_UPDATE_FAIL, payload: message })
+    toast.error('Cập nhật thất bại')
   }
 }
 
@@ -73,6 +78,8 @@ export const deleteCategoryAction = (id) => async (dispatch, getState) => {
       headers: { Authorization: `Bearer ${userInfo.token}` }
     })
     dispatch({ type: CATEGORY_DELETE_SUCCESS })
+    dispatch(categoryAction())
+    toast.success('Xóa thành công')
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -80,6 +87,7 @@ export const deleteCategoryAction = (id) => async (dispatch, getState) => {
         : error.message;
 
     dispatch({ type: CATEGORY_DELETE_FAIL, payload: message })
+    toast.error(error)
   }
 };
 

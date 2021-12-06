@@ -23,7 +23,6 @@ const getProducts = asyncHandler(async (req, res) => {
   const categoryFilter = category ? { category } : {};
   const brandFilter = brand ? { brand } : {};
   const certificationFilter = certification ? { certification: { $regex: certification, $options: 'i' } } : {};
-  const protypeFilter = protype ? { protype } : {};
   const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
   const sortOrder =
     order === 'lowest'
@@ -34,16 +33,17 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const count = await Product.count({
     ...categoryFilter,
+    ...brandFilter,
     ...nameFilter,
     ...categoryFilter,
     ...certificationFilter,
-    ...protypeFilter,
     ...priceFilter,
   });
 
   const products = await Product.find({
     ...nameFilter,
     ...categoryFilter,
+    ...brandFilter,
     ...priceFilter,
     ...certificationFilter,
   })
@@ -66,7 +66,7 @@ const getProducts = asyncHandler(async (req, res) => {
 const getProductsAdmin = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
-  const keyword = req.query.keyword || '';
+  const keyword = req.query.keyword === 'notset' ? '' : req.query.keyword;
 
   const searchFilter = keyword ? {
     $or: [
@@ -135,7 +135,7 @@ const getProductById = asyncHandler(async (req, res) => {
 // @route   DELETE /v1/products/:id
 // @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await product.findById(req.params.id);
+  const product = await Product.findById(req.params.id);
 
   if (product) {
     await product.remove();

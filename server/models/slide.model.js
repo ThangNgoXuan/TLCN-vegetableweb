@@ -10,7 +10,11 @@ const slideShema = new mongoose.Schema({
   },
   description: { type: String, trim: true },
   path: { type: String, trim: true }
-});
+},
+  {
+    timestamps: true,
+  }
+);
 
 const Slide = mongoose.model('Slide', slideShema);
 export default Slide;

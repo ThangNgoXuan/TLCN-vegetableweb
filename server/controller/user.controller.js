@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { OAuth2Client } from 'google-auth-library'
-import { User } from '../models/user.model.js';
+import User from '../models/user.model.js';
 import { HttpStatusCode } from '../utils/constants.js';
 import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/generateToken.js';
@@ -207,17 +207,24 @@ const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.body._id);
 
-    if (!user) {
+    if (user) {
+      if (req.body.email && (await User.isEmailTaken(req.body.email, req.body._id))) {
+        res.status(HttpStatusCode.BAD_REQUEST);
+        throw new Error('Email này đã được sử dụng!');
+      }
+      user.firstName = req.body.firstName || user.firstName
+      user.lastName = req.body.lastName || user.lastName
+      user.email = req.body.email || user.email
+      user.avatar = req.body.avatar || user.avatar
+      user.status = req.body.status || user.status
+      if (req.body.password) {
+        user.password = req.body.password
+      }
+    }
+    else {
       res.status(HttpStatusCode.NOT_FOUND);
       throw new Error('Không tìm thấy user!');
     }
-
-    if (req.body.email && (await User.isEmailTaken(req.body.email, req.body._id))) {
-      res.status(HttpStatusCode.BAD_REQUEST);
-      throw new Error('Email này đã được sử dụng!');
-    }
-
-    Object.assign(user, req.body);
 
     const updatedUser = await user.save();
     res.json({

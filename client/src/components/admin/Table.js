@@ -9,13 +9,12 @@ const Table = props => {
 
     let pages = props.pages || 1;
 
-    let pageList = []
-    for (let i = 1; i <= pages; i++) {
-        pageList.push(i)
+    const pageList = [];
+    if (pages) {
+        for (let i = 1; i <= pages; i++) {
+            pageList.push(i);
+        }
     }
-
-    console.log(pageList)
-
 
     // if (props.limit !== undefined) {
     //     let page = Math.floor(props.bodyData.length / Number(props.limit))
@@ -65,8 +64,8 @@ const Table = props => {
                 pages > 1 ? (
                     <div className="table__pagination">
                         {
-                            pageList.map((item, index) => (
-                                <div key={index} className={`table__pagination-item ${currPage === index ? 'active' : ''}`} onClick={() => selectPage(index)}>
+                            pageList.map((item) => (
+                                <div key={item} className={`table__pagination-item ${currPage === item ? 'active' : ''}`} onClick={() => props.handlePageChange({ newPage: item })}>
                                     {item}
                                 </div>
                             ))

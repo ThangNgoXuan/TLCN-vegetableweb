@@ -60,9 +60,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 //@access Private/staff
 const createCategory = asyncHandler(async (req, res) => {
   const category = new ProductCategory();
-
-  category.name = req.body.name;
-
+  Object.assign(category, req.body)
   const createdCategory = await category.save();
   res.status(HttpStatusCode.CREATED_SUCCESS).json(createdCategory);
 });
