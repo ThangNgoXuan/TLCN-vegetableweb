@@ -67,18 +67,11 @@ export const listProductCategories = () => async (dispatch) => {
   }
 };
 
-export const detailsProduct = (productId) => async (dispatch, getState) => {
+export const detailsProduct = (productId) => async (dispatch) => {
   dispatch({ type: PRODUCT_DETAILS_REQUEST, payload: productId });
-  const {
-    userSignin: { userInfo },
-  } = getState();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userInfo.token}`,
-    }
-  }
+
   try {
-    const { data } = await Axios.get(`/v1/products/${productId}`, config);
+    const { data } = await Axios.get(`/v1/products/${productId}`);
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
