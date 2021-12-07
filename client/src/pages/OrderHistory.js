@@ -6,16 +6,22 @@ import Table from '../components/admin/Table'
 import { myOrders as myOrdersAction } from '../redux/actions/orderAction'
 
 
-const OrderHistory = () => {
+const OrderHistory = ({ history }) => {
 
   const myOrders = useSelector(state => state.myOrders)
   const { loading, error, orders } = myOrders;
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(myOrdersAction())
-  }, [dispatch])
+    if (!userInfo) {
+      history.push('/login')
+    } else {
+      dispatch(myOrdersAction())
+    }
+  }, [dispatch, userInfo, history])
 
   const customerTableHead = [
     'Mã đơn hàng',

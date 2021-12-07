@@ -19,16 +19,20 @@ const EditBrand = ({ match, history }) => {
   const { loading: loadingUpdate, error: errorUpdate, success: updatedBrand } = brandUpdate;
 
   const dispatch = useDispatch()
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
 
   useEffect(() => {
-
-    if (!brand || brand._id !== brandId) {
-      dispatch(detailBrandAction(brandId))
+    if (userInfo && userInfo.role === 'admin') {
+      if (!brand || brand._id !== brandId) {
+        dispatch(detailBrandAction(brandId))
+      } else {
+        setName(brand.name)
+      }
     } else {
-      setName(brand.name)
+      history.push('/login')
     }
-
-  }, [dispatch, brandId, brand])
+  }, [dispatch, brandId, brand, userInfo, history])
 
   const handleSubmit = (e) => {
     e.preventDefault();

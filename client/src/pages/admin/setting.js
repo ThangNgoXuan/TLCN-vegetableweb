@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { detailsUser, updateUserProfile } from '../../redux/actions/userAction'
 
-const Setting = () => {
+const Setting = ({ history }) => {
     const imageDefault = "https://img.icons8.com/officel/260/000000/person-male.png"
     const myInfo = useSelector(state => state.userSignin);
     const { userInfo } = myInfo;
@@ -24,18 +24,22 @@ const Setting = () => {
 
     useEffect(() => {
 
-        if (!user) {
-            dispatch(detailsUser(userInfo._id));
+        if (userInfo && userInfo.role === 'admin') {
+            if (!user) {
+                dispatch(detailsUser(userInfo._id));
+            } else {
+                setFname(user.firstName);
+                setLname(user.lastName);
+                setEmail(user.email);
+                setImage(user.avatar);
+                setAddress(user.address);
+                setPhone(user.phone);
+                setImage(user.avatar);
+            }
         } else {
-            setFname(user.firstName);
-            setLname(user.lastName);
-            setEmail(user.email);
-            setImage(user.avatar);
-            setAddress(user.address);
-            setPhone(user.phone);
-            setImage(user.avatar);
+            history.push('/login')
         }
-    }, [dispatch, userInfo, user])
+    }, [dispatch, userInfo, user, history])
 
     const uploadImage = (e) => {
         const cloundName = 'dl02ow13v';

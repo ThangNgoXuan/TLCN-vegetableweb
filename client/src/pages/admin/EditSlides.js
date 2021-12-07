@@ -25,18 +25,24 @@ const EditSlide = ({ match, history }) => {
   const [status, setStatus] = useState(0)
 
   const dispatch = useDispatch()
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
 
   useEffect(() => {
-    if (!slide || slide._id !== slideId) {
-      dispatch(detailSlideAction(slideId))
+    if (userInfo && userInfo.role === 'admin') {
+      if (!slide || slide._id !== slideId) {
+        dispatch(detailSlideAction(slideId))
+      } else {
+        setName(slide.name)
+        setImage(slide.image)
+        setPath(slide.path)
+        setDescription(slide.description)
+        setStatus(slide.status)
+      }
     } else {
-      setName(slide.name)
-      setImage(slide.image)
-      setPath(slide.path)
-      setDescription(slide.description)
-      setStatus(slide.status)
+      history.push('/login')
     }
-  }, [dispatch, slideId, slide])
+  }, [dispatch, slideId, slide, history, userInfo])
 
   const handleSubmit = (e) => {
     e.preventDefault();

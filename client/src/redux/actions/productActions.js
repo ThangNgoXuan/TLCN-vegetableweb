@@ -66,10 +66,18 @@ export const listProductCategories = () => async (dispatch) => {
   }
 };
 
-export const detailsProduct = (productId) => async (dispatch) => {
+export const detailsProduct = (productId) => async (dispatch, getState) => {
   dispatch({ type: PRODUCT_DETAILS_REQUEST, payload: productId });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    }
+  }
   try {
-    const { data } = await Axios.get(`/v1/products/${productId}`);
+    const { data } = await Axios.get(`/v1/products/${productId}`, config);
     dispatch({ type: PRODUCT_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -109,15 +117,22 @@ export const topProductsRelate = (productId) => async (dispatch) => {
 export const listProductsAdmin = ({
   pageNumber = 1,
   keyword = 'notset'
-}) => async (dispatch) => {
+}) => async (dispatch, getState) => {
   dispatch({
     type: PRODUCT_LIST_REQUEST,
   });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    }
+  }
   try {
     const { data } = await Axios.get(
-      `/v1/products/admin/search?pageNumber=${pageNumber}&keyword=${keyword}`
+      `/v1/products/admin/search?pageNumber=${pageNumber}&keyword=${keyword}`, config
     );
-    console.log(data)
     dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: PRODUCT_LIST_FAIL, payload: error.message });

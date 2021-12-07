@@ -24,7 +24,7 @@ const Order = (props) => {
   const [address, setAddress] = useState('')
   const [note, setNote] = useState('')
   const [onlinePayment, setOnlinePayment] = useState("");
-  const [codPayment, setCodPayment] = useState("");
+  const [codPayment, setCodPayment] = useState("COD");
 
   console.log(codPayment)
   console.log(onlinePayment)
@@ -41,7 +41,7 @@ const Order = (props) => {
     } else {
       props.history.push('/login?redirect=order');
     }
-  }, [])
+  }, [props.history, userInfo])
 
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
@@ -163,21 +163,21 @@ const Order = (props) => {
           <div className="order__payment">
 
             <div className="order__payment-item">
-              <input type="radio" id="COD" name="pay" value="COD"
+              <input checked={codPayment === 'COD'} type="radio" id="COD" name="pay" value="COD"
                 onChange={() => setCodPayment(codPayment !== 'COD' && 'COD')}
               />
               <label for="COD">Thanh toán khi nhận hàng</label>
             </div>
             <div className="order__payment-item">
-              <input type="radio" id="online" name="pay" value="Online"
-                onChange={() => setOnlinePayment(onlinePayment !== 'online' && 'online')}
-              />
+              <input checked={false} type="radio" id="online" name="pay" value="Online" />
+              {/* onChange={() => setOnlinePayment(onlinePayment !== 'online' && 'online')} */}
+
               <label for="online">Thánh toán online(Chưa hỗ trợ)</label>
             </div>
 
             <div className="order__button">
               <button type="submit" className="order__button-checkout">Đặt hàng</button>
-              <button className="order__button-return">Tiếp tục mua hàng</button>
+              <button className="order__button-return" onClick={() => props.history.push('/catalog')}>Tiếp tục mua hàng</button>
             </div>
 
           </div>

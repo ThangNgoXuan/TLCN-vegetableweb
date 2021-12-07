@@ -6,14 +6,20 @@ import Table from '../../components/admin/Table'
 import { listSlides, deleteSlideAction } from '../../redux/actions/slideAction'
 import Loading from '../../components/Loading'
 
-const Slides = () => {
+const Slides = ({ history }) => {
   const dispatch = useDispatch();
   const slideList = useSelector(state => state.slideList);
   const { loading, error, slides } = slideList;
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
 
   useEffect(() => {
-    dispatch(listSlides())
-  }, [dispatch])
+    if (userInfo && userInfo.role === 'admin') {
+      dispatch(listSlides())
+    } else {
+      history.push('/login')
+    }
+  }, [dispatch, history, userInfo])
 
   const tableHead = [
     'STT',

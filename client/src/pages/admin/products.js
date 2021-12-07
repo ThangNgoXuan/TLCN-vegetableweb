@@ -10,19 +10,25 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { listProductsAdmin, deleteProductAction } from '../../redux/actions/productActions'
 
-const Products = () => {
+const Products = ({ history }) => {
 
     const dispatch = useDispatch();
     const productsList = useSelector(state => state.productList)
     const { loading, error, products, page, pages } = productsList
     const [pageNumber, setPageNUmber] = useState(1);
-
+    const myInfo = useSelector(state => state.userSignin);
+    const { userInfo } = myInfo;
     useEffect(() => {
 
-        dispatch(listProductsAdmin({
-            pageNumber
-        }))
-    }, [dispatch, pageNumber])
+        if (userInfo && userInfo.role === 'admin') {
+            dispatch(listProductsAdmin({
+                pageNumber
+            }))
+        } else {
+            history.push('/login')
+        }
+
+    }, [dispatch, pageNumber, history, userInfo])
 
     const handleDelete = (id) => {
         if (window.confirm('Xác nhận xóa')) {

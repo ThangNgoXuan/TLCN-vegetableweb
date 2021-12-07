@@ -8,16 +8,21 @@ import { updateStatusOrderAction } from '../../redux/actions/orderAction'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Orders = () => {
+const Orders = ({ history }) => {
     const dispatch = useDispatch();
     const orderList = useSelector(state => state.orderList)
     const { loading, orders, error } = orderList;
+    const myInfo = useSelector(state => state.userSignin);
+    const { userInfo } = myInfo;
 
     useEffect(() => {
+        if (userInfo && userInfo.role === 'admin') {
+            dispatch(orderListAction())
+        } else {
+            history.push('/login')
+        }
 
-        dispatch(orderListAction())
-
-    }, [dispatch])
+    }, [dispatch, userInfo, history])
 
     const customerTableHead = [
         'Mã đơn',

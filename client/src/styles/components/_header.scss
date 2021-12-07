@@ -85,44 +85,44 @@
                 }
 
                 .user-wrap {
-                    .dropdown {
-                        position: absolute;
-                        background-color: rgb(166, 175, 175);
-                        top: 100%;
-                        right: 0;
-                        display: none;
+                    // .dropdown {
+                    //     position: absolute;
+                    //     background-color: rgb(166, 175, 175);
+                    //     top: 100%;
+                    //     right: 0;
+                    //     display: none;
 
-                        ul {
-                            list-style: none;
-                            padding: 10px;
+                    //     ul {
+                    //         list-style: none;
+                    //         padding: 10px;
 
-                            li {
-                                font-size: 1.1rem;
-                                min-width: 120px;
-                                display: inline-block;
-                                height: 1.2rem;
-                                span {
-                                    line-height: 1.2rem;
-                                }
-                            }
-                        }
-                    }
-                    .dropdown::before {
-                        content: "";
-                        display: block;
-                        width: 90 px;
-                        height: 28 px;
-                        position: absolute;
-                        top: 0 px;
-                        right: 0;
-                        background-color: blue;
-                    }
+                    //         li {
+                    //             font-size: 1.1rem;
+                    //             min-width: 120px;
+                    //             display: inline-block;
+                    //             height: 1.2rem;
+                    //             span {
+                    //                 line-height: 1.2rem;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    // .dropdown::before {
+                    //     content: "";
+                    //     display: block;
+                    //     width: 90 px;
+                    //     height: 28 px;
+                    //     position: absolute;
+                    //     top: 0 px;
+                    //     right: 0;
+                    //     background-color: blue;
+                    // }
                 }
-                .user-wrap:hover {
-                    .dropdown {
-                        display: block;
-                    }
-                }
+                // .user-wrap:hover {
+                //     .dropdown {
+                //         display: block;
+                //     }
+                // }
 
                 .cart-icon-wrap {
                     position: relative;

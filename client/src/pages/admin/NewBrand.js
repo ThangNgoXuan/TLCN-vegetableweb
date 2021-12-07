@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addBrandAction } from '../../redux/actions/brandActions'
@@ -13,10 +13,21 @@ const NewBrand = ({ match, history }) => {
 
   const dispatch = useDispatch()
 
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
+
+  useEffect(() => {
+    if (userInfo && userInfo.role === 'admin') {
+
+    }
+    else {
+      history.push('/login')
+    }
+  }, [history, userInfo])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(addBrandAction({ name }))
-    console.log(createdBrand)
   }
 
   return (

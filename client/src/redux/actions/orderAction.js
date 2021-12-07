@@ -161,8 +161,13 @@ export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getS
   try {
     dispatch({ type: ORDER_UPDATE_REQUEST });
     const { userSignin: { userInfo } } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      }
+    }
 
-    const { data } = await Axios.put('/v1/order/' + id, { status });
+    const { data } = await Axios.put('/v1/order/' + id, { status }, config);
     if (data) {
       dispatch({
         type: ORDER_UPDATE_SUCCESS,

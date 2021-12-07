@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 
 import Chart from 'react-apexcharts'
 import { useDispatch, useSelector } from 'react-redux'
@@ -39,15 +39,22 @@ const chartOptions = {
 
 
 
-const Analytics = () => {
+const Analytics = ({ history }) => {
     const state = useSelector(state => state.revenueBy);
     const { loading, error, revenue } = state;
     const dispatch = useDispatch();
 
+    const myInfo = useSelector(state => state.userSignin);
+    const { userInfo } = myInfo;
+
     useEffect(() => {
-        dispatch(sumarryOrders("day"))
-    }, [])
-    console.log(revenue)
+        if (userInfo && userInfo.role === 'admin') {
+            dispatch(sumarryOrders("day"))
+        } else {
+            history.push('/login')
+        }
+    }, [history, userInfo])
+
     const tableHead = [
         'STT',
         'Thời gian',

@@ -7,7 +7,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { register } from '../redux/actions/userAction'
 
 const Register = (props) => {
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setconfirmPassword] = useState('');
@@ -26,7 +27,7 @@ const Register = (props) => {
         if (password !== confirmPassword) {
             alert('Mật khẩu bạn nhập lại không khớp!');
         } else {
-            dispatch(register(name, email, password));
+            dispatch(register({ firstName, lastName, email, password }));
         }
     };
 
@@ -44,9 +45,15 @@ const Register = (props) => {
                     {loading && <div>Loading...</div>}
                     {error && <div>{error}</div>}
                     <div className="input-group">
-                        <label htmlFor="">Họ và tên</label>
-                        <input type="text" placeholder="Nguyễn Văn A" required
-                            onChange={e => setName(e.target.value)}
+                        <label htmlFor="">Họ và tên đệm</label>
+                        <input type="text" placeholder="Nguyễn Văn" required
+                            onChange={e => setLastName(e.target.value)}
+                        />
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="">Tên</label>
+                        <input type="text" placeholder="Hiếu" required
+                            onChange={e => setFirstName(e.target.value)}
                         />
                     </div>
                     <div className="input-group">

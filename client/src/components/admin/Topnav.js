@@ -1,10 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-
 import Dropdown from './Dropdown'
-
-import user_image from '../../images/admin/avata.jpg'
 
 import { useSelector } from 'react-redux'
 
@@ -20,10 +17,10 @@ import { useSelector } from 'react-redux'
 const renderUserToggle = (user) => (
     <div className="topnav__right-user">
         <div className="topnav__right-user__image">
-            <img src={user.image} alt="" />
+            <img src={user.avatar} alt="" />
         </div>
         <div className="topnav__right-user__name">
-            {user.display_name}
+            {user.lastName}
         </div>
     </div>
 )
@@ -37,15 +34,21 @@ const renderUserMenu = (item, index) => (
     </Link>
 )
 
-const Topnav = () => {
+const Topnav = ({ history }) => {
 
     const userSignin = useSelector(state => state.userSignin);
     const { userInfo } = userSignin;
 
-    const curr_user = {
-        display_name: userInfo.firstName,
-        image: userInfo.image,
-    }
+
+    // useEffect(() => {
+    //     if (userInfo && userInfo.role === 'admin') {
+
+    //     } else {
+    //         history.push('/login')
+    //     }
+    // })
+
+
 
     const user_menu = [
         {
@@ -69,7 +72,7 @@ const Topnav = () => {
                     userInfo && userInfo.role === 'admin' ?
                         <div className="topnav__right-item">
                             <Dropdown
-                                customToggle={() => renderUserToggle(curr_user)}
+                                customToggle={() => renderUserToggle(userInfo)}
                                 contentData={user_menu}
                                 renderItems={(item, index) => renderUserMenu(item, index)}
                             />

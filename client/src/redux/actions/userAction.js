@@ -59,10 +59,13 @@ export const detailsUser = (userId) => async (dispatch, getState) => {
     userSignin: { userInfo },
   } = getState();
   try {
-    const { data } = await Axios.get(`/v1/user/profile/${userId}`);
-    // , {
-    //   headers: { Authorization: `Bearer ${userInfo?.token}` },
-    // });
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data } = await Axios.get(`/v1/user/profile/${userId}`, config);
+
     dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -79,9 +82,12 @@ export const deleteUser = (userId) => async (dispatch, getState) => {
     userSignin: { userInfo },
   } = getState();
   try {
-    const { data } = await Axios.delete(`/api/users/${userId}`, {
-      // headers: { Authorization: `Bearer ${userInfo.token}` },
-    });
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+    const { data } = await Axios.delete(`/api/users/${userId}`, config);
     dispatch({ type: USER_DELETE_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -91,28 +97,11 @@ export const deleteUser = (userId) => async (dispatch, getState) => {
     dispatch({ type: USER_DELETE_FAIL, payload: message });
   }
 };
-export const listTopSellers = () => async (dispatch) => {
-  dispatch({ type: USER_TOPSELLERS_LIST_REQUEST });
-  try {
-    const { data } = await Axios.get('/api/users/top-sellers');
-    dispatch({ type: USER_TOPSELLERS_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    dispatch({ type: USER_TOPSELLERS_LIST_FAIL, payload: message });
-  }
-};
 
-export const register = (name, email, password) => async (dispatch) => {
-  dispatch({ type: USER_REGISTER_REQUEST, payload: { email, password } });
+export const register = (value) => async (dispatch) => {
+  dispatch({ type: USER_REGISTER_REQUEST });
   try {
-    const { data } = await Axios.post('/v1/user/register', {
-      name,
-      email,
-      password,
-    });
+    const { data } = await Axios.post('/v1/user/register', value);
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
     localStorage.setItem('userInfo', JSON.stringify(data));
@@ -136,8 +125,9 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     const { data } = await Axios.put('/v1/user/profile', user, {
       headers: { Authorization: `Bearer ${userInfo.token}` },
     });
-    dispatch({ type: USER_UPDATE_PROFILE_SUCCESS, payload: data });
-    dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
+    dispatch({ type: USER_UPDATE_PROFILE_SUCCESS });
+    // dispatch({ type: USER_SIGNIN_SUCCESS });
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
     toast.success("Cập nhật thành công")
     localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {

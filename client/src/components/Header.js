@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation, Route } from 'react-router-dom'
 import { userLogOutAction } from '../redux/actions/userAction'
+import Dropdown from './admin/Dropdown'
 
 import logo from '../images/main-logo.png'
 
@@ -38,6 +39,37 @@ const Header = () => {
     const activeNav = mainNav.findIndex(e => e.path === pathname)
 
     const headerRef = useRef(null)
+    let user_menu = []
+    if (userInfo) {
+        if (userInfo.role === 'admin') {
+            user_menu = [
+                {
+                    "icon": "bx bx-user",
+                    "content": "Trang Admin"
+                },
+                {
+                    "icon": "bx bx-log-out-circle bx-rotate-180",
+                    "content": "Đăng xuất"
+                },
+            ]
+        } else {
+            user_menu = [
+                {
+                    "icon": "bx bx-user",
+                    "content": "Tài khoản"
+                },
+                {
+                    "icon": "bx bx-log-out-circle bx-rotate-180",
+                    "content": "Đăng xuất"
+                },
+                {
+                    "icon": "bx bx-user",
+                    "content": "Đơn hàng"
+                }
+            ]
+        }
+    }
+
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
@@ -47,6 +79,7 @@ const Header = () => {
                 headerRef.current.classList.remove('shrink')
             }
         })
+
         return () => {
             window.removeEventListener("scroll")
         };
@@ -59,6 +92,27 @@ const Header = () => {
     const signoutHandler = () => {
         dispatch(userLogOutAction());
     }
+
+    const renderUserToggle = (user) => (
+        <div className="topnav__right-user">
+            <div className="topnav__right-user__image">
+                <img src={user.avatar} alt="" />
+            </div>
+            <div className="topnav__right-user__name">
+                {user.firstName}
+            </div>
+        </div>
+    )
+
+    const renderUserMenu = (item, index) => (
+        <Link to='/' key={index}>
+            <div className="notification-item">
+                <i className={item.icon}></i>
+                <span>{item.content}</span>
+            </div>
+        </Link>
+    )
+
 
     return (
         <div className="header" ref={headerRef}>
@@ -113,8 +167,8 @@ const Header = () => {
                                     <Link>| Đăng ký</Link>
                                 </div>
                                 : <div className="user-wrap">
-                                    <i className="bx bx-user"></i>
-                                    <div className="dropdown">
+                                    {/* <i className="bx bx-user"></i> */}
+                                    {/* <div className="dropdown">
                                         <ul>
                                             <li><Link to=""><span>Tài khoản của tôi</span></Link></li>
                                             <li><Link to="">Đơn mua</Link></li>
@@ -122,7 +176,13 @@ const Header = () => {
                                             >Đăng xuất
                                             </Link></li>
                                         </ul>
-                                    </div>
+                                    </div> */}
+                                    <Dropdown
+                                        customToggle={() => renderUserToggle(userInfo)}
+                                        contentData={user_menu}
+                                        renderItems={(item, index) => renderUserMenu(item, index)}
+                                    // logOut ={signoutHandler}
+                                    />
                                 </div>
                             }
                         </div>

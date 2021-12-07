@@ -1,11 +1,15 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { detailsUser, updateUserProfile } from '../redux/actions/userAction';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const UserProfile = () => {
+const UserProfile = ({ location, history }) => {
 
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,15 +32,24 @@ const UserProfile = () => {
 
   useEffect(() => {
 
-    if (!user) {
+    // if (!userInfo) {
+    //   history.push('/login')
+    // } else {
+    if (userInfo && userInfo.role === 'admin') {
+      history.push('/admin')
+    }
+    else if (!user) {
       dispatch(detailsUser(userInfo._id));
     } else {
-      setName(user.name);
+      setFirstName(user.firstName);
+      setLastName(user.lastName);
       setEmail(user.email);
       setPhone(user.phone);
       setAddress(user.address);
+      setImage(user.avatar);
     }
-  }, [dispatch, userInfo, user])
+    // }
+  }, [dispatch, userInfo, user, history])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,18 +60,44 @@ const UserProfile = () => {
       dispatch(
         updateUserProfile({
           _id: user._id,
-          name,
+          firstName,
+          lastName,
           email,
           password,
           address,
           phone,
+          avatar: image,
         })
       );
     }
   }
 
+  const uploadImage = (e) => {
+    const cloundName = 'dl02ow13v';
+    const uploadPreset = 'oj8a39rm';
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    formData.append("upload_preset", uploadPreset);
+
+    console.log(formData)
+
+    axios.post(`https://api.cloudinary.com/v1_1/${cloundName}/upload`, formData)
+      .then(res => {
+        setImage(res.data.url)
+
+      }).catch(error =>
+        console.log(error)
+      )
+  }
+
   return (
     <div>
+      <ToastContainer
+        position="top-left"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+      />
       <h2 className="page-header">Tài khoản của tôi</h2>
       <div className="row">
         <div className="col-4">
@@ -81,12 +120,9 @@ const UserProfile = () => {
                     <span className="userShowTitle">Thông tin tài khoảns</span>
                     <div className="userShowInfo">
                       <i className="bx bx-user bx-sm userUpdateIcon"></i>
-                      <span className="userShowInfoTitle">{(user && user.name) || ''}</span>
+                      <span className="userShowInfoTitle">{(user && (user.lastName + ' ' + user.firstName)) || ''}</span>
                     </div>
-                    <div className="userShowInfo">
-                      <i className="bx bx-calendar-alt bx-sm userUpdateIcon"></i>
-                      <span className="userShowInfoTitle">chưa làm</span>
-                    </div>
+
                     <span className="userShowTitle">Thông tin liên hệ</span>
                     <div className="userShowInfo">
                       <i className="bx bx-phone bx-sm userUpdateIcon"></i>
@@ -112,15 +148,25 @@ const UserProfile = () => {
                 <span className="userShowTitle">Cập nhật thông tin</span>
                 {loadingUpdate && <div>Đang cập nhật...</div>}
                 {errorUpdate && <div>{errorUpdate}</div>}
-                {successUpdate && <div>Cập nhật thành công</div>}
+
                 <div className="userUpdateItem">
-                  <label>Username</label>
+                  <label>Họ và tên đệm</label>
                   <input
                     type="text"
-                    placeholder="Thang Ngo"
+                    placeholder="Ngo Xuan"
                     className="userUpdateInput"
-                    value={user && user.name}
-                    onChange={e => setName(e.target.value)}
+                    value={user && user.lastName}
+                    onChange={e => setLastName(e.target.value)}
+                  />
+                </div>
+                <div className="userUpdateItem">
+                  <label>Tên</label>
+                  <input
+                    type="text"
+                    placeholder="Thang"
+                    className="userUpdateInput"
+                    value={user && user.firstName}
+                    onChange={e => setFirstName(e.target.value)}
                   />
                 </div>
                 <div className="userUpdateItem">
@@ -181,13 +227,13 @@ const UserProfile = () => {
                 <div className="userUpdateUpload">
                   <img
                     className="userUpdateImg"
-                    src={''}
+                    src={image}
                     alt=""
                   />
                   <label htmlFor="file">
                     <i className="bx bx-upload bx-sm userUpdateIcon"></i>
                   </label>
-                  <input type="file" id="file" style={{ display: "none" }} />
+                  <input onChange={uploadImage} type="file" id="file" style={{ display: "none" }} />
                 </div>
                 <button className="userUpdateButton" type='submit'>Update</button>
               </div>

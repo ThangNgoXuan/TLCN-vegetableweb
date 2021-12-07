@@ -8,17 +8,24 @@ import { updateUserProfile } from '../../redux/actions/userAction'
 import Table from '../../components/admin/Table'
 import { listUserAction } from '../../redux/actions/userAction'
 
-const Customers = () => {
+const Customers = ({ history }) => {
 
     const userList = useSelector(state => state.userList)
     const { loading, error, users } = userList;
 
     const dispatch = useDispatch();
-    console.log(users)
+
+    const myInfo = useSelector(state => state.userSignin);
+    const { userInfo } = myInfo;
 
     useEffect(() => {
-        dispatch(listUserAction())
-    }, [dispatch])
+        if (userInfo && userInfo.role === 'admin') {
+            dispatch(listUserAction())
+        } else {
+            history.push('/login')
+
+        }
+    }, [dispatch, history, userInfo])
 
     const customerTableHead = [
         'STT',

@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux'
+import { categoryAction } from '../../redux/actions/categoryActions';
+import { listBrandAction } from '../../redux/actions/brandActions';
+import { addProductAction } from '../../redux/actions/productActions';
 
 
-import user_image from '../../images/admin/avata.jpg'
+const NewProduct = ({ history }) => {
+
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
+
+  useEffect(() => {
+    if (userInfo && userInfo.role === 'admin') {
+
+    } else {
+      history.push('/login')
+    }
+  }, [history, userInfo])
 
 
-const newProduct = () => {
   return (
     <div>
       <h2 className="page-header">Thêm sản phẩm mới</h2>
@@ -95,4 +111,4 @@ const newProduct = () => {
   )
 }
 
-export default newProduct
+export default NewProduct

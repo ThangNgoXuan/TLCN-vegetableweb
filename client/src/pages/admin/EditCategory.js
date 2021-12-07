@@ -25,16 +25,23 @@ const EditCategory = ({ match, history }) => {
 
   const dispatch = useDispatch()
 
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
+
   useEffect(() => {
-    if (!category || category._id !== categoryId) {
-      dispatch(detailCategoryAction(categoryId))
+    if (userInfo && userInfo.role === 'admin') {
+      if (!category || category._id !== categoryId) {
+        dispatch(detailCategoryAction(categoryId))
+      } else {
+        setName(category.name)
+        setImage(category.image)
+        setDisplayOrder(category.displayOrder)
+        setStatus(category.status)
+      }
     } else {
-      setName(category.name)
-      setImage(category.image)
-      setDisplayOrder(category.displayOrder)
-      setStatus(category.status)
+      history.push('/login')
     }
-  }, [dispatch, categoryId, category])
+  }, [dispatch, categoryId, category, history, userInfo])
 
   const handleUploadImage = (e) => {
     const cloundName = 'dl02ow13v';

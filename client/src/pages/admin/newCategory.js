@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addCategoryAction } from '../../redux/actions/categoryActions';
 import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -14,6 +14,18 @@ const NewCategory = ({ match, history }) => {
   const [status, setStatus] = useState(0)
 
   const dispatch = useDispatch()
+
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
+
+  useEffect(() => {
+    if (userInfo && userInfo.role === 'admin') {
+
+    } else {
+      history.push('/login')
+    }
+  }, [history, userInfo])
+
 
   const uploadImage = (e) => {
     const cloundName = 'dl02ow13v';

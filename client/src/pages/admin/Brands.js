@@ -7,14 +7,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import Table from '../../components/admin/Table'
 import { listBrandAction, deleteBrandAction } from '../../redux/actions/brandActions'
 
-const Brands = () => {
+const Brands = ({ history }) => {
   const dispatch = useDispatch();
   const brandsList = useSelector(state => state.brandsList)
   const { loading, error, brands } = brandsList
 
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
+
   useEffect(() => {
-    dispatch(listBrandAction())
-  }, [dispatch])
+    if (userInfo && userInfo.role === 'admin') {
+      dispatch(listBrandAction())
+    } else {
+      history.push('/login')
+    }
+  }, [dispatch, history, userInfo])
 
   const tableHead = [
     'STT',

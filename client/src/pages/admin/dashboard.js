@@ -130,7 +130,7 @@ const renderOrderBody = (item, index) => (
     </tr>
 )
 
-const Dashboard = () => {
+const Dashboard = ({ history }) => {
 
     const state = useSelector(state => state.statisticAll)
     const { loading, error, summary } = state;
@@ -140,14 +140,23 @@ const Dashboard = () => {
 
     const dispatch = useDispatch();
 
+    const myInfo = useSelector(state => state.userSignin);
+    const { userInfo } = myInfo;
+
     useEffect(() => {
-        if (!summary) {
-            dispatch(statisticAllAction())
+
+        if (userInfo && userInfo.role === 'admin') {
+            if (!summary) {
+                dispatch(statisticAllAction())
+            }
+            if (!customers) {
+                dispatch(topCustomersAction())
+            }
+
+        } else {
+            history.push('/login')
         }
-        if (!customers) {
-            dispatch(topCustomersAction())
-        }
-    }, [dispatch, summary, customers])
+    }, [dispatch, summary, customers, history, userInfo])
 
     return (
         <div>

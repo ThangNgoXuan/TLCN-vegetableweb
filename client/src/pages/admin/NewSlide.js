@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -8,7 +8,7 @@ import { addSlideAction } from '../../redux/actions/slideAction'
 import { Link } from 'react-router-dom';
 
 
-const NewSlide = () => {
+const NewSlide = ({ history }) => {
 
   // const Slide = useSelector(state => state.addSlide)
   // const { loading, error, slide } = Slide;
@@ -20,6 +20,18 @@ const NewSlide = () => {
   const [status, setStatus] = useState(0)
 
   const dispatch = useDispatch()
+
+  const myInfo = useSelector(state => state.userSignin);
+  const { userInfo } = myInfo;
+
+  useEffect(() => {
+    if (userInfo && userInfo.role === 'admin') {
+
+    } else {
+      history.push('/login')
+    }
+  }, [dispatch, history, userInfo])
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

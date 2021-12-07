@@ -152,7 +152,7 @@ const registUser = async (req, res) => {
       firstName,
       lastName,
       email,
-      password
+      password,
     });
 
     if (userCreate) {
@@ -161,7 +161,9 @@ const registUser = async (req, res) => {
         firstName: userCreate.firstName,
         lastName: userCreate.lastName,
         email: userCreate.email,
-        role: userCreate.role
+        role: userCreate.role,
+        avatar: userCreate.avatar,
+        phone: userCreate.phone,
       });
     }
     else {
@@ -217,6 +219,8 @@ const updateUserProfile = async (req, res) => {
       user.email = req.body.email || user.email
       user.avatar = req.body.avatar || user.avatar
       user.status = req.body.status || user.status
+      user.phone = req.body.phone || user.phone
+      user.address = req.body.address || user.address
       if (req.body.password) {
         user.password = req.body.password
       }

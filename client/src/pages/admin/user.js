@@ -14,7 +14,7 @@ const User = () => {
                 </div>
                 <div className="col-8">
                     <div className="card full-height">
-                        
+
                     </div>
                 </div>
             </div>
