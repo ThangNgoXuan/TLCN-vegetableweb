@@ -32,9 +32,14 @@ export const myOrders = () => async (dispatch, getState) => {
   const {
     userSignin: { userInfo },
   } = getState();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    }
+  }
   const id = userInfo._id;
   try {
-    const { data } = await Axios.get('/v1/order/myOrder/' + id);
+    const { data } = await Axios.get('/v1/order/myOrder/' + id, config);
     dispatch({ type: ORDER_MINE_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -50,8 +55,17 @@ const createOrder = (order) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_CREATE_REQUEST });
 
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      }
+    }
+
     const { data } = await Axios.post('/v1/order',
-      order
+      order, config
     );
     dispatch({
       type: ORDER_CREATE_SUCCESS,
@@ -59,37 +73,6 @@ const createOrder = (order) => async (dispatch, getState) => {
     });
   } catch (error) {
     dispatch({ type: ORDER_CREATE_FAIL, payload: error.message });
-  }
-};
-
-export const adminApproveOrder = (orderID, action) => async (dispatch) => {
-  try {
-    if (action === 'Duyet') {
-      dispatch({ type: ORDER_APPROVE_REQUEST });
-      const { data } = await Axios.patch('/api/orders/admin/' + orderID);
-      if (data) {
-        dispatch({
-          type: ORDER_APPROVE_SUCCESS,
-          payload: data
-        });
-
-      }
-    }
-    else if (action === 'Huy') {
-      dispatch({ type: ORDER_APPROVE_REQUEST });
-      const { data } = await Axios.patch('/api/orders/admin/cancelOrder/' + orderID);
-      if (data) {
-        dispatch({
-          type: ORDER_APPROVE_SUCCESS,
-          payload: data
-        });
-
-      }
-    }
-
-
-  } catch (error) {
-    dispatch({ type: ORDER_APPROVE_FAIL, payload: error.message });
   }
 };
 
@@ -128,8 +111,13 @@ export const orderListAction = () => async (dispatch, getState) => {
 
   dispatch({ type: ORDER_LIST_REQUEST });
   const { userSignin: { userInfo } } = getState();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    }
+  }
   try {
-    const { data } = await Axios.get('/v1/order');
+    const { data } = await Axios.get('/v1/order', config);
 
     dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
   } catch (error) {

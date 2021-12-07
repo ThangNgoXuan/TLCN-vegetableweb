@@ -50,7 +50,8 @@ const Header = () => {
                 },
                 {
                     "icon": "bx bx-log-out-circle bx-rotate-180",
-                    "content": "Đăng xuất"
+                    "content": "Đăng xuất",
+                    "go": ""
                 },
             ]
         } else {
@@ -67,7 +68,8 @@ const Header = () => {
                 },
                 {
                     "icon": "bx bx-log-out-circle bx-rotate-180",
-                    "content": "Đăng xuất"
+                    "content": "Đăng xuất",
+                    "go": "",
                 },
             ]
         }
@@ -110,7 +112,9 @@ const Header = () => {
     )
 
     const renderUserMenu = (item, index) => (
-        <Link to={item.go} key={index}>
+        <Link to={item.go} key={index}
+            onClick={item.go === "" && (() => signoutHandler())}
+        >
             <div className="notification-item">
                 <i className={item.icon}></i>
                 <span>{item.content}</span>

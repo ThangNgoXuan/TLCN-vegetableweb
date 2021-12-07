@@ -69,7 +69,7 @@ const OrderHistory = ({ history }) => {
             <div className="card__body">
               {
                 loading ? <div>Loading...</div> : error ? <div>{error}</div>
-                  : orders && orders.length <= 0 ? <div>Không có người dùng nào</div> :
+                  : orders && orders.length <= 0 ? <div>Không có đơn hàng nào</div> :
                     <Table
                       limit='10'
                       headData={customerTableHead}

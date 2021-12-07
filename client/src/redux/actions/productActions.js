@@ -18,13 +18,14 @@ export const listProducts = ({
   certificate = '',
   min = '',
   max = '',
+  brand = '',
 }) => async (dispatch) => {
   dispatch({
     type: PRODUCT_LIST_REQUEST,
   });
   try {
     const { data } = await Axios.get(
-      `/v1/products?pageNumber=${pageNumber}&name=${name}&category=${category}&certificate=${certificate}&min=${min}&max=${max}`
+      `/v1/products?pageNumber=${pageNumber}&name=${name}&category=${category}&certificate=${certificate}&min=${min}&max=${max}&brand=${brand}`
     );
     dispatch({ type: PRODUCT_LIST_SUCCESS, payload: data });
   } catch (error) {

@@ -1,14 +1,15 @@
 import express from 'express';
 import { statisticController } from '../controller/statistic.controller.js';
+import { isAdmin, isAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 router.route('/all')
-  .get(statisticController.statisticAll)
+  .get(isAuth, isAdmin, statisticController.statisticAll)
 
 router.route('/topCustomer')
-  .get(statisticController.topCustomers)
+  .get(isAuth, isAdmin, statisticController.topCustomers)
 
 router.route('/revenue/:by')
-  .get(statisticController.getRevenue)
+  .get(isAuth, isAdmin, statisticController.getRevenue)
 export const statisticRouter = router;

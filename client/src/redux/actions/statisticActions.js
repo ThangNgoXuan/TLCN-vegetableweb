@@ -42,9 +42,13 @@ export const topCustomersAction = () => async (dispatch, getState) => {
       payload: data
     })
   } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
     dispatch({
       type: S.TOP_CUSTOMER_FAIL,
-      payload: error.message
+      payload: message
     })
   }
 };

@@ -1,18 +1,19 @@
 import express from 'express'
-import { orderController } from '../controller/order.controller.js'
+import { orderController } from '../controller/order.controller.js';
+import { isAdmin, isAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.route('/myOrder/:id').get(orderController.getMyOrders);
+router.route('/myOrder/:id').get(isAuth, orderController.getMyOrders);
 
 router.route('/sendmail').post(orderController.sendMailOrder);
 
 router.route('/:id')
-  .get(orderController.getOrderById)
-  .put(orderController.adminUpdateOrder)
+  .get(isAuth, orderController.getOrderById)
+  .put(isAuth, orderController.adminUpdateOrder)
 
 router.route('/')
-  .get(orderController.getOrders)
-  .post(orderController.newOrder)
+  .get(isAuth, orderController.getOrders)
+  .post(isAuth, orderController.newOrder)
 
 export const orderRouter = router;
