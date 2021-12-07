@@ -7,9 +7,6 @@ import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
   ORDER_CREATE_FAIL,
-  ORDER_APPROVE_REQUEST,
-  ORDER_APPROVE_SUCCESS,
-  ORDER_APPROVE_FAIL,
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
@@ -71,6 +68,8 @@ const createOrder = (order) => async (dispatch, getState) => {
       type: ORDER_CREATE_SUCCESS,
       payload: data
     });
+    toast.success('Đặt hàng thành công');
+
   } catch (error) {
     dispatch({ type: ORDER_CREATE_FAIL, payload: error.message });
   }
