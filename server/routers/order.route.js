@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('/myOrder/:id').get(isAuth, orderController.getMyOrders);
 
-router.route('/sendmail').post(isAuth, orderController.sendMailOrder);
+router.route('/sendmail').post(orderController.sendMailOrder);
 
 router.route('/:id')
   .get(isAuth, orderController.getOrderById)

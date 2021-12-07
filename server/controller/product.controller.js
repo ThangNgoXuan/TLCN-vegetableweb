@@ -5,59 +5,66 @@ import { HttpStatusCode } from '../utils/constants.js';
 // @desc    Fetch all products
 // @route   GET /v1/products
 // @access  Public
-const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 12;
-  const page = Number(req.query.pageNumber) || 1;
-  const name = req.query.name || '';
-  const category = req.query.category || '';
-  const certification = req.query.certificate || '';
-  const order = req.query.order || '';
-  const brand = req.query.brand || '';
-  const min =
-    req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
-  const max =
-    req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
+const getProducts = async (req, res) => {
+  try {
 
-  const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
-  const categoryFilter = category ? { category } : {};
-  const brandFilter = brand ? { brand } : {};
-  const certificationFilter = certification ? { certification: { $regex: certification, $options: 'i' } } : {};
-  const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
-  const sortOrder =
-    order === 'lowest'
-      ? { price: 1 }
-      : order === 'highest'
-        ? { price: -1 }
-        : { _id: -1 };
+    const pageSize = 12;
+    const page = Number(req.query.pageNumber) || 1;
+    const name = req.query.name || '';
+    const category = req.query.category || '';
+    const certification = req.query.certificate || '';
+    const order = req.query.order || '';
+    const brand = req.query.brand && req.query.brand === 'all' ? '' : req.query.brand;
+    const min =
+      req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
+    const max =
+      req.query.max && Number(req.query.max) !== 0 ? Number(req.query.max) : 0;
 
-  const count = await Product.count({
-    ...categoryFilter,
-    ...brandFilter,
-    ...nameFilter,
-    ...categoryFilter,
-    ...certificationFilter,
-    ...priceFilter,
-  });
+    const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
+    const categoryFilter = category ? { category } : {};
+    const brandFilter = brand ? { brand } : {};
+    const certificationFilter = certification ? { certification: { $regex: certification, $options: 'i' } } : {};
+    const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
+    const sortOrder =
+      order === 'lowest'
+        ? { price: 1 }
+        : order === 'highest'
+          ? { price: -1 }
+          : { _id: -1 };
 
-  const products = await Product.find({
-    ...nameFilter,
-    ...categoryFilter,
-    ...brandFilter,
-    ...priceFilter,
-    ...certificationFilter,
-  })
-    .populate('brand')
-    .sort(sortOrder)
-    .skip(pageSize * (page - 1))
-    .limit(pageSize);
+    const count = await Product.count({
+      ...categoryFilter,
+      ...brandFilter,
+      ...nameFilter,
+      ...categoryFilter,
+      ...certificationFilter,
+      ...priceFilter,
+    });
 
-  if (products) {
-    res.send({ products, page, pages: Math.ceil(count / pageSize) });
-  } else {
-    res.json({}).status(HttpStatusCode.NOT_FOUND);
-    throw new Error('Không tìm thấy sản phẩm');
+    const products = await Product.find({
+      ...nameFilter,
+      ...categoryFilter,
+      ...brandFilter,
+      ...priceFilter,
+      ...certificationFilter,
+    })
+      .populate('brand')
+      .sort(sortOrder)
+      .skip(pageSize * (page - 1))
+      .limit(pageSize);
+
+    if (products) {
+      res.send({ products, page, pages: Math.ceil(count / pageSize) });
+    } else {
+      res.json({}).status(HttpStatusCode.NOT_FOUND);
+      throw new Error('Không tìm thấy sản phẩm');
+    }
+
+  } catch (error) {
+    res.status(404).send({ message: error.message });
+    console.log(error.message)
   }
-})
+}
 
 // @desc    Fetch all products
 // @route   GET /v1/products
