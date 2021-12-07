@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 
 const Table = props => {
@@ -7,17 +7,23 @@ const Table = props => {
 
     const [dataShow, setDataShow] = useState(initDataShow)
 
-    let pages = 1
+    let pages = props.pages || 1;
 
-    let range = []
-
-    if (props.limit !== undefined) {
-        let page = Math.floor(props.bodyData.length / Number(props.limit))
-        pages = props.bodyData.length % Number(props.limit) === 0 ? page : page + 1
-        range = [...Array(pages).keys()]
+    const pageList = [];
+    if (pages) {
+        for (let i = 1; i <= pages; i++) {
+            pageList.push(i);
+        }
     }
 
-    const [currPage, setCurrPage] = useState(0)
+    // if (props.limit !== undefined) {
+    //     let page = Math.floor(props.bodyData.length / Number(props.limit))
+    //     pages = props.bodyData.length % Number(props.limit) === 0 ? page : page + 1
+    //     range = [...Array(pages).keys()]
+    // }
+
+    const [currPage, setCurrPage] = useState(props.page || 1)
+    console.log(currPage)
 
     const selectPage = page => {
         const start = Number(props.limit) * page
@@ -58,9 +64,9 @@ const Table = props => {
                 pages > 1 ? (
                     <div className="table__pagination">
                         {
-                            range.map((item, index) => (
-                                <div key={index} className={`table__pagination-item ${currPage === index ? 'active' : ''}`} onClick={() => selectPage(index)}>
-                                    {item + 1}
+                            pageList.map((item) => (
+                                <div key={item} className={`table__pagination-item ${currPage === item ? 'active' : ''}`} onClick={() => props.handlePageChange({ newPage: item })}>
+                                    {item}
                                 </div>
                             ))
                         }

@@ -23,10 +23,10 @@ const CartItem = props => {
 
     const updateQuantity = (opt) => {
         if (opt === '+') {
-            dispatch(updateItem({...item, quantity: quantity + 1}))
+            dispatch(updateItem({ ...item, quantity: quantity + 1 }))
         }
         if (opt === '-') {
-            dispatch(updateItem({...item, quantity: quantity - 1 === 0 ? 1 : quantity - 1}))
+            dispatch(updateItem({ ...item, quantity: quantity - 1 === 0 ? 1 : quantity - 1 }))
         }
     }
 
@@ -40,14 +40,14 @@ const CartItem = props => {
     }
 
     return (
-        <div className="cart__item" ref={itemRef}>
+        <div className="cart__item" >
             <div className="cart__item__image">
-                <img src={item.product.image01} alt="" />
+                <img src={item.image[0]} alt="" />
             </div>
             <div className="cart__item__info">
                 <div className="cart__item__info__name">
-                    <Link to={`/catalog/${item.slug}`}>
-                        {`${item.product.title} - ${item.color} - ${item.certification}`}
+                    <Link to={`/catalog/${item._id}`}>
+                        {item.product.name}
                     </Link>
                 </div>
                 <div className="cart__item__info__price">

@@ -6,13 +6,14 @@ import { HttpStatusCode } from '../utils/constants.js';
 // @route   GET /v1/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 18;
+  const pageSize = 12;
   const page = Number(req.query.pageNumber) || 1;
   const name = req.query.name || '';
   const category = req.query.category || '';
-  const certification = req.query.certification || '';
+  const certification = req.query.certificate || '';
   const protype = req.query.protype || '';
   const order = req.query.order || '';
+  const brand = req.query.brand || '';
   const min =
     req.query.min && Number(req.query.min) !== 0 ? Number(req.query.min) : 0;
   const max =
@@ -20,8 +21,8 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const nameFilter = name ? { name: { $regex: name, $options: 'i' } } : {};
   const categoryFilter = category ? { category } : {};
-  const certificationFilter = certification ? { certification } : {};
-  const protypeFilter = protype ? { protype } : {};
+  const brandFilter = brand ? { brand } : {};
+  const certificationFilter = certification ? { certification: { $regex: certification, $options: 'i' } } : {};
   const priceFilter = min && max ? { price: { $gte: min, $lte: max } } : {};
   const sortOrder =
     order === 'lowest'
@@ -31,19 +32,76 @@ const getProducts = asyncHandler(async (req, res) => {
         : { _id: -1 };
 
   const count = await Product.count({
+    ...categoryFilter,
+    ...brandFilter,
     ...nameFilter,
     ...categoryFilter,
     ...certificationFilter,
-    ...protypeFilter,
     ...priceFilter,
   });
 
   const products = await Product.find({
     ...nameFilter,
     ...categoryFilter,
+    ...brandFilter,
     ...priceFilter,
+    ...certificationFilter,
   })
+    .populate('brand')
     .sort(sortOrder)
+    .skip(pageSize * (page - 1))
+    .limit(pageSize);
+
+  if (products) {
+    res.send({ products, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    res.json({}).status(HttpStatusCode.NOT_FOUND);
+    throw new Error('Không tìm thấy sản phẩm');
+  }
+})
+
+// @desc    Fetch all products
+// @route   GET /v1/products
+// @access  Private / admin/staff
+const getProductsAdmin = asyncHandler(async (req, res) => {
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword === 'notset' ? '' : req.query.keyword;
+
+  const searchFilter = keyword ? {
+    $or: [
+      {
+        name: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        description: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        certification: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+
+    ]
+  } : {}
+
+  const count = await Product.count({
+    ...searchFilter
+  });
+
+  const products = await Product.find({
+    ...searchFilter
+  })
+    .populate({ path: 'category', select: 'name' })
+    .populate({ path: 'brand', select: 'name' })
+    .populate({ path: 'creator', select: 'name' })
     .skip(pageSize * (page - 1))
     .limit(pageSize);
 
@@ -59,7 +117,10 @@ const getProducts = asyncHandler(async (req, res) => {
 // @route   GET /v1/products/:id
 // @access  Public
 const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id)
+    .populate({ path: 'category', select: 'name' })
+    .populate({ path: 'brand', select: 'name' })
+    .populate({ path: 'creator', select: 'name' })
 
   if (product) {
     res.json(product);
@@ -74,7 +135,7 @@ const getProductById = asyncHandler(async (req, res) => {
 // @route   DELETE /v1/products/:id
 // @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await product.findById(req.params.id);
+  const product = await Product.findById(req.params.id);
 
   if (product) {
     await product.remove();
@@ -124,6 +185,7 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.qtyInStock = req.body.qtyInStock;
     product.certification = req.body.certification;
     product.protype = req.body.protype;
+    product.sold = req.body.sold;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -155,10 +217,11 @@ const searchProduct = asyncHandler(async (req, res) => {
 //@route  get /v1/products/top-product
 //@access public
 const getTopProduct = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ sold: -1 }).limit(10)
+  const products = await Product.find()
+    .populate('category', 'id name').populate('brand').sort({ sold: -1 }).limit(8)
 
   if (products) {
-    res.send({ products });
+    res.json(products);
   } else {
     throw new Error('Khong tim thay san pham');
   }
@@ -174,7 +237,9 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    const products = await Product.find({ category: product.category }).sort({ sold: -1 }).limit(10)
+    const products = await Product.find({ category: product.category })
+      .populate('category', 'id name').populate('brand')
+      .sort({ sold: -1 }).limit(6)
     if (products) {
       res.send({ products });
     } else {
@@ -184,7 +249,29 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
     throw new Error('Không tìm thấy sản phẩm liên quan');
   }
 
-})
+});
+
+export const updateProductQuantity = async (orderItems) => {
+  if (orderItems) {
+
+    for (let i = 0; i < orderItems.length; i++) {
+      let product = await Product.findById(orderItems[i].product)
+
+      if (orderItems.quantity > product.qtyInStock) {
+        throw new Error(`${product.name} không có đủ số lượng bạn yêu cầu`)
+      }
+    }
+    for (let i = 0; i < orderItems.length; i++) {
+      let product = await Product.findById(orderItems[i].product)
+      let newQty = product.qtyInStock - orderItems[i].quantity;
+      product.qtyInStock = newQty
+      product.sold += newQty
+      await product.save();
+    }
+    console.log('update product ok')
+
+  }
+}
 
 export const productController = {
   searchProduct,
@@ -195,5 +282,6 @@ export const productController = {
   deleteProduct,
   getTopProduct,
   getTopProductRelate,
+  getProductsAdmin,
 };
 

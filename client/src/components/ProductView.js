@@ -4,11 +4,12 @@ import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { withRouter } from 'react-router'
 
-import { addItem } from '../redux/cartItemsSlide'
-import { remove } from '../redux/productModalSlice'
+import { addToCart } from '../redux/actions/cartActions'
 
 import Button from './Button'
 import numberWithCommas from '../utils/numberWithCommas'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProductView = props => {
 
@@ -34,10 +35,6 @@ const ProductView = props => {
 
     const [descriptionExpand, setDescriptionExpand] = useState(false)
 
-    const [protype, setProtype] = useState(undefined)
-
-    const [certification, setCertification] = useState(undefined)
-
     const [quantity, setQuantity] = useState(1)
 
     const updateQuantity = (type) => {
@@ -51,69 +48,42 @@ const ProductView = props => {
     useEffect(() => {
         setPreviewImg(product.images[0])
         setQuantity(1)
-        setProtype(undefined)
-        setCertification(undefined)
     }, [product])
 
-    const check = () => {
-        if (protype === undefined) {
-            alert('Vui lòng chọn màu sắc!')
-            return false
-        }
 
-        if (certification === undefined) {
-            alert('Vui lòng chọn kích cỡ!')
-            return false
-        }
-
-        return true
-    }
-
-    const addToCart = () => {
-        if (check()) {
-            let newItem = {
-                slug: product.slug,
-                protype: protype,
-                certification: certification,
-                price: product.price,
-                quantity: quantity
-            }
-            if (dispatch(addItem(newItem))) {
-                alert('Đã thêm vào giở hàng')
-            } else {
-                alert('Thêm vào giỏ thất bại')
-            }
+    const handleAddToCart = () => {
+        if (dispatch(addToCart(product._id, quantity))) {
+            toast.success("Đã thêm vào giỏ hàng");
         }
     }
 
-    const goToCart = () => {
-        if (check()) {
-            let newItem = {
-                slug: product.slug,
-                protype: protype,
-                certification: certification,
-                price: product.price,
-                quantity: quantity
-            }
-            if (dispatch(addItem(newItem))) {
-                dispatch(remove())
-                props.history.push('/cart')
-            } else {
-                alert('Fail')
-            }
-        }
+    const handleGoToCart = () => {
+        props.history.push(`/cart/${product._id}?qty=${quantity}`)
     }
 
     return (
         <div className="product">
+            <ToastContainer
+                position="top-left"
+                autoClose={1500}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             <div className="product__images">
                 <div className="product__images__list">
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.images[0])}>
-                        <img src={product.images[0]} alt="" />
-                    </div>
-                    <div className="product__images__list__item" onClick={() => setPreviewImg(product.images[1])}>
-                        <img src={product.images[1]} alt="" />
-                    </div>
+                    {
+                        product.images.map(item => (
+                            <div className="product__images__list__item" onClick={() => setPreviewImg(item)}>
+                                <img src={item} alt="" />
+                            </div>
+
+                        ))
+                    }
                 </div>
                 <div className="product__images__main">
                     <img src={previewImg} alt="" />
@@ -133,7 +103,7 @@ const ProductView = props => {
                 </div>
             </div>
             <div className="product__info">
-                <h1 className="product__info__title">{product.title}</h1>
+                <h1 className="product__info__title">{product.name}</h1>
                 <div className="product__info__item">
                     <span className="product__info__item__price">
                         {numberWithCommas(product.price)}
@@ -156,8 +126,8 @@ const ProductView = props => {
                     </div>
                 </div>
                 <div className="product__info__item">
-                    <Button onClick={() => addToCart()}>thêm vào giỏ</Button>
-                    <Button onClick={() => goToCart()}>mua ngay</Button>
+                    <Button onClick={() => handleAddToCart()}>thêm vào giỏ</Button>
+                    <Button onClick={() => handleGoToCart()}>mua ngay</Button>
                 </div>
             </div>
             <div className={`product-description mobile ${descriptionExpand ? 'expand' : ''}`}>

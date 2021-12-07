@@ -79,9 +79,73 @@
 
             &__item {
                 @include flex(center, center);
-
+                position: relative;
                 @include tablet {
                     margin-left: 10px;
+                }
+
+                .user-wrap {
+                    // .dropdown {
+                    //     position: absolute;
+                    //     background-color: rgb(166, 175, 175);
+                    //     top: 100%;
+                    //     right: 0;
+                    //     display: none;
+
+                    //     ul {
+                    //         list-style: none;
+                    //         padding: 10px;
+
+                    //         li {
+                    //             font-size: 1.1rem;
+                    //             min-width: 120px;
+                    //             display: inline-block;
+                    //             height: 1.2rem;
+                    //             span {
+                    //                 line-height: 1.2rem;
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    // .dropdown::before {
+                    //     content: "";
+                    //     display: block;
+                    //     width: 90 px;
+                    //     height: 28 px;
+                    //     position: absolute;
+                    //     top: 0 px;
+                    //     right: 0;
+                    //     background-color: blue;
+                    // }
+                }
+                // .user-wrap:hover {
+                //     .dropdown {
+                //         display: block;
+                //     }
+                // }
+
+                .cart-icon-wrap {
+                    position: relative;
+
+                    .cart-icon-amout {
+                        position: absolute;
+                        content: "";
+                        display: block;
+                        top: -6px;
+                        right: -10px;
+                        width: 20px;
+                        height: 20px;
+                        line-height: 20px;
+                        border-radius: 8px;
+                        // background-color: red;
+                        border: 1px solid #fcfcfc;
+                        box-shadow: 1px 1px 1px rgba($color: #000000, $alpha: 0.1);
+                        color: #000;
+                        font-size: 13px;
+                        text-align: center;
+                        font-weight: 600;
+                        background-color: #fff;
+                    }
                 }
             }
 

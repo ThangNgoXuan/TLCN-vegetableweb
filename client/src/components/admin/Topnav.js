@@ -1,39 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-
 
 import Dropdown from './Dropdown'
 
-import notifications from '../../fakedata/notification.json'
-import user_image from '../../images/admin/avata.jpg'
-import user_menu from '../../fakedata/user_menus.json'
+import { useSelector } from 'react-redux'
 
 
 
-const curr_user = {
-    display_name: 'Thang Ngo',
-    image: user_image
-}
-
-const renderNotificationItem = (item, index) => (
-    <div className="notification-item" key={index}>
-        <i className={item.icon}></i>
-        <span>{item.content}</span>
-    </div>
-)
+// const renderNotificationItem = (item, index) => (
+//     <div className="notification-item" key={index}>
+//         <i className={item.icon}></i>
+//         <span>{item.content}</span>
+//     </div>
+// )
 
 const renderUserToggle = (user) => (
     <div className="topnav__right-user">
         <div className="topnav__right-user__image">
-            <img src={user.image} alt="" />
+            <img src={user.avatar} alt="" />
         </div>
         <div className="topnav__right-user__name">
-            {user.display_name}
+            {user.lastName}
         </div>
     </div>
 )
 
-const renderUserMenu =(item, index) => (
+const renderUserMenu = (item, index) => (
     <Link to='/' key={index}>
         <div className="notification-item">
             <i className={item.icon}></i>
@@ -42,7 +34,33 @@ const renderUserMenu =(item, index) => (
     </Link>
 )
 
-const Topnav = () => {
+const Topnav = ({ history }) => {
+
+    const userSignin = useSelector(state => state.userSignin);
+    const { userInfo } = userSignin;
+
+
+    // useEffect(() => {
+    //     if (userInfo && userInfo.role === 'admin') {
+
+    //     } else {
+    //         history.push('/login')
+    //     }
+    // })
+
+
+
+    const user_menu = [
+        {
+            "icon": "bx bx-user",
+            "content": "Tài khoản"
+        },
+        {
+            "icon": "bx bx-log-out-circle bx-rotate-180",
+            "content": "Đăng xuất"
+        }
+    ]
+
     return (
         <div className='topnav'>
             <div className="topnav__search">
@@ -50,14 +68,18 @@ const Topnav = () => {
                 <i className='bx bx-search'></i>
             </div>
             <div className="topnav__right">
-                <div className="topnav__right-item">
-                <Dropdown
-                   customToggle={() => renderUserToggle(curr_user)}
-                   contentData={user_menu}
-                   renderItems={(item, index) => renderUserMenu(item, index)}
-                />
-                </div>
-                <div className="topnav__right-item">
+                {
+                    userInfo && userInfo.role === 'admin' ?
+                        <div className="topnav__right-item">
+                            <Dropdown
+                                customToggle={() => renderUserToggle(userInfo)}
+                                contentData={user_menu}
+                                renderItems={(item, index) => renderUserMenu(item, index)}
+                            />
+                        </div> : ''
+                }
+
+                {/* <div className="topnav__right-item">
                     <Dropdown
                         icon='bx bx-bell'
                         badge='12'
@@ -65,10 +87,7 @@ const Topnav = () => {
                         renderItems={(item, index) => renderNotificationItem(item, index)}
                         renderFooter={() => <Link to='/'>View All</Link>}
                     />
-                </div>
-                <div className="topnav__right-item">
-                
-                </div>
+                </div> */}
             </div>
         </div>
     )

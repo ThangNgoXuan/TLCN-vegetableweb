@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
@@ -9,10 +9,11 @@ import ProductCard from '../components/ProductCard'
 import ProductView from '../components/ProductView'
 import { detailsProduct, topProductsRelate } from '../redux/actions/productActions'
 
-import productData from '../fakedata/product'
 
 const Product = props => {
     const dispatch = useDispatch()
+    const productId = props.match.params.id
+
     const productDetail = useSelector(state => state.productDetail)
     const { loading, error, product } = productDetail
 
@@ -23,10 +24,9 @@ const Product = props => {
         topProductsRelate: productsRelate,
     } = listProductsRelate
 
-    console.log(listProductsRelate)
+    //console.log(listProductsRelate)
 
-    // const product = productData.getProductBySlug(props.match.params.id)
-    const productId = props.match.params.id
+    // const product = productData.getProductBySlug(props.match.params.id
 
 
     React.useEffect(() => {
@@ -35,6 +35,10 @@ const Product = props => {
         dispatch(detailsProduct(productId))
         dispatch(topProductsRelate(productId))
     }, [dispatch, productId])
+
+    // const addToCartHandler = () => {
+    //     props.history.push(`/cart/${productId}?qty=${qty}`);
+    // };
 
     return (
 
@@ -55,7 +59,7 @@ const Product = props => {
                             : errorTopProductRelate ? <div>{errorTopProductRelate}</div> :
                                 <Section>
                                     <SectionTitle>
-                                        Khám phá thêm
+                                        Sản phẩm tương tự
                                     </SectionTitle>
                                     {!productsRelate || productsRelate.length === 0
                                         ? <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào liên quan</div> :
@@ -73,9 +77,9 @@ const Product = props => {
                                                             key={index}
                                                             img01={item.images[0]}
                                                             img02={item.images[1]}
-                                                            name={item.title}
+                                                            name={item.name}
                                                             price={Number(item.price)}
-                                                            id={item._id}
+                                                            _id={item._id}
                                                         />
                                                     ))}
                                             </Grid>

@@ -1,109 +1,75 @@
-import React, { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Helmet from '../components/Helmet'
-import CheckBox from '../components/CheckBox'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-
-import productData from '../fakedata/product'
-import category from '../fakedata/category'
-import protype from '../fakedata/product-type'
-import certification from '../fakedata/product-certification'
 import Button from '../components/Button'
 import InfinityList from '../components/InfinityList'
 
 import { listProducts } from '../redux/actions/productActions'
+import { listBrandAction } from '../redux/actions/brandActions'
+import { categoryAction } from '../redux/actions/categoryActions'
+import { Link, useParams } from 'react-router-dom'
+import SearchPriceBox from '../components/SearchPriceBox'
 
 const Catalog = () => {
-    console.log('user-route')
+
+    const {
+        name = 'all',
+        category = 'all',
+        min = 0,
+        max = 0,
+        certificate = 'all',
+        pageNumber = 1,
+        brand = 'all',
+    } = useParams();
 
     const dispatch = useDispatch();
     const productsList = useSelector(state => state.productList)
     const { loading, error, products, page, pages } = productsList
 
-    const initFilter = {
-        category: [],
-        protype: [],
-        certification: []
-    }
+    const categoriesList = useSelector(state => state.categoriesList)
+    const { loading: loadingCategories, error: errorCategories, categories } = categoriesList
 
-    // const productList = productData.getAllProducts()
-
-    // const [products, setProducts] = useState(productList)
-
-    const [filter, setFilter] = useState(initFilter)
-
-    const filterSelect = (type, checked, item) => {
-        if (checked) {
-            switch (type) {
-                case "CATEGORY":
-                    setFilter({ ...filter, category: [...filter.category, item.categorySlug] })
-                    break
-                case "PROTYPE":
-                    setFilter({ ...filter, protype: [...filter.protype, item.protype] })
-                    break
-                case "CERTIFICATION":
-                    setFilter({ ...filter, certification: [...filter.certification, item.certification] })
-                    break
-                default:
-            }
-        } else {
-            switch (type) {
-                case "CATEGORY":
-                    const newCategory = filter.category.filter(e => e !== item.categorySlug)
-                    setFilter({ ...filter, category: newCategory })
-                    break
-                case "PROTYPE":
-                    const newProtype = filter.protype.filter(e => e !== item.protype)
-                    setFilter({ ...filter, protype: newProtype })
-                    break
-                case "CERTIFICATION":
-                    const newCertification = filter.certification.filter(e => e !== item.certification)
-                    setFilter({ ...filter, certification: newCertification })
-                    break
-                default:
-            }
-        }
-    }
-
-    const clearFilter = () => setFilter(initFilter)
-
-    // const updateProducts = useCallback(
-    //     () => {
-    //         let temp = productList
-
-    //         if (filter.category.length > 0) {
-    //             temp = temp.filter(e => filter.category.includes(e.categorySlug))
-    //         }
-
-    //         if (filter.protype.length > 0) {
-    //             temp = temp.filter(e => {
-    //                 const check = e.protype.find(protype => filter.protype.includes(protype))
-    //                 return check !== undefined
-    //             })
-    //         }
-
-    //         if (filter.certification.length > 0) {
-    //             temp = temp.filter(e => {
-    //                 const check = e.certification.find(certification => filter.certification.includes(certification))
-    //                 return check !== undefined
-    //             })
-    //         }
-
-    //         setProducts(temp)
-    //     },
-    //     [filter, productList],
-    // )
+    const brandsList = useSelector(state => state.brandsList)
+    const { loading: loadingBrand, error: errorBrand, brands } = brandsList
+    console.log(brands)
+    const certificates = ['Hữu cơ', 'VietGAP', 'GlobalGAP']
 
     useEffect(() => {
         // updateProducts()
-        dispatch(listProducts({}))
-    }, [dispatch])
+        dispatch(categoryAction())
+        dispatch(listBrandAction())
+        dispatch(listProducts({
+            pageNumber,
+            name: name !== 'all' ? name : '',
+            category: category !== 'all' ? category : '',
+            certificate: certificate !== 'all' ? certificate : '',
+            min,
+            max,
+            brand,
+        }))
+    }, [dispatch, category, name, pageNumber, certificate, min, max, brand])
 
     const filterRef = useRef(null)
 
     const showHideFilter = () => filterRef.current.classList.toggle('active')
+    const getFilterUrl = (filter) => {
+        const filterPage = filter.page || pageNumber;
+        const filterCategory = filter.category || category;
+        const filterBrand = filter.brand || brand;
+        const filterName = filter.name || name;
+        const filterCertificate = filter.certificate || certificate;
+        const filterMin = filter.min ? filter.min : filter.min === 0 ? 0 : min;
+        const filterMax = filter.max ? filter.max : filter.max === 0 ? 0 : max;
+        return `/catalog/category/${filterCategory}/name/${filterName}/certificate/${filterCertificate}/min/${filterMin}/max/${filterMax}/pageNumber/${filterPage}/brand/${filterBrand}`;
+    };
+
+    const pageNumberArr = [];
+    if (pages) {
+        for (let i = 1; i <= pages; i++) {
+            pageNumberArr.push(i);
+        }
+    }
 
     return (
         <Helmet title="Sản phẩm">
@@ -114,38 +80,20 @@ const Catalog = () => {
                     </div>
                     <div className="catalog__filter__widget">
                         <div className="catalog__filter__widget__title">
-                            danh mục sản phẩm
+                            Danh mục sản phẩm
                         </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                category.map((item, index) => (
-                                    <div key={index} className="catalog__filter__widget__content__item">
-                                        <CheckBox
-                                            label={item.display}
-                                            onChange={(input) => filterSelect("CATEGORY", input.checked, item)}
-                                            checked={filter.category.includes(item.categorySlug)}
-                                        />
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </div>
-
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            Chủng loại
-                        </div>
-                        <div className="catalog__filter__widget__content">
-                            {
-                                protype.map((item, index) => (
-                                    <div key={index} className="catalog__filter__widget__content__item">
-                                        <CheckBox
-                                            label={item.display}
-                                            onChange={(input) => filterSelect("PROTYPE", input.checked, item)}
-                                            checked={filter.protype.includes(item.protype)}
-                                        />
-                                    </div>
-                                ))
+                                loadingCategories ? <div>Loading...</div> : errorCategories ? <div></div>
+                                    : !categories ? <div></div> :
+                                        categories.map((item) => (
+                                            <div key={item._id} className="catalog__filter__widget__content__item">
+                                                <Link className={item._id === category ? 'active' : ''}
+                                                    to={() => getFilterUrl({ category: item._id })}>
+                                                    {item.name}
+                                                </Link>
+                                            </div>
+                                        ))
                             }
                         </div>
                     </div>
@@ -154,26 +102,40 @@ const Catalog = () => {
                         <div className="catalog__filter__widget__title">
                             Chứng nhận
                         </div>
+                        {!certificates ? <div></div> :
+                            certificates.map(x =>
+                                <div className="catalog__filter__widget__content">
+                                    <div className="catalog__filter__widget__content__item">
+                                        <Link className={certificate === 'x' ? 'active' : ''}
+                                            to={() => getFilterUrl({ certificate: x })}>
+                                            {x}</Link>
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </div>
+                    <div className="catalog__filter__widget">
+                        <div className="catalog__filter__widget__title">
+                            Thương hiệu
+                        </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                certification.map((item, index) => (
-                                    <div key={index} className="catalog__filter__widget__content__item">
-                                        <CheckBox
-                                            label={item.display}
-                                            onChange={(input) => filterSelect("CERTIFICATION", input.checked, item)}
-                                            checked={filter.certification.includes(item.certification)}
-                                        />
-                                    </div>
-                                ))
+                                loadingBrand ? <div>Loading...</div> : errorBrand ? <div></div>
+                                    : !brands ? <div></div> :
+                                        brands.map((item) => (
+                                            <div key={item._id} className="catalog__filter__widget__content__item">
+                                                <Link className={item._id === brand ? 'active' : ''}
+                                                    to={() => getFilterUrl({ brand: item._id })}>
+                                                    {item.name}
+                                                </Link>
+                                            </div>
+                                        ))
                             }
                         </div>
                     </div>
 
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__content">
-                            <Button size="sm" onClick={clearFilter}>xóa bộ lọc</Button>
-                        </div>
-                    </div>
+                    <SearchPriceBox getFilterUrl={getFilterUrl} />
+                    <div><Link to="/catalog">Reset</Link></div>
                 </div>
                 <div className="catalog__filter__toggle">
                     <Button size="sm" onClick={() => showHideFilter()}>bộ lọc</Button>
@@ -187,6 +149,52 @@ const Catalog = () => {
                         pages={pages}
                     />
                 </div>
+            </div>
+            {/* <Pagination page={page} pages={pages} getFilterUrl={getFilterUrl} /> */}
+
+            <div className="paginate">
+                <ul className="paginate__list">
+                    {page === 1 ?
+                        <li className="paginate__list-item">
+                            <Link to="#" style={{ cursor: 'default', backgroundColor: "#f5f5f5" }}
+                            >Trang trước</Link>
+                        </li>
+                        :
+                        <li className="paginate__list-item">
+
+                            <Link to={getFilterUrl({ page: pageNumber - 1 })}>Trang trước</Link>
+                        </li>
+                    }
+                    {pageNumberArr.map((number) => {
+                        if (number === page) {
+                            return <li className="paginate__list-item">
+                                <button className="active">{number}</button>
+                            </li>
+                        } else {
+                            return <li className="paginate__list-item">
+                                {/* <button onClick={() => handlePageChange(number)}>{number}</button> */}
+                                {/* <Link to={`/catalog/pageNumber/${number}`}>{number}</Link> */}
+                                <Link to={getFilterUrl({ page: number })}>{number}</Link>
+
+                            </li>
+                        }
+                    })
+                    }
+                    <li className="paginate__list-item">
+                        <button>...</button>
+                    </li>
+                    {page >= pages ?
+                        <li className="paginate__list-item">
+                            <Link to="#" style={{ cursor: 'default', backgroundColor: "#f5f5f5" }}
+                            >Trang sau</Link>
+                        </li>
+                        :
+                        <li className="paginate__list-item">
+
+                            <Link to={getFilterUrl({ page: +pageNumber + 1 })}>Trang sau</Link>
+                        </li>
+                    }
+                </ul>
             </div>
         </Helmet>
     )

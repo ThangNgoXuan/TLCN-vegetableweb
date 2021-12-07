@@ -8,6 +8,7 @@ router.route('/')
   .post(slideController.createSlide)
 
 router.route('/:id')
+  .get(slideController.getSlide)
   .put(slideController.updateSlide)
   .delete(slideController.deleteSlide)
 

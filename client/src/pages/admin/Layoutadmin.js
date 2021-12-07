@@ -1,16 +1,20 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import '../../styles/admin/indexadmin.scss'
 import RouterAdmin from '../../customRouter/RouterAdmin'
 
 /* components */
 import Sidebar from '../../components/admin/Sidebar'
 import Topnav from '../../components/admin/Topnav'
+import { useSelector } from 'react-redux'
 
 const Layoutadmin = () => {
+    const userSignin = useSelector((state) => state.userSignin);
+    const { userInfo } = userSignin;
+
     return (
-        <BrowserRouter>
-            <Route render={(props) => (
+        <Route render={(props) => (
+            userInfo && userInfo.role === 'admin' ?
                 <div>
                     <Sidebar {...props} />
                     <div className="layout__content">
@@ -20,8 +24,8 @@ const Layoutadmin = () => {
                         </div>
                     </div>
                 </div>
-            )} />
-        </BrowserRouter>
+                : <Redirect to="/login"></Redirect>
+        )} />
     )
 }
 

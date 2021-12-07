@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Chart from 'react-apexcharts'
 import { Link } from 'react-router-dom'
+import Loading from '../../components/Loading'
 
+import numberWithCommas from '../../utils/numberWithCommas'
 import Table from '../../components/admin/Table'
 import StatusCard from '../../components/admin/StatusCart'
 import Badge from '../../components/admin/Badge'
-
-import statusCards from '../../fakedata/status-card-data.json'
+import { useDispatch, useSelector } from 'react-redux'
+import { statisticAllAction, topCustomersAction } from '../../redux/actions/statisticActions'
 
 const chartOptions = {
     series: [{
         name: 'Online Customers',
-        data: [40,70,20,90,36,80,30,91,60]
+        data: [40, 70, 20, 90, 36, 80, 30, 91, 60]
     }, {
         name: 'Store Customers',
         data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10]
@@ -39,40 +41,12 @@ const chartOptions = {
     }
 }
 
-const topCustomers = {
-    head: [
-        'user',
-        'total orders',
-        'total spending'
-    ],
-    body: [
-        {
-            "username": "john doe",
-            "order": "490",
-            "price": "$15,870"
-        },
-        {
-            "username": "frank iva",
-            "order": "250",
-            "price": "$12,251"
-        },
-        {
-            "username": "anthony baker",
-            "order": "120",
-            "price": "$10,840"
-        },
-        {
-            "username": "frank iva",
-            "order": "110",
-            "price": "$9,251"
-        },
-        {
-            "username": "anthony baker",
-            "order": "80",
-            "price": "$8,840"
-        }
-    ]
-}
+const topCustomerTableHeader = [
+    'user',
+    'Tổng đơn hàng',
+    'Trị giá'
+]
+
 
 const renderCusomerHead = (item, index) => (
     <th key={index}>{item}</th>
@@ -80,9 +54,9 @@ const renderCusomerHead = (item, index) => (
 
 const renderCusomerBody = (item, index) => (
     <tr key={index}>
-        <td>{item.username}</td>
-        <td>{item.order}</td>
-        <td>{item.price}</td>
+        <td>{item.lastName + ' ' + item.firstName}</td>
+        <td>{item.totalOrders}</td>
+        <td>{numberWithCommas(item.total)}đ</td>
     </tr>
 )
 
@@ -151,32 +125,98 @@ const renderOrderBody = (item, index) => (
         <td>{item.price}</td>
         <td>{item.date}</td>
         <td>
-            <Badge type={orderStatus[item.status]} content={item.status}/>
+            <Badge type={orderStatus[item.status]} content={item.status} />
         </td>
     </tr>
 )
 
-const Dashboard = () => {
+const Dashboard = ({ history }) => {
+
+    const state = useSelector(state => state.statisticAll)
+    const { loading, error, summary } = state;
+
+    const topCustomers = useSelector(state => state.topCustomers)
+    const { loading: loadingCustomers, error: errorCustomers, customers } = topCustomers;
+
+    const dispatch = useDispatch();
+
+    const myInfo = useSelector(state => state.userSignin);
+    const { userInfo } = myInfo;
+
+    useEffect(() => {
+
+        if (userInfo && userInfo.role === 'admin') {
+            if (!summary) {
+                dispatch(statisticAllAction())
+            }
+            if (!customers) {
+                dispatch(topCustomersAction())
+            }
+
+        } else {
+            history.push('/login')
+        }
+    }, [dispatch, summary, customers, history, userInfo])
+
     return (
         <div>
             <h2 className="page-header">Dashboard</h2>
             <div className="row">
-                <div className="col-6">
+                <div className="col-12">
                     <div className="row">
-                        {
-                            statusCards.map((item, index) => (
-                                <div className="col-6" key={index}>
+
+                        {loading ? <Loading /> : error ? <div>{error}</div> : summary ? (
+                            <>
+                                <div className="col-4" >
                                     <StatusCard
-                                        icon={item.icon}
-                                        count={item.count}
-                                        title={item.title}
+                                        icon=''
+                                        count={summary.totalCustomer}
+                                        title="Tổng khách hàng"
                                     />
                                 </div>
-                            ))
+                                <div className="col-4" >
+                                    <StatusCard
+                                        icon=''
+                                        count={summary.totalProduct}
+                                        title="Tổng sản phẩm"
+                                    />
+                                </div>
+                                <div className="col-4" >
+                                    <StatusCard
+                                        icon=''
+                                        count={summary.totalCategories}
+                                        title="Tổng danh mục sản phẩm"
+                                    />
+                                </div>
+
+                                <div className="col-4" >
+                                    <StatusCard
+                                        icon=''
+                                        count={summary.totalOrder}
+                                        title="Tổng đơn hàng"
+                                    />
+                                </div>
+                                <div className="col-4" >
+                                    <StatusCard
+                                        icon=''
+                                        count={summary.revenueOrder[0].totalRevenue}
+                                        title="Tổng doanh thu"
+                                    />
+                                </div>
+                                <div className="col-4" >
+                                    <StatusCard
+                                        icon=''
+                                        count={summary.totalBrand}
+                                        title="Tổng thương hiệu"
+                                    />
+                                </div>
+                            </>
+                        ) : ''
                         }
+
                     </div>
                 </div>
-                <div className="col-6">
+                {/* <div className="col-6">
                     <div className="card full-height">
                     <Chart
                             options={chartOptions.options}
@@ -185,19 +225,24 @@ const Dashboard = () => {
                             height='100%'
                         />
                     </div>
-                </div>
+                </div> */}
                 <div className="col-4">
                     <div className="card">
                         <div className="card__header">
-                            <h3>top customers</h3>
+                            <h3>top khách hàng</h3>
                         </div>
                         <div className="card__body">
-                            <Table
-                                headData={topCustomers.head}
-                                renderHead={(item, index) => renderCusomerHead(item, index)}
-                                bodyData={topCustomers.body}
-                                renderBody={(item, index) => renderCusomerBody(item, index)}
-                            />
+                            {
+                                customers ? (
+                                    <Table
+                                        headData={topCustomerTableHeader}
+                                        renderHead={(item, index) => renderCusomerHead(item, index)}
+                                        bodyData={customers}
+                                        renderBody={(item, index) => renderCusomerBody(item, index)}
+                                    />
+                                ) : ""
+                            }
+
                         </div>
                         <div className="card__footer">
                             <Link to='/'>view all</Link>

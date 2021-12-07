@@ -3,19 +3,13 @@ import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
 
-import { useDispatch } from 'react-redux'
-
-import { set } from '../redux/productModalSlice'
-
-import Button from './Button'
-
 import numberWithCommas from '../utils/numberWithCommas'
 
 const ProductCard = props => {
 
-    const dispatch = useDispatch()
-
+    const price = props.discount ? (props.price - props.discount * props.price) : props.price;
     return (
+
         <div className="product-card">
             <Link to={`/product/${props._id}`}>
                 <div className="product-card__image">
@@ -25,13 +19,13 @@ const ProductCard = props => {
                 <h3 className="product-card__name">{props.name}</h3>
                 <div className="product-card__price">
                     {/* {numberWithCommas(props.price)} */}
-                    {props.price}
+                    {numberWithCommas(price)}đ
                     <span className="product-card__price__old">
-                        <del>{numberWithCommas(399000)}</del>
+                        <del>{numberWithCommas(props.price)}đ</del>
                     </span>
                 </div>
             </Link>
-            <div className="product-card__btn">
+            {/* <div className="product-card__btn">
                 <Button
                     size="sm"
                     icon="bx bx-cart"
@@ -40,17 +34,17 @@ const ProductCard = props => {
                 >
                     chọn mua
                 </Button>
-            </div>
+            </div> */}
         </div>
     )
 }
 
 ProductCard.propTypes = {
-    img01: PropTypes.string.isRequired,
-    img02: PropTypes.string.isRequired,
+    // img01: PropTypes.string.isRequired,
+    // img02: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
-    slug: PropTypes.string.isRequired,
+
 }
 
 export default ProductCard

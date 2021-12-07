@@ -20,12 +20,16 @@ const getCategories = asyncHandler(async (req, res) => {
 // @route   PUT /v1/category/:id
 // @access  Staff/Admin Private
 const updateCategory = asyncHandler(async (req, res) => {
-  const name = req.body.name;
+  const { name, path, displayOrder, image, status } = req.body;
 
   const category = await ProductCategory.findById(req.params.id);
 
   if (category) {
     category.name = name;
+    category.categorySlug = path;
+    category.displayOrder = displayOrder;
+    category.status = status;
+    category.image = image;
 
     const updatedCategory = await category.save();
     res.json(updatedCategory);
@@ -56,11 +60,23 @@ const deleteCategory = asyncHandler(async (req, res) => {
 //@access Private/staff
 const createCategory = asyncHandler(async (req, res) => {
   const category = new ProductCategory();
-
-  category.name = req.body.name;
-
+  Object.assign(category, req.body)
   const createdCategory = await category.save();
-  res.status(HttpStatusCode.CREATED_SUCCESS).json(createdSlide);
+  res.status(HttpStatusCode.CREATED_SUCCESS).json(createdCategory);
+});
+
+// @desc    Get  category 
+// @route   GET /v1/category/:id
+// @access  Public
+const getCategory = asyncHandler(async (req, res) => {
+  const categories = await ProductCategory.findById(req.params.id);
+
+  if (categories) {
+    res.json(categories);
+  } else {
+    res.status(404)
+    throw new Error('Categories not found!');
+  }
 });
 
 export const productCategoryController = {
@@ -68,5 +84,6 @@ export const productCategoryController = {
   getCategories,
   updateCategory,
   deleteCategory,
+  getCategory,
 };
 

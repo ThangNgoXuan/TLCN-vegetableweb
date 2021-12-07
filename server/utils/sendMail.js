@@ -1,9 +1,9 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer'
 
-const adminEmail = 'tranquangdai5012@gmail.com';
-const adminPassword = 'tranquangdai501';
+const adminEmail = process.env.MAIL;
+const adminPassword = process.env.MAIL_PASSWORD;
 
-const sendMail = (toEmail, sub, htmlContent) => {
+export const sendMail = (toEmail, sub, htmlContent) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -28,4 +28,3 @@ const sendMail = (toEmail, sub, htmlContent) => {
   });
 }
 
-module.exports = sendMail;

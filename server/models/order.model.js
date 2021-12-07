@@ -9,15 +9,27 @@ const orderSchema = mongoose.Schema(
     },
     orderItems: [
       {
-        qty: { type: Number, required: true },
+        quantity: { type: Number, required: true },
         product: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
           ref: 'Product',
         },
+        price: { type: Number, required: true },
+        discount: { type: Number, default: 0 }
       },
     ],
-    name: {
+    firstName: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    lastName: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    mail: {
       type: String,
       required: true,
       trim: true
@@ -35,28 +47,27 @@ const orderSchema = mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
+      default: 'COD'
     },
     paymentResult: {
-      id: { type: String },
-      status: { type: String },
-      update_time: { type: String },
-      email_address: { type: String },
+      type: Boolean,
+      default: false
+    },
+    paidAt: {
+      type: Date,
     },
     totalPrice: {
       type: Number,
       required: true,
-      default: 0.0,
     },
     message: {
       type: String,
       trim: true
     },
-    paidAt: {
-      type: Date,
-    },
     status: {
       type: String,
-      required: true
+      required: true,
+      default: 'DANG_XU_LY'
     }
   },
   {

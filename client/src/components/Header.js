@@ -1,7 +1,12 @@
 import React, { useRef, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useLocation, Route } from 'react-router-dom'
+import { userLogOutAction } from '../redux/actions/userAction'
+import Dropdown from './admin/Dropdown'
 
-import logo from '../images/logo__txt.PNG'
+import logo from '../images/main-logo.png'
+
+import Search from './Search'
 
 const mainNav = [
     {
@@ -16,18 +21,55 @@ const mainNav = [
         display: "Giới thiệu",
         path: "/intro"
     },
-    {
-        display: "Liên hệ",
-        path: "/contact"
-    }
+    // {
+    //     display: "Liên hệ",
+    //     path: "/contact"
+    // }
 ]
 
 const Header = () => {
+
+    const userSignin = useSelector(state => state.userSignin);
+    const dispatch = useDispatch();
+    const { userInfo } = userSignin;
+    const cart = useSelector((state) => state.cart);
+    const { cartItems, error } = cart;
 
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
 
     const headerRef = useRef(null)
+    let user_menu = []
+    if (userInfo) {
+        if (userInfo.role === 'admin') {
+            user_menu = [
+                {
+                    "icon": "bx bx-user",
+                    "content": "Trang Admin"
+                },
+                {
+                    "icon": "bx bx-log-out-circle bx-rotate-180",
+                    "content": "Đăng xuất"
+                },
+            ]
+        } else {
+            user_menu = [
+                {
+                    "icon": "bx bx-user",
+                    "content": "Tài khoản"
+                },
+                {
+                    "icon": "bx bx-log-out-circle bx-rotate-180",
+                    "content": "Đăng xuất"
+                },
+                {
+                    "icon": "bx bx-user",
+                    "content": "Đơn hàng"
+                }
+            ]
+        }
+    }
+
 
     useEffect(() => {
         window.addEventListener("scroll", () => {
@@ -37,6 +79,7 @@ const Header = () => {
                 headerRef.current.classList.remove('shrink')
             }
         })
+
         return () => {
             window.removeEventListener("scroll")
         };
@@ -46,11 +89,36 @@ const Header = () => {
 
     const menuToggle = () => menuLeft.current.classList.toggle('active')
 
+    const signoutHandler = () => {
+        dispatch(userLogOutAction());
+    }
+
+    const renderUserToggle = (user) => (
+        <div className="topnav__right-user">
+            <div className="topnav__right-user__image">
+                <img src={user.avatar} alt="" />
+            </div>
+            <div className="topnav__right-user__name">
+                {user.firstName}
+            </div>
+        </div>
+    )
+
+    const renderUserMenu = (item, index) => (
+        <Link to='/' key={index}>
+            <div className="notification-item">
+                <i className={item.icon}></i>
+                <span>{item.content}</span>
+            </div>
+        </Link>
+    )
+
+
     return (
         <div className="header" ref={headerRef}>
             <div className="container">
-                <div className="header__logo">
-                    <img src={logo} alt="#" />
+                <div className="header__logo" style={{ height: '100%' }}>
+                    <img src={logo} alt="#" style={{ width: '60px', borderRadius: '50%' }} />
                 </div>
                 <div className="header__menu">
                     <div className="header__menu__mobile-toggle" onClick={menuToggle}>
@@ -76,18 +144,47 @@ const Header = () => {
                     </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bx-search"></i>
+                            {/* <i className="bx bx-search"></i> */}
+
+                            <Route render={({ history }) => <Search history={history} />}></Route>
                         </div>
+
                         <div className="header__menu__item header__menu__right__item">
                             <Link to="/cart">
-                                <i className="bx bx-shopping-bag"></i>
+                                <span className="cart-icon-wrap">
+                                    {cartItems ? cartItems.length > 0 ?
+                                        <span className="cart-icon-amout">{cartItems.length}</span>
+                                        : false : false
+                                    }
+                                    <i className="bx bx-shopping-bag"></i>
+                                </span>
                             </Link>
                         </div>
                         <div className="header__menu__item header__menu__right__item">
-                            <Link to="/login">
-                                <i className="bx bx-user"></i>
-                            </Link>
-                            
+                            {!userInfo ?
+                                <div style={{ fontSize: '14px' }}>
+                                    <Link to="/login">Đăng nhập</Link>
+                                    <Link>| Đăng ký</Link>
+                                </div>
+                                : <div className="user-wrap">
+                                    {/* <i className="bx bx-user"></i> */}
+                                    {/* <div className="dropdown">
+                                        <ul>
+                                            <li><Link to=""><span>Tài khoản của tôi</span></Link></li>
+                                            <li><Link to="">Đơn mua</Link></li>
+                                            <li><Link to="#signout" onClick={signoutHandler}
+                                            >Đăng xuất
+                                            </Link></li>
+                                        </ul>
+                                    </div> */}
+                                    <Dropdown
+                                        customToggle={() => renderUserToggle(userInfo)}
+                                        contentData={user_menu}
+                                        renderItems={(item, index) => renderUserMenu(item, index)}
+                                    // logOut ={signoutHandler}
+                                    />
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

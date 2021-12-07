@@ -8,14 +8,11 @@ import Section, { SectionTitle, SectionBody } from '../components/Section'
 import PolicyCard from '../components/PolicyCard'
 import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 
-import heroSliderData from '../fakedata/heroslide'
 import policy from '../fakedata/policy'
 import productData from '../fakedata/product'
 
-import { listProducts, topProductAction } from '../redux/actions/productActions'
+import { listProducts, topProductAction, listProductsWithCondition } from '../redux/actions/productActions'
 import { listSlides } from '../redux/actions/slideAction'
 
 import banner from '../images/sale1.png'
@@ -31,9 +28,7 @@ const Home = () => {
     const dispatch = useDispatch();
 
     const productList = useSelector(state => state.productList);
-    const { loading, error, products, page, pages } = productList;
-
-
+    const { loading, error, products, } = productList;
 
     const topProducts = useSelector(state => state.topProducts);
     const {
@@ -42,6 +37,7 @@ const Home = () => {
         topProducts: topProducts1,
     } = topProducts;
 
+
     const slideList = useSelector(state => state.slideList);
     const {
         loading: loadingSlides,
@@ -49,11 +45,19 @@ const Home = () => {
         slides,
     } = slideList;
 
+    const listproductByCertification = useSelector(state => state.productListWithContidion);
+    const {
+        loading: loadingProductCertification,
+        error: errorProductCertification,
+        products: productsCertification,
+    } = listproductByCertification;
+
     useEffect(() => {
 
         dispatch(listSlides())
         dispatch(topProductAction())
         dispatch(listProducts({}))
+        dispatch(listProductsWithCondition({ certificate: 'VietGAP' }))
 
     }, [dispatch])
 
@@ -98,7 +102,7 @@ const Home = () => {
             {/* best selling section */}
             <Section>
                 <SectionTitle>
-                    Sản phẩm mới thu hoạch
+                    Sản phẩm mới
                 </SectionTitle>
                 {
                     loading ? <div>Loading...</div>
@@ -138,28 +142,36 @@ const Home = () => {
                 <SectionTitle>
                     Sản phẩm bán chạy
                 </SectionTitle>
-                <SectionBody>
-                    <Grid
-                        col={4}
-                        mdCol={2}
-                        smCol={1}
-                        gap={20}
-                    >
-                        {
-                            productData.getProducts(8).map((item, index) => (
-                                <ProductCard
-                                    key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
-                                    price={Number(item.price)}
-                                    slug={item.slug}
-                                    _id={item._id}
-                                />
-                            ))
-                        }
-                    </Grid>
-                </SectionBody>
+                {
+                    loadingTopProducts ? <div>Loading...</div>
+                        : errorTopProducts ? <div>{errorTopProducts}</div> :
+                            <SectionBody>
+                                {
+                                    topProducts1 === undefined || topProducts1.length === 0 ?
+                                        <div className="text-center" style={{ height: '10vh', fontSize: '30px' }}>Không có sản phẩm nào</div> :
+                                        <Grid
+                                            col={4}
+                                            mdCol={2}
+                                            smCol={1}
+                                            gap={20}
+                                        >
+                                            {
+                                                topProducts1.map((item) => (
+                                                    <ProductCard
+                                                        key={item._id}
+                                                        img01={item.images[0]}
+                                                        img02={item.images[1]}
+                                                        name={item.name}
+                                                        price={item.price}
+                                                        _id={item._id}
+                                                    />
+                                                )
+                                                )
+                                            }
+                                        </Grid>
+                                }
+                            </SectionBody>
+                }
             </Section>
             {/* end new arrival section */}
 
@@ -176,30 +188,33 @@ const Home = () => {
             {/* popular product section */}
             <Section>
                 <SectionTitle>
-                    Sản phẩm chế biến sẵn
+                    Sản phẩm VietGAP
                 </SectionTitle>
-                <SectionBody>
-                    <Grid
-                        col={4}
-                        mdCol={2}
-                        smCol={1}
-                        gap={20}
-                    >
-                        {
-                            productData.getProducts(12).map((item, index) => (
-                                <ProductCard
-                                    key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
-                                    price={Number(item.price)}
-                                    slug={item.slug}
-                                    _id={item._id}
-                                />
-                            ))
-                        }
-                    </Grid>
-                </SectionBody>
+                {
+                    loadingProductCertification ? <div>Loading...</div>
+                        : errorProductCertification ? <div>{errorProductCertification}</div> :
+                            <SectionBody>
+                                <Grid
+                                    col={4}
+                                    mdCol={2}
+                                    smCol={1}
+                                    gap={20}
+                                >
+                                    {
+                                        productsCertification ? (productsCertification.map((item, index) => (
+                                            <ProductCard
+                                                key={index}
+                                                img01={item.images[0]}
+                                                img02={item.images[1]}
+                                                name={item.name}
+                                                price={Number(item.price)}
+                                                _id={item._id}
+                                            />
+                                        ))) : ''
+                                    }
+                                </Grid>
+                            </SectionBody>
+                }
             </Section>
             {/* end popular product section */}
         </Helmet>

@@ -10,21 +10,36 @@ import Categories from '../pages/admin/categories'
 import Analytics from '../pages/admin/analytics'
 import Orders from '../pages/admin/orders'
 import NewProduct from '../pages/admin/newproduct'
+import NewCategory from '../pages/admin/NewCategory'
+import EditCategory from '../pages/admin/EditCategory'
+import Brand from '../pages/admin/Brands'
+import NewBrand from '../pages/admin/NewBrand'
+import EditBrand from '../pages/admin/EditBrand'
+import Slides from '../pages/admin/Slides'
+import EditSlide from '../pages/admin/EditSlides'
+import NewSlide from '../pages/admin/NewSlide'
+
 const RouterAdmin = () => {
     return (
         <Switch>
-            <Route  path='/admin' exact component={Dashboard}/>
-            <Route path='/admin/products' component={Products}/>
-            <Route path='/admin/newproduct' component={NewProduct}/>
-            <Route path='/admin/customers' component={Customers}/>
-            <Route path='/admin/newuser' component={NewUser}/>
-            <Route path='/admin/user' component={User}/>
-            <Route path='/admin/setting' component={Setting}/>
-            <Route path='/admin/categories' component={Categories}/>
-            <Route path='/admin/analytics' component={Analytics}/>
-            <Route path='/admin/orders' component={Orders}/>
-
-
+            <Route path='/admin/products' component={Products} />
+            <Route path='/admin/newproduct' component={NewProduct} />
+            <Route path='/admin/customers' component={Customers} />
+            <Route path='/admin/newuser' component={NewUser} />
+            <Route path='/admin/user' component={User} />
+            <Route path='/admin/setting' component={Setting} />
+            <Route path='/admin/categories/:id' exact component={EditCategory} />
+            <Route path='/admin/categories' component={Categories} />
+            <Route path='/admin/analytics' component={Analytics} />
+            <Route path='/admin/orders' component={Orders} />
+            <Route path='/admin/newCategory' exact component={NewCategory} />
+            <Route path='/admin/brands' exact component={Brand} />
+            <Route path='/admin/newBrand' exact component={NewBrand} />
+            <Route path='/admin/brand/:id' exact component={EditBrand} />
+            <Route path='/admin/slides' exact component={Slides} />
+            <Route path='/admin/slides/:id' exact component={EditSlide} />
+            <Route path='/admin/newSlide' exact component={NewSlide} />
+            <Route path='/admin' exact component={Dashboard} />
         </Switch>
     )
 }
