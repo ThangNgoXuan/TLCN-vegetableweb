@@ -32,7 +32,7 @@ const Catalog = () => {
 
     const brandsList = useSelector(state => state.brandsList)
     const { loading: loadingBrand, error: errorBrand, brands } = brandsList
-    console.log(brands)
+
     const certificates = ['Hữu cơ', 'VietGAP', 'GlobalGAP']
 
     useEffect(() => {

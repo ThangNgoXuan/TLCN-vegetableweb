@@ -11,6 +11,10 @@ const NewProduct = ({ history }) => {
 
   const myInfo = useSelector(state => state.userSignin);
   const { userInfo } = myInfo;
+  const listCategory = useSelector(state => state.categoriesList);
+  const { categories } = listCategory;
+  const brandsList = useSelector(state => state.brandsList);
+  const { brands } = brandsList;
 
   useEffect(() => {
     if (userInfo && userInfo.role === 'admin') {
@@ -18,6 +22,7 @@ const NewProduct = ({ history }) => {
     } else {
       history.push('/login')
     }
+
   }, [history, userInfo])
 
 
@@ -65,11 +70,15 @@ const NewProduct = ({ history }) => {
                 </div>
                 <div className="userUpdateItem">
                   <label>Thương hiệu:</label>
-                  <input
-                    type="text"
-                    placeholder="Thang Ngo"
-                    className="userUpdateInput"
-                  />
+                  {brands &&
+                    <select>
+                      {brands.map((item, index) =>
+                        <option key={index}>{item.name}</option>
+                      )
+                      }
+                    </select>
+                  }
+
                 </div>
                 <div className="userUpdateItem">
                   <label>Trạng thái</label>

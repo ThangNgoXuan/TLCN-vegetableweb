@@ -36,11 +36,19 @@ export const userLogOutAction = () => (dispatch) => {
   document.location.href = "/";
 }
 
-export const listUserAction = () => async (dispatch) => {
+export const listUserAction = () => async (dispatch, getState) => {
   dispatch({ type: USER_LIST_REQUEST });
+  const {
+    userSignin: { userInfo },
+  } = getState();
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    },
+  }
   try {
-    const { data } = await Axios.get('/v1/user');
+    const { data } = await Axios.get('/v1/user', config);
     dispatch({ type: USER_LIST_SUCCESS, payload: data })
   } catch (error) {
     dispatch({

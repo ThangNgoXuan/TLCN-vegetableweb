@@ -167,6 +167,7 @@ const Dashboard = ({ history }) => {
 
                         {loading ? <Loading /> : error ? <div>{error}</div> : summary ? (
                             <>
+                                {console.log(summary)}
                                 <div className="col-4" >
                                     <StatusCard
                                         icon=''

@@ -93,7 +93,8 @@ const googleLogin = asyncHandler(async (req, res) => {
         role: oldAccount.role,
         phone: oldAccount.phone,
         email: oldAccount.email,
-        address: oldAccount.address
+        address: oldAccount.address,
+        avatar: oldAccount.avatar,
       };
     } else {
 
@@ -111,6 +112,7 @@ const googleLogin = asyncHandler(async (req, res) => {
           lastName: userCreate.lastName,
           email: userCreate.email,
           role: userCreate.role,
+          avatar: userCreate.avatar,
         };
       } else {
         res.status(401)
@@ -118,8 +120,10 @@ const googleLogin = asyncHandler(async (req, res) => {
       }
     }
     if (user) {
-      user.token = generateToken(user._id);
-      res.status(200).json(user);
+      res.status(200).json({
+        ...user,
+        token: generateToken(user._id),
+      });
     } else {
       res.status(401)
       throw new Error('Đăng nhập không thành công');

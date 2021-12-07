@@ -11,7 +11,6 @@ const getProducts = asyncHandler(async (req, res) => {
   const name = req.query.name || '';
   const category = req.query.category || '';
   const certification = req.query.certificate || '';
-  const protype = req.query.protype || '';
   const order = req.query.order || '';
   const brand = req.query.brand || '';
   const min =
