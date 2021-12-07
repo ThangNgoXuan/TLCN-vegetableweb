@@ -45,7 +45,8 @@ const Header = () => {
             user_menu = [
                 {
                     "icon": "bx bx-user",
-                    "content": "Trang Admin"
+                    "content": "Trang Admin",
+                    "go": "admin"
                 },
                 {
                     "icon": "bx bx-log-out-circle bx-rotate-180",
@@ -56,22 +57,25 @@ const Header = () => {
             user_menu = [
                 {
                     "icon": "bx bx-user",
-                    "content": "Tài khoản"
+                    "content": "Tài khoản",
+                    "go": "/my-profile"
+                },
+                {
+                    "icon": "bx bx-user",
+                    "content": "Đơn hàng",
+                    "go": "order-history"
                 },
                 {
                     "icon": "bx bx-log-out-circle bx-rotate-180",
                     "content": "Đăng xuất"
                 },
-                {
-                    "icon": "bx bx-user",
-                    "content": "Đơn hàng"
-                }
             ]
         }
     }
 
 
     useEffect(() => {
+
         window.addEventListener("scroll", () => {
             if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
                 headerRef.current.classList.add('shrink')
@@ -81,8 +85,9 @@ const Header = () => {
         })
 
         return () => {
-            window.removeEventListener("scroll")
+            window.removeEventListener("scroll", null)
         };
+
     }, []);
 
     const menuLeft = useRef(null)
@@ -105,7 +110,7 @@ const Header = () => {
     )
 
     const renderUserMenu = (item, index) => (
-        <Link to='/' key={index}>
+        <Link to={item.go} key={index}>
             <div className="notification-item">
                 <i className={item.icon}></i>
                 <span>{item.content}</span>
