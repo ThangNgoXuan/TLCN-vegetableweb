@@ -82,12 +82,12 @@ const Header = () => {
             if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
                 headerRef.current.classList.add('shrink')
             } else {
-                headerRef.current.classList.remove('shrink')
+                headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
             }
         })
 
         return () => {
-            window.removeEventListener("scroll", null)
+            window.removeEventListener("scroll", () => { })
         };
 
     }, []);
