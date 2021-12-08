@@ -103,9 +103,9 @@ const NewSlide = ({ history }) => {
 
                 <div className="userUpdateItem">
                   <label>Hình ảnh</label>
-                  <img src={image} alt="hình ảnh" />
+                  <img src={image} alt="Hình ảnh" />
 
-                  <div>Tải hình ảnh lên</div>
+                  <br />
                   <input type="file" id="file"
                     onChange={handleUploadImage}
                   />
@@ -113,7 +113,7 @@ const NewSlide = ({ history }) => {
                     <label>Đường dẫn tới sản phẩm</label>
                     <input
                       type="text"
-                      placeholder="Cam sành hữu cơ"
+                      placeholder="Link"
                       className="userUpdateInput"
                       onChange={e => setPath(e.target.value)}
                     />
@@ -127,8 +127,14 @@ const NewSlide = ({ history }) => {
                     ></textarea>
                   </div>
                 </div>
-                <Link to="/admin/slides" className="userUpdateButton">Trở về</Link>
+                <br />
+                <br />
                 <button className="userUpdateButton">Lưu</button>
+                <br />
+                <br />
+                <Link to="/admin/slides">
+                  <button className="userUpdateButton">Trở về</button>
+                </Link>
               </div>
             </form>
           </div>

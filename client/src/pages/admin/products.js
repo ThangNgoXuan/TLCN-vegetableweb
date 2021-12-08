@@ -9,6 +9,7 @@ import Table from '../../components/admin/Table'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { listProductsAdmin, deleteProductAction } from '../../redux/actions/productActions'
+import Search from '../../components/Search'
 
 const Products = ({ history }) => {
 
@@ -99,16 +100,21 @@ const Products = ({ history }) => {
                 newestOnTop={false}
             />
             <div className="row">
-                <div className="col-10">
+                <div className="col-8">
                     <h2 className="page-header">
                         Danh sách sản phẩm
+                    </h2>
+                </div>
+                <div className="col-2">
+                    <h2 className="page-header">
+                        <Search/>
                     </h2>
                 </div>
                 <div className="col-2">
                     <Link to='/admin/newproduct'>
                         <div className="slide__item">
                             <div className="sidebar__item-inner active flexcenter">
-                                <span>New Product</span>
+                                <span>Thêm sản phẩm</span>
                             </div>
                         </div>
                     </Link>

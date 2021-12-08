@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateStatusOrderAction } from '../../redux/actions/orderAction'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Search from '../../components/Search'
 
 const Orders = ({ history }) => {
     const dispatch = useDispatch();
@@ -73,6 +74,11 @@ const Orders = ({ history }) => {
                 <div className="col-10">
                     <h2 className="page-header">
                         Orders
+                    </h2>
+                </div>
+                <div className="col-2">
+                    <h2 className="page-header">
+                      <Search/>
                     </h2>
                 </div>
             </div>

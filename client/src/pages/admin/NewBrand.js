@@ -54,8 +54,14 @@ const NewBrand = ({ match, history }) => {
                     onChange={e => setName(e.target.value)}
                   />
                 </div>
+                <br />
+              
+                <Link to="/admin/brands" className="userUpdateButton" >
+                  <button className="userUpdateButton" type="submit">Trở về</button>
+                </Link>
+                <br /><br />
                 <button className="userUpdateButton" type="submit">Thêm mới</button>
-                <Link to="/admin/brands" className="userUpdateButton" >Trở về</Link>
+                
               </div>
             </form>
           </div>
