@@ -28,6 +28,31 @@ export const listSlides = () => async (dispatch) => {
   }
 };
 
+export const listSlidesAdmin = () => async (dispatch, getState) => {
+  dispatch({
+    type: SLIDE_LIST_REQUEST
+  })
+
+  const {
+    userSignin: { userInfo }
+  } = getState();
+
+  try {
+    const { data } = await Axios.get('/v1/slide/admin', {
+      headers: { Authorization: `Bearer ${userInfo.token}` }
+    })
+    dispatch({
+      type: SLIDE_LIST_SUCCESS,
+      payload: data
+    })
+  } catch (error) {
+    dispatch({
+      type: SLIDE_LIST_FAIL,
+      payload: error.message
+    })
+  }
+};
+
 
 export const addSlideAction = (slide) => async (dispatch, getState) => {
   dispatch({ type: SLIDE_CREATE_REQUEST })

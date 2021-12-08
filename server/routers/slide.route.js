@@ -4,6 +4,9 @@ import { isAdmin, isAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
+router.route('/admin')
+  .get(isAuth, isAdmin, slideController.adminGetSlides)
+
 router.route('/')
   .get(slideController.slides)
   .post(isAuth, isAdmin, slideController.createSlide)

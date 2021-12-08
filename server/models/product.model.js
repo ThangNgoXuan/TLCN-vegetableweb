@@ -22,7 +22,8 @@ const productSchema = new mongoose.Schema(
       required: true
     },
     certification: { type: String },
-    discount: { type: Number, default: 0 }
+    discount: { type: Number, default: 0 },
+    status: { type: Boolean, default: true, required: true },
   },
   {
     timestamps: true,

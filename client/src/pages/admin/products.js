@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import numberWithCommas from '../../utils/numberWithCommas'
 
 
@@ -80,7 +80,7 @@ const Products = ({ history }) => {
             <td>{item.description.substring(0, 32) + '...'}</td>
             <td>{'chưa lam'}</td>
             <td>{item.status ? 'active' : 'disable'}</td>
-            <td><Link to={`/admin/products/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+            <td><Link to={`/admin/product/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
             <td>
                 <nav style={{ cursor: 'pointer' }}
                     onClick={() => handleDelete(item._id)}

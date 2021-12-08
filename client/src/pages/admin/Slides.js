@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Table from '../../components/admin/Table'
-import { listSlides, deleteSlideAction } from '../../redux/actions/slideAction'
+import { listSlidesAdmin, deleteSlideAction } from '../../redux/actions/slideAction'
 import Loading from '../../components/Loading'
 
 const Slides = ({ history }) => {
@@ -15,7 +15,7 @@ const Slides = ({ history }) => {
 
   useEffect(() => {
     if (userInfo && userInfo.role === 'admin') {
-      dispatch(listSlides())
+      dispatch(listSlidesAdmin())
     } else {
       history.push('/login')
     }

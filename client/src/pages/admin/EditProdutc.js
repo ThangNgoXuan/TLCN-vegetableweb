@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { categoryAction } from '../../redux/actions/categoryActions';
 import { listBrandAction } from '../../redux/actions/brandActions';
-import { addProductAction } from '../../redux/actions/productActions';
+import { addProductAction, detailsProduct } from '../../redux/actions/productActions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-const NewProduct = ({ history }) => {
+
+const EditProduct = ({ history, match }) => {
+
+  const productId = match.params.id;
 
   const myInfo = useSelector(state => state.userSignin);
   const { userInfo } = myInfo;
@@ -17,6 +21,8 @@ const NewProduct = ({ history }) => {
   const { categories } = listCategory;
   const brandsList = useSelector(state => state.brandsList);
   const { loading: loadingBrands, error: errorBrands, brands } = brandsList;
+  const productDetail = useSelector(state => state.productDetail);
+  const { loading, error, product } = productDetail;
 
   const [name, setName] = useState('');
   const [image1, setImage1] = useState('');
@@ -28,6 +34,7 @@ const NewProduct = ({ history }) => {
   const [qtyInStock, setQtyInStock] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [certification, setCertification] = useState('');
+  const [status, setStatus] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -39,11 +46,27 @@ const NewProduct = ({ history }) => {
       if (categories && categories.length === 0) {
         dispatch(categoryAction());
       }
+      if (!product || product._id !== productId) {
+        dispatch(detailsProduct(productId))
+      }
+      else if (Object.keys(product).length !== 0) {
+        setName(product.name)
+        setCategory(product.category._id)
+        setbrand(product.brand._id)
+        setDescription(product.description)
+        setCertification(product.certification)
+        setDiscount(product.discount)
+        setPrice(product.price)
+        setQtyInStock(product.qtyInStock)
+        setImage1(product.images[0])
+        setImage2(product.images[1])
+        setStatus(product.status)
+      }
     } else {
       history.push('/login')
     }
 
-  }, [history, userInfo, dispatch, brands, categories])
+  }, [history, userInfo, dispatch, brands, categories, product, productId])
 
   const handleUploadImage = (e) => {
     const cloundName = 'dl02ow13v';
@@ -91,7 +114,7 @@ const NewProduct = ({ history }) => {
         hideProgressBar={true}
         newestOnTop={false}
       />
-      <h2 className="page-header">Thêm sản phẩm mới</h2>
+      <h2 className="page-header">Chỉnh sửa sản phẩm</h2>
       <div className="row">
         <div className="col-10">
           <div className="card full-height">
@@ -105,6 +128,7 @@ const NewProduct = ({ history }) => {
                     className="userUpdateInput"
                     onChange={(e) => setName(e.target.value)}
                     required
+                    value={name}
                   />
                 </div>
 
@@ -116,6 +140,7 @@ const NewProduct = ({ history }) => {
                     className="userUpdateInput"
                     onChange={(e) => setPrice(e.target.value)}
                     required
+                    value={price}
                   />
                 </div>
 
@@ -127,6 +152,7 @@ const NewProduct = ({ history }) => {
                     className="userUpdateInput"
                     onChange={(e) => setDiscount(e.target.value)}
                     required
+                    value={discount}
                   />
                 </div>
                 <div className="userUpdateItem">
@@ -138,6 +164,7 @@ const NewProduct = ({ history }) => {
                     className="userUpdateInput"
                     onChange={(e) => setQtyInStock(e.target.value)}
                     required
+                    value={qtyInStock}
                   />
                 </div>
                 <div className="userUpdateItem">
@@ -147,7 +174,9 @@ const NewProduct = ({ history }) => {
                     {
                       categories &&
                       categories.map((item, index) =>
-                        <option key={index} value={item._id}>{item.name}</option>
+                        <option key={index} value={item._id}
+                          selected={product && product.category === item._id}
+                        >{item.name}</option>
                       )
                     }
                   </select>
@@ -159,7 +188,9 @@ const NewProduct = ({ history }) => {
                     {loadingBrands ? '' : errorBrands ? '' :
                       brands &&
                       brands.map((item, index) =>
-                        <option key={index} value={item._id}>{item.name}</option>
+                        <option key={index} value={item._id}
+                          selected={brand === item._id}
+                        >{item.name}</option>
                       )
                     }
                   </select>
@@ -171,17 +202,34 @@ const NewProduct = ({ history }) => {
                     placeholder="VD: VietGAP"
                     className="userUpdateInput"
                     onChange={(e) => setCertification(e.target.value)}
+                    value={certification}
                   />
+                </div>
+                <div className="userUpdateItem">
+                  <label>Trạng thái:</label>
+                  <select>
+                    <option value={false}>Ẩn đi</option>
+                    <option value={true} selected={status}>Hiển thị</option>
+                  </select>
                 </div>
 
                 <div className="userUpdateItem">
                   <label>Mô tả</label>
+                  {/* <textarea
+                    id="description"
+                    rows="3"
+                    type="text"
+                    placeholder="Enter description"
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                    value={description}
+                  ></textarea> */}
                   <CKEditor
                     editor={ClassicEditor}
-                    data="<p>Nhập mô tả cho sản phẩm</p>"
                     onChange={(event, editor) => {
                       setDescription(editor.getData())
                     }}
+                    data={description}
                   />
                 </div>
                 <div className="userUpdateUpload">
@@ -209,7 +257,8 @@ const NewProduct = ({ history }) => {
                   </label>
                   <input onChange={handleUploadImage} type="file" id="file" multiple="multiple" style={{ display: "none" }} />
                 </div>
-                <button type="submit" className="userUpdateButton">Tạo mới</button>
+                <Link to="/admin/products" className="userUpdateButton">Trở về</Link>
+                <button type="submit" className="userUpdateButton">Cập nhật</button>
               </div>
 
               {/* <div className="userUpdateRight">
@@ -223,4 +272,4 @@ const NewProduct = ({ history }) => {
   )
 }
 
-export default NewProduct
+export default EditProduct

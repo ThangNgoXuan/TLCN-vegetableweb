@@ -67,8 +67,8 @@ const NewSlide = ({ history }) => {
   return (
     <div>
       <ToastContainer
-        position="top-left"
-        autoClose={1400}
+        position="top-right"
+        autoClose={2400}
         hideProgressBar={true}
         newestOnTop={false}
         closeOnClick

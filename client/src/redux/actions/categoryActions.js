@@ -25,6 +25,22 @@ export const categoryAction = () => async (dispatch) => {
   }
 }
 
+export const listCategoriesAdmin = () => async (dispatch, getState) => {
+  dispatch({ type: CATEGORY_LIST_REQUEST });
+
+  try {
+    const { data } = await Axios.get('/v1/category/admin');
+    dispatch({ type: CATEGORY_LIST_SUCCESS, payload: data })
+
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: CATEGORY_LIST_FAIL, payload: message })
+  }
+}
+
 export const addCategoryAction = (category) => async (dispatch, getState) => {
   dispatch({ type: CATEGORY_ADD_REQUEST })
   const {

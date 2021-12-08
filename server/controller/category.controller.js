@@ -6,6 +6,18 @@ import { HttpStatusCode } from '../utils/constants.js';
 // @route   GET /v1/category
 // @access  Public
 const getCategories = asyncHandler(async (req, res) => {
+  const categories = await ProductCategory.find({ status: true }).sort({ displayOrder: 1 });
+
+  if (categories) {
+    res.json(categories);
+  } else {
+    res.status(404)
+    throw new Error('Categories not found!');
+  }
+});
+
+//admin get categories
+const adminGetCategories = asyncHandler(async (req, res) => {
   const categories = await ProductCategory.find();
 
   if (categories) {
@@ -85,5 +97,6 @@ export const productCategoryController = {
   updateCategory,
   deleteCategory,
   getCategory,
+  adminGetCategories,
 };
 

@@ -86,6 +86,7 @@ const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({})
     .populate('user', 'id name')
     .populate('orderItems.product')
+    .sort({ "createdAt": -1 })
 
   res.json(orders)
 })

@@ -31,7 +31,7 @@ import User from '../models/user.model.js';
 
 const isAuth = async (req, res, next) => {
   const authorization = req.headers.authorization;
-  console.log(authorization)
+
   if (authorization) {
     const token = authorization.slice(7, authorization.length); // Bearer XXXXXX
 

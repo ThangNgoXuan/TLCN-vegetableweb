@@ -50,6 +50,10 @@ const signinUser = async (req, res) => {
   try {
 
     const user = await User.findOne({ email: req.body.email });
+    if (user.status === false) {
+      res.status(401)
+      throw new Error('Tài khoản của bạn đang bị khóa');
+    }
 
     if (user && await user.matchPassword(req.body.password)) {
       res.json({
@@ -79,23 +83,29 @@ const googleLogin = asyncHandler(async (req, res) => {
     idToken: token,
     //audience: process.env
   })
-  console.log(ticket)
+
   if (ticket) {
     const { email, given_name, family_name, picture } = ticket.payload;
     const oldAccount = await User.findOne({ email: email });
     let user;
     if (oldAccount) {
-      user = {
-        _id: oldAccount._id,
-        firstName: oldAccount.firstName,
-        lastName: oldAccount.lastName,
-        email: oldAccount.email,
-        role: oldAccount.role,
-        phone: oldAccount.phone,
-        email: oldAccount.email,
-        address: oldAccount.address,
-        avatar: oldAccount.avatar,
-      };
+      if (oldAccount.status === false) {
+        res.status(401)
+        throw new Error('Tài khoản của bạn đang bị khóa!')
+      } else {
+        user = {
+          _id: oldAccount._id,
+          firstName: oldAccount.firstName,
+          lastName: oldAccount.lastName,
+          email: oldAccount.email,
+          role: oldAccount.role,
+          phone: oldAccount.phone,
+          email: oldAccount.email,
+          address: oldAccount.address,
+          avatar: oldAccount.avatar,
+        };
+      }
+
     } else {
 
       const userCreate = await User.create({
@@ -194,7 +204,8 @@ const getUserProfile = async (req, res) => {
         phone: user.phone,
         address: user.address,
         avatar: user.avatar,
-        role: user.role
+        role: user.role,
+        status: user.status,
       });
     }
     else {
