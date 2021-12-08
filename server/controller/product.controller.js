@@ -39,6 +39,7 @@ const getProducts = async (req, res) => {
       ...categoryFilter,
       ...certificationFilter,
       ...priceFilter,
+      status: true,
     });
 
     const products = await Product.find({
@@ -47,6 +48,7 @@ const getProducts = async (req, res) => {
       ...brandFilter,
       ...priceFilter,
       ...certificationFilter,
+      status: true,
     })
       .populate('brand')
       .sort(sortOrder)
@@ -94,16 +96,15 @@ const getProductsAdmin = asyncHandler(async (req, res) => {
           $options: "$i"
         }
       },
-
     ]
   } : {}
 
   const count = await Product.count({
-    ...searchFilter
+    ...searchFilter,
   });
 
   const products = await Product.find({
-    ...searchFilter
+    ...searchFilter,
   })
     .populate({ path: 'category', select: 'name' })
     .populate({ path: 'brand', select: 'name' })
@@ -168,7 +169,9 @@ const createProduct = asyncHandler(async (req, res) => {
   product.price = req.body.price;
   product.qtyInStock = req.body.qtyInStock || 0;
   product.certification = req.body.certification;
-  product.protype = req.body.protype;
+  product.discount = req.body.discount;
+  product.status = req.body.status;
+
 
   const createdProduct = await product.save();
   res.status(HttpStatusCode.CREATED_SUCCESS).json(createdProduct);
@@ -191,7 +194,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.qtyInStock = req.body.qtyInStock;
     product.certification = req.body.certification;
     product.protype = req.body.protype;
-    product.sold = req.body.sold;
+    product.sold = req.body.sold || product.sold;
+    product.status = req.body.status;
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);
@@ -223,7 +227,7 @@ const searchProduct = asyncHandler(async (req, res) => {
 //@route  get /v1/products/top-product
 //@access public
 const getTopProduct = asyncHandler(async (req, res) => {
-  const products = await Product.find()
+  const products = await Product.find({ status: true })
     .populate('category', 'id name').populate('brand').sort({ sold: -1 }).limit(8)
 
   if (products) {
@@ -243,7 +247,7 @@ const getTopProductRelate = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    const products = await Product.find({ category: product.category })
+    const products = await Product.find({ category: product.category, status: true })
       .populate('category', 'id name').populate('brand')
       .sort({ sold: -1 }).limit(6)
     if (products) {

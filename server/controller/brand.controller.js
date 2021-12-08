@@ -6,7 +6,7 @@ import Brand from '../models/brand.model.js';
 // @route   GET /v1/brand
 // @access  Public
 const getBrands = asyncHandler(async (req, res) => {
-  const brands = await Brand.find();
+  const brands = await Brand.find({ status: true });
 
   if (brands) {
     res.json(brands);

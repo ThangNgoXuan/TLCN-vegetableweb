@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Table from '../../components/admin/Table'
-import { categoryAction, deleteCategoryAction } from '../../redux/actions/categoryActions'
+import { listCategoriesAdmin, deleteCategoryAction } from '../../redux/actions/categoryActions'
 
 const Categories = ({ history }) => {
     const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const Categories = ({ history }) => {
 
     useEffect(() => {
         if (userInfo && userInfo.role === 'admin') {
-            dispatch(categoryAction())
+            dispatch(listCategoriesAdmin())
         } else {
             history.push('/login')
         }

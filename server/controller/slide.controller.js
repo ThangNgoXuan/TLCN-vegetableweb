@@ -18,6 +18,17 @@ const slides = asyncHandler(async (req, res) => {
   }
 });
 
+const adminGetSlides = asyncHandler(async (req, res) => {
+  const slides = await Slide.find();
+
+  if (slides) {
+    res.json(slides);
+  } else {
+    res.status(404)
+    throw new Error('Slides not found!');
+  }
+});
+
 // @desc    update slide
 // @route   PUT /v1/slides/:id
 // @access  Staff/Admin Private
@@ -98,4 +109,5 @@ export const slideController = {
   updateSlide,
   deleteSlide,
   getSlide,
+  adminGetSlides
 };

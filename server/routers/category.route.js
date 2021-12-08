@@ -9,6 +9,8 @@ router.route('/')
   .get(productCategoryController.getCategories)
   .post(isAuth, isAdmin, productCategoryController.createCategory)
 
+router.route('/admin').get(isAuth, isAdmin, productCategoryController.adminGetCategories)
+
 router.route('/:id')
   .put(isAuth, isAdmin, productCategoryController.updateCategory)
   .delete(isAuth, isAdmin, productCategoryController.deleteCategory)

@@ -66,6 +66,7 @@ export const brandListReducer = (
     case c.BRAND_LIST_REQUEST:
       return { loading: true };
     case c.BRAND_LIST_SUCCESS:
+      console.log(action.payload)
       return {
         loading: false,
         brands: action.payload,

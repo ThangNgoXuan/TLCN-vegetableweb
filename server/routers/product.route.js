@@ -19,7 +19,7 @@ router.route('/:id')
   .put(isAuth, isAdmin, productController.updateProduct)
 
 router.route('/admin/search')
-  .get(isAuth, isAdmin, productController.getProductsAdmin)
+  .get(productController.getProductsAdmin)
 
 router.route('/')
   .get(productController.getProducts)

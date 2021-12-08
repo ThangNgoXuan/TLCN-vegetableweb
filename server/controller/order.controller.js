@@ -86,6 +86,7 @@ const getOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({})
     .populate('user', 'id name')
     .populate('orderItems.product')
+    .sort({ "createdAt": -1 })
 
   res.json(orders)
 })
@@ -156,7 +157,77 @@ const adminUpdateOrder = async (req, res) => {
   } catch (error) {
     res.json({ message: error.message });
   }
-}
+};
+
+// @desc    Fetch all orders
+// @route   GET /v1/order
+// @access  Private / admin/staff
+const adminGetOrders = async (req, res) => {
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword || '';
+
+  const searchFilter = keyword ? {
+    $or: [
+      {
+        firstName: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        lastName: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        mail: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        phone: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        description: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        certification: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+    ]
+  } : {}
+
+  const count = await Order.count({
+    ...searchFilter,
+  });
+
+  const orders = await Order.find({
+    ...searchFilter,
+  })
+    .populate({ path: 'category', select: 'name' })
+    .populate({ path: 'brand', select: 'name' })
+    .populate({ path: 'creator', select: 'name' })
+    .skip(pageSize * (page - 1))
+    .limit(pageSize);
+
+  if (orders) {
+    res.send({ orders, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    res.json({}).status(HttpStatusCode.NOT_FOUND);
+    throw new Error('Không tìm thấy sản phẩm');
+  }
+};
 
 export const orderController = {
   getOrders,
