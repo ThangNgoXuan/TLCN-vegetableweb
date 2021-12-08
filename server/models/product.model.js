@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String, required: true },
     price: { type: Number, required: true },
     qtyInStock: { type: Number, required: true, default: 0 },
-    sold: { type: Number, required: true, default: 0 },
+    sold: { type: Number, default: 0 },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

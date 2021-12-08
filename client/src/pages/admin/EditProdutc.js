@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { categoryAction } from '../../redux/actions/categoryActions';
 import { listBrandAction } from '../../redux/actions/brandActions';
-import { addProductAction, detailsProduct } from '../../redux/actions/productActions';
+import { updateProductAction, detailsProduct } from '../../redux/actions/productActions';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
 
 const EditProduct = ({ history, match }) => {
 
@@ -91,7 +90,8 @@ const EditProduct = ({ history, match }) => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    dispatch(addProductAction({
+    dispatch(updateProductAction({
+      _id: productId,
       name,
       brand,
       category,
@@ -102,6 +102,7 @@ const EditProduct = ({ history, match }) => {
       certification,
       creator: userInfo._id,
       images: [image1, image2],
+      status,
     }))
 
   }
@@ -184,7 +185,7 @@ const EditProduct = ({ history, match }) => {
                 <div className="userUpdateItem">
                   <label>Thương hiệu:</label>
 
-                  <select onChange={e => setbrand(e.target.value)} required>
+                  <select onChange={e => setbrand(e.target.value)} value={brand}>
                     {loadingBrands ? '' : errorBrands ? '' :
                       brands &&
                       brands.map((item, index) =>
@@ -270,6 +271,7 @@ const EditProduct = ({ history, match }) => {
       </div>
     </div>
   )
+
 }
 
 export default EditProduct
