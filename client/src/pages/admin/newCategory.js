@@ -106,8 +106,14 @@ const NewCategory = ({ match, history }) => {
                     onChange={uploadImage}
                   />
                 </div>
-                <Link to="/admin/categories" className="userUpdateButton">Trở về</Link>
+                <br />
+                <br />
                 <button className="userUpdateButton">Tạo</button>
+                <br />
+                <br />
+                <Link to="/admin/categories">
+                <button className="userUpdateButton">Trở về</button>
+                </Link>
               </div>
               {/* <div className="userUpdateLeft">
                   <div className="userUpdateItem">

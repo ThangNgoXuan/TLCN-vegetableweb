@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Button from "./Button";
 
 const SearchPriceBox = ({ getFilterUrl }) => {
   const styles = {
@@ -8,6 +9,13 @@ const SearchPriceBox = ({ getFilterUrl }) => {
     backgroundColor: '#fcfcfc',
     border: 'solid 1px #ccc',
     marginTop: '5px'
+  }
+  const apply = {
+    padding: '20px',
+    height: '30px',
+    width: '100%',
+    backgroundColor: '#024137',
+    color: '#fff'
   }
 
   const [min, setMin] = useState(0)
@@ -26,7 +34,12 @@ const SearchPriceBox = ({ getFilterUrl }) => {
           onChange={(e) => setmax(+(e.target.value))}
         ></input>
       </div>
-      <Link to={getFilterUrl({ min: min, max: max })}>Áp dụng</Link>
+      <Link 
+        to={getFilterUrl({ min: min, max: max })}
+        style={apply}  
+      >
+        Áp dụng
+      </Link>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import Table from '../../components/admin/Table'
 import { listSlides, deleteSlideAction } from '../../redux/actions/slideAction'
 import Loading from '../../components/Loading'
+import Search from '../../components/Search'
 
 const Slides = ({ history }) => {
   const dispatch = useDispatch();
@@ -57,9 +58,14 @@ const Slides = ({ history }) => {
   return (
     <div>
       <div className="row">
-        <div className="col-10">
+        <div className="col-8">
           <h2 className="page-header">
             Slides
+          </h2>
+        </div>
+        <div className="col-2">
+          <h2 className="page-header">
+            <Search/>
           </h2>
         </div>
         <div className="col-2">

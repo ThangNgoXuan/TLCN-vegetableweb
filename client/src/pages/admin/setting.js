@@ -223,6 +223,7 @@ const Setting = ({ history }) => {
                                     {/* <label htmlFor="file" onClick={uploadImage}>
                                         <i className="bx bx-upload bx-sm userUpdateIcon"></i>
                                     </label> */}
+                                    
                                     <input type="file" id="file"
                                         onChange={uploadImage}
                                     />

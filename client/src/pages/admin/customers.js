@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { updateUserProfile } from '../../redux/actions/userAction'
 import Table from '../../components/admin/Table'
 import { listUserAction } from '../../redux/actions/userAction'
+import Search from '../../components/Search';
 
 const Customers = ({ history }) => {
 
@@ -75,9 +76,14 @@ const Customers = ({ history }) => {
                 newestOnTop={false}
             />
             <div className="row">
-                <div className="col-10">
+                <div className="col-8">
                     <h2 className="page-header">
                         Quản lý người dùng
+                    </h2>
+                </div>
+                <div className="col-2">
+                    <h2 className="page-header">
+                        <Search/>
                     </h2>
                 </div>
                 <div className="col-2">

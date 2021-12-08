@@ -12,6 +12,14 @@ import { Link, useParams } from 'react-router-dom'
 import SearchPriceBox from '../components/SearchPriceBox'
 
 const Catalog = () => {
+    const reset = {
+        padding: '20px',
+        height: '30px',
+        width: '150px',
+        backgroundColor: '#39834b',
+        color: '#fff',
+        marginTop: '20px'
+    }
 
     const {
         name = 'all',
@@ -135,7 +143,15 @@ const Catalog = () => {
                     </div>
 
                     <SearchPriceBox getFilterUrl={getFilterUrl} />
-                    <div><Link to="/catalog">Reset</Link></div>
+                    <br />
+                    <br />
+                    <br />
+                    
+                    <div>
+                        <Link to="/catalog" style={reset}>
+                                Reset
+                        </Link>
+                    </div>
                 </div>
                 <div className="catalog__filter__toggle">
                     <Button size="sm" onClick={() => showHideFilter()}>bộ lọc</Button>

@@ -80,6 +80,7 @@ const Header = () => {
 
         window.addEventListener("scroll", () => {
             if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+                console.log(headerRef.current)
                 headerRef.current.classList.add('shrink')
             } else {
                 headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
