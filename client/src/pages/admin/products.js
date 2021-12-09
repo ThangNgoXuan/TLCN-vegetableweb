@@ -67,19 +67,20 @@ const Products = ({ history }) => {
     const renderBody = (item, index) => (
         <tr key={index}>
             <td>{index + 1}</td>
-            <td>{item._id}</td>
+            <td style={{ maxWidth: '90px', overflowWrap: 'break-word' }}
+            >{item._id}</td>
             <td><img src={item.images[0]} alt="Hình ảnh"
                 style={{ maxWidth: '40px' }}
             /></td>
-            <td>{item.name}</td>
-            <td>{(item.category && item.category.name) || ''}</td>
+            <td style={{ minWidth: '110px' }}>{item.name}</td>
+            <td style={{ minWidth: '110px' }} >{(item.category && item.category.name) || ''}</td>
             <td>{numberWithCommas(item.price)}</td>
-            <td>{0 + '%'}</td>
+            <td>{item.discount + '%'}</td>
             <td>{item.qtyInStock}</td>
             <td>{item.sold}</td>
             <td>{item.brand.name}</td>
-            <td>{item.description.substring(0, 32) + '...'}</td>
-            <td>{'chưa lam'}</td>
+            <td style={{ minWidth: '140px' }}  >{item.description.substring(0, 32) + '...'}</td>
+            <td>{item.createdAt || ''}</td>
             <td>{item.status ? 'active' : 'disable'}</td>
             <td><Link to={`/admin/product/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
             <td>
@@ -107,7 +108,7 @@ const Products = ({ history }) => {
                 </div>
                 <div className="col-2">
                     <h2 className="page-header">
-                        <Search/>
+                        <Search />
                     </h2>
                 </div>
                 <div className="col-2">

@@ -65,14 +65,9 @@ const ProductView = props => {
         <div className="product">
             <ToastContainer
                 position="top-left"
-                autoClose={1500}
+                autoClose={2000}
                 hideProgressBar={true}
                 newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
             />
             <div className="product__images">
                 <div className="product__images__list">

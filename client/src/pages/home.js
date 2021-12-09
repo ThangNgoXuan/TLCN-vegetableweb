@@ -10,7 +10,6 @@ import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
 
 import policy from '../fakedata/policy'
-import productData from '../fakedata/product'
 
 import { listProducts, topProductAction, listProductsWithCondition } from '../redux/actions/productActions'
 import { listSlides } from '../redux/actions/slideAction'
@@ -125,6 +124,7 @@ const Home = () => {
                                                         img02={item.images[1]}
                                                         name={item.name}
                                                         price={item.price}
+                                                        discount={item.discount}
                                                         _id={item._id}
                                                     />
                                                 )
@@ -163,6 +163,7 @@ const Home = () => {
                                                         img02={item.images[1]}
                                                         name={item.name}
                                                         price={item.price}
+                                                        discount={item.discount}
                                                         _id={item._id}
                                                     />
                                                 )
@@ -208,6 +209,7 @@ const Home = () => {
                                                 img02={item.images[1]}
                                                 name={item.name}
                                                 price={Number(item.price)}
+                                                discount={item.discount}
                                                 _id={item._id}
                                             />
                                         ))) : ''

@@ -196,6 +196,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.protype = req.body.protype;
     product.sold = req.body.sold || product.sold;
     product.status = req.body.status;
+    product.discount = req.body.discount;
+
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);

@@ -5,6 +5,7 @@ import Layoutadmin from './pages/admin/Layoutadmin';
 import Login from './pages/login';
 import Register from './pages/register';
 import NotFound from './components/NotFound';
+import ResetPassword from './pages/ResetPassword';
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/admin" component={Layoutadmin} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/reset_password" component={ResetPassword} />
         <Route path="/" component={Layoutuser} />
         <Route path="*" component={NotFound} />
       </Switch>
