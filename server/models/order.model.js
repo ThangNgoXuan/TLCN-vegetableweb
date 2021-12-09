@@ -35,7 +35,7 @@ const orderSchema = mongoose.Schema(
       trim: true
     },
     phone: {
-      type: Number,
+      type: String,
       required: true,
       trim: true
     },

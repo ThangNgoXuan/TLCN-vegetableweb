@@ -1,6 +1,15 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
-import { USER_SIGNIN_REQUEST, USER_SIGNIN_SUCCESS, USER_SIGNIN_FAIL, USER_SIGNOUT, USER_LIST_REQUEST, USER_LIST_SUCCESS, USER_LIST_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DELETE_FAIL, USER_TOPSELLERS_LIST_REQUEST, USER_TOPSELLERS_LIST_SUCCESS, USER_TOPSELLERS_LIST_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL } from "../constants/userConstansts";
+import {
+  USER_SIGNIN_REQUEST, USER_SIGNIN_SUCCESS, USER_SIGNIN_FAIL,
+  USER_SIGNOUT, USER_LIST_REQUEST, USER_LIST_SUCCESS, USER_LIST_FAIL,
+  USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_DETAILS_FAIL,
+  USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DELETE_FAIL,
+  USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_REGISTER_FAIL,
+  USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_PROFILE_FAIL,
+  USER_RESET_PASSWORD_REQUEST, USER_RESET_PASSWORD_SUCCESS, USER_RESET_PASSWORD_FAIL,
+  USER_FOGOT_PASSWORD_REQUEST, USER_FOGOT_PASSWORD_SUCCESS, USER_FOGOT_PASSWORD_FAIL,
+} from "../constants/userConstansts";
 
 export const userLoginAction = (data) => async (dispatch) => {
   const { email, password, token, ggId } = data
@@ -147,3 +156,36 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     toast.error(error)
   }
 };
+
+export const resetPassword = (value) => async (dispatch) => {
+  dispatch({ type: USER_RESET_PASSWORD_REQUEST });
+  try {
+    const { data } = await Axios.post('/v1/user/reset-password', value);
+    console.log(data)
+
+    dispatch({ type: USER_RESET_PASSWORD_SUCCESS, payload: data });
+  } catch (error) {
+    console.log(error.message)
+    dispatch({
+      type: USER_RESET_PASSWORD_FAIL,
+      payload: error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    });
+  }
+}
+
+export const fogotPassword = ({ email }) => async (dispatch) => {
+  dispatch({ type: USER_FOGOT_PASSWORD_REQUEST });
+  try {
+    const { data } = await Axios.post('/v1/user/send-code-reset-password', { email });
+    dispatch({ type: USER_FOGOT_PASSWORD_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_FOGOT_PASSWORD_FAIL,
+      payload: error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message
+    });
+  }
+}

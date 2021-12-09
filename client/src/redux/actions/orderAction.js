@@ -116,9 +116,13 @@ export const orderListAction = () => async (dispatch, getState) => {
     }
   }
   try {
-    const { data } = await Axios.get('/v1/order', config);
-
-    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+    if (userInfo.role === 'user') {
+      const { data } = await Axios.get('/v1/order', config);
+      dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+    } else {
+      const { data } = await Axios.get('/v1/order/admin', config);
+      dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+    }
   } catch (error) {
     const message =
       error.response && error.response.data.message

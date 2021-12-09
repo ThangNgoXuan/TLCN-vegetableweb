@@ -27,9 +27,12 @@ export const categoryAction = () => async (dispatch) => {
 
 export const listCategoriesAdmin = () => async (dispatch, getState) => {
   dispatch({ type: CATEGORY_LIST_REQUEST });
+  const {
+    userSignin: { userInfo }
+  } = getState();
 
   try {
-    const { data } = await Axios.get('/v1/category/admin');
+    const { data } = await Axios.get('/v1/category/admin', { headers: { Authorization: `Bearer ${userInfo.token}` } });
     dispatch({ type: CATEGORY_LIST_SUCCESS, payload: data })
 
   } catch (error) {

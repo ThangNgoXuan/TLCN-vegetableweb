@@ -6,7 +6,10 @@ import {
     productCreateReducer, productDeleteReducer, productUpdateReducer, producListtWithConditionReducer
 } from './reducers/productReducer';
 import { slideListReducer, addSlideReducer, updateSlideReducer, deleteSlideReducer, detailSlideReducer } from './reducers/slideReducer';
-import { userSigninReducer, userListReducer, userDetailsReducer, userRegisterReducer, userUpdateProfileReducer } from './reducers/userReducer';
+import {
+    userSigninReducer, userListReducer, userDetailsReducer, userRegisterReducer,
+    userFogotPasswordReducer, resetPassswordReducer, userUpdateProfileReducer
+} from './reducers/userReducer';
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList, addCategoryReducer, updateCategoryReducer, deleteCategoryReducer, detailCategoryReducer } from './reducers/categoryReducers';
 import { brandListReducer, brandCreateReducer, brandDeleteReducer, brandUpdateReducer, brandDetailReducer } from './reducers/brandReducer';
@@ -44,6 +47,8 @@ const reducer = combineReducers({
     userDetail: userDetailsReducer,
     userRegister: userRegisterReducer,
     userUpdateProfile: userUpdateProfileReducer,
+    forgotPassword: userFogotPasswordReducer,
+    resetPassword: resetPassswordReducer,
 
     categoriesList: categoryList,
     addCategory: addCategoryReducer,

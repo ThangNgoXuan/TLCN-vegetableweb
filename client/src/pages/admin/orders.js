@@ -47,7 +47,7 @@ const Orders = ({ history }) => {
         <tr key={index}>
             <td>{item._id}</td>
             <td>{item.lastName + ' ' + item.firstName}</td>
-            <td>{item.email}</td>
+            <td>{item.mail}</td>
             <td>{item.phone}</td>
             <td>{numberWithCommas(item.totalPrice)}</td>
             {/* <td>{item.status}</td> */}
@@ -81,7 +81,7 @@ const Orders = ({ history }) => {
                 </div>
                 <div className="col-2">
                     <h2 className="page-header">
-                      <Search/>
+                        <Search />
                     </h2>
                 </div>
             </div>
@@ -94,7 +94,7 @@ const Orders = ({ history }) => {
                                     limit='10'
                                     headData={customerTableHead}
                                     renderHead={(item, index) => renderHead(item, index)}
-                                    bodyData={orders}
+                                    bodyData={orders.orders}
                                     renderBody={(item, index) => renderBody(item, index)}
                                 />
                             }

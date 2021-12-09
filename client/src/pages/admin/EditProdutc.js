@@ -50,8 +50,8 @@ const EditProduct = ({ history, match }) => {
       }
       else if (Object.keys(product).length !== 0) {
         setName(product.name)
-        setCategory(product.category._id)
-        setbrand(product.brand._id)
+        setCategory(product.category && product.category._id)
+        setbrand(product.brand && product.brand._id)
         setDescription(product.description)
         setCertification(product.certification)
         setDiscount(product.discount)

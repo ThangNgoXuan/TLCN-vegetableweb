@@ -74,7 +74,8 @@ const getProducts = async (req, res) => {
 const getProductsAdmin = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
-  const keyword = req.query.keyword === 'notset' ? '' : req.query.keyword;
+  const keyword = req.query.keyword === 'undefined' ? '' : req.query.keyword;
+  // console.log(keyword)
 
   const searchFilter = keyword ? {
     $or: [
@@ -196,6 +197,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     product.protype = req.body.protype;
     product.sold = req.body.sold || product.sold;
     product.status = req.body.status;
+    product.discount = req.body.discount;
+
 
     const updatedProduct = await product.save();
     res.json(updatedProduct);

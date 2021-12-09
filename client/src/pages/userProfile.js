@@ -32,22 +32,24 @@ const UserProfile = ({ location, history }) => {
 
   useEffect(() => {
 
-    // if (!userInfo) {
-    //   history.push('/login')
-    // } else {
-    if (userInfo && userInfo.role === 'admin') {
-      history.push('/admin')
-    }
-    else if (!user) {
-      dispatch(detailsUser(userInfo._id));
+    if (!userInfo) {
+      history.push('/login')
     } else {
-      setFirstName(user.firstName);
-      setLastName(user.lastName);
-      setEmail(user.email);
-      setPhone(user.phone);
-      setAddress(user.address);
-      setImage(user.avatar);
+      if (userInfo && userInfo.role === 'admin') {
+        history.push('/admin')
+      }
+      else if (!user) {
+        dispatch(detailsUser(userInfo._id));
+      } else {
+        setFirstName(user.firstName);
+        setLastName(user.lastName);
+        setEmail(user.email);
+        setPhone(user.phone);
+        setAddress(user.address);
+        setImage(user.avatar);
+      }
     }
+
     // }
   }, [dispatch, userInfo, user, history])
 
@@ -79,7 +81,6 @@ const UserProfile = ({ location, history }) => {
     formData.append("file", e.target.files[0]);
     formData.append("upload_preset", uploadPreset);
 
-    console.log(formData)
 
     axios.post(`https://api.cloudinary.com/v1_1/${cloundName}/upload`, formData)
       .then(res => {
