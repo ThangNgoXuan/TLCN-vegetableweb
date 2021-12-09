@@ -6,6 +6,7 @@ import Login from './pages/login';
 import Register from './pages/register';
 import NotFound from './components/NotFound';
 import ResetPassword from './pages/ResetPassword';
+import GetToken from './pages/GetToken';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/reset_password" component={ResetPassword} />
+        <Route path="/get-token" component={GetToken} />
         <Route path="/" component={Layoutuser} />
         <Route path="*" component={NotFound} />
       </Switch>

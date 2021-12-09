@@ -20,6 +20,8 @@ router.route('/:id')
 router.route('/register')
   .post(userController.registUser);
 
+router.route('/send-code-reset-password').post(userController.sentCodeResetPassword)
+router.route('/reset-password').post(userController.resetPassword)
 
 router.route('/')
   .get(isAuth, isAdmin, userController.getUsers)

@@ -4,6 +4,9 @@ import User from '../models/user.model.js';
 import { HttpStatusCode } from '../utils/constants.js';
 import asyncHandler from 'express-async-handler';
 import generateToken from '../utils/generateToken.js';
+import Token from '../models/token.model.js'
+import { sendMail } from '../utils/sendMail.js';
+import crypto from 'crypto'
 
 // @desc    Get all users
 // @route   GET /v1/user
@@ -346,6 +349,91 @@ const updateUser = async (req, res) => {
   }
 }
 
+// [PATCH] - /api/users/update-password
+const updatePassword = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const userUpdated = await User.updateOne({ email }, { password });
+    if (userUpdated) {
+      res.send({ message: "Update user successfully!", data: userUpdated });
+    }
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+}
+
+// [POST] - /api/fogot-password
+const sentCodeResetPassword = async (req, res) => {
+  const email = req.body.email;
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user)
+      return res.status(400).send({ message: 'Email không tồn tại trong hệ thống!' });
+
+    let token = await Token.findOne({ userId: user._id });
+    if (!token) {
+
+      token = await new Token({
+        userId: user._id,
+        token: crypto.randomBytes(4).toString("hex"),
+      }).save();
+    }
+
+    const subject = 'NSHC - Đặt lại mật khẩu';
+    const code = generateToken(user._id);
+    const content = `
+        <p>Xin chào ${user.firstName},</p>
+        <p>NSHC đã nhận được yêu cầu đổi mật khẩu của bạn. 
+            Đây là mã kích hoạt để đổi mật khẩu: <b>${token.token}</b></p>
+        <p>Nếu bạn không yêu cầu đổi mật khẩu thì hãy bỏ qua email này để tài khoản được bảo mật nhé!</p>
+        <p>Trân trọng,</p>
+        <p>NSHC</p>`;
+    sendMail(email, subject, content);
+
+    res.send({ status: 'SENT_EMAIL', _id: user._id });
+  } catch (error) {
+    res.send({ message: error.message });
+  }
+}
+
+// [POST] - /api/auth/reset-password
+const resetPassword = async (req, res) => {
+  console.log(req.body)
+
+  const { code, password, _id } = req.body;
+  try {
+    const user = await User.findById(_id);
+
+    if (!user) {
+      res.status(400).json({ mesage: "Mã code không chính xác hoặc đã hết hạn" })
+      return
+
+    }
+    const token = await Token.findOne({
+      userId: user._id,
+      token: code,
+    });
+
+    if (!token) {
+      res.status(400).json({ mesage: "Mã code không chính xác hoặc đã hết hạn" })
+      return;
+      ;
+    }
+
+    user.password = password;
+    const userSave = await user.save();
+    delete userSave.password;
+    await token.delete();
+
+    res.send({ status: "Cập nhật mật khẩu thành công" });
+
+  } catch (error) {
+    res.send({ message: error.message });
+    console.log({ message: error.message })
+  }
+}
+
 export const userController =
 {
   getUsers,
@@ -356,5 +444,8 @@ export const userController =
   updateUser,
   getUserById,
   signinUser,
-  googleLogin
+  googleLogin,
+  updatePassword,
+  sentCodeResetPassword,
+  resetPassword,
 };
