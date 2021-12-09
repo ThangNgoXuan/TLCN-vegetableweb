@@ -8,6 +8,7 @@ import { updateStatusOrderAction } from '../../redux/actions/orderAction'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Search from '../../components/Search'
+import { Link } from 'react-router-dom'
 
 const Orders = ({ history }) => {
     const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const Orders = ({ history }) => {
         'Số điện thoại',
         'Tổng tiền ',
         'Địa chỉ giao ',
+        'Chi tiết',
         'Trạng thái'
     ]
 
@@ -50,6 +52,7 @@ const Orders = ({ history }) => {
             <td>{numberWithCommas(item.totalPrice)}</td>
             {/* <td>{item.status}</td> */}
             <td>{item.shipAddress}</td>
+            <td><Link>Chi tiết</Link></td>
             <td>
                 <select onChange={(e) => handleChangeOrderState(item._id, e.target.value)}>
                     <option selected={item.status === "DANG_XU_LY"} value="DANG_XU_LY">Đang xử lý</option>

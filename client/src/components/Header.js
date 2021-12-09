@@ -4,7 +4,7 @@ import { Link, useLocation, Route } from 'react-router-dom'
 import { userLogOutAction } from '../redux/actions/userAction'
 import Dropdown from './admin/Dropdown'
 
-import logo from '../images/main-logo.png'
+import logo from '../images/Logo.png'
 
 import Search from './Search'
 
@@ -21,10 +21,10 @@ const mainNav = [
         display: "Giới thiệu",
         path: "/intro"
     },
-    // {
-    //     display: "Liên hệ",
-    //     path: "/contact"
-    // }
+     {
+         display: "Liên hệ",
+         path: "/contact"
+     }
 ]
 
 const Header = () => {

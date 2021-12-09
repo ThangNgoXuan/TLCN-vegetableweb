@@ -1,10 +1,10 @@
 :root {
-    --main-color-bold: #3b6bfe;
-    --main-color: #7bcaff;
+    --main-color-bold: #024137;
+    --main-color: #26a630;
 }
 
 .form-alert {
-    background-color: #7ac9ff;
+    background-color: #26a630;
     display: inline-block;
     padding: 9px;
     border-radius: 16px;
@@ -15,7 +15,7 @@
 .login {
     width: 100%;
     min-height: 100vh;
-    background-image: linear-gradient(to right, #3b6bfe 0, #7bcaff 51%);
+    background-image: linear-gradient(to right, #024137 0, #26a630 51%);
     position: absolute;
     top: 0;
     left: 0;
@@ -67,15 +67,15 @@
 
 .input-group input:focus {
     outline: none;
-    border: 0.3px solid #3b6bfe;
-    box-shadow: 0 0 5px 0.5px #3b6bfe;
+    border: 0.3px solid #024137;
+    box-shadow: 0 0 5px 0.5px #024137;
 }
 
 .input-group i {
     position: absolute;
     right: 20px;
     top: 4rem;
-    color: #3e9fff;
+    color: #26a630;
     transform: translateY(50%);
 }
 
@@ -91,7 +91,7 @@ form p {
 }
 
 form p a {
-    color: #3b6bfe;
+    color: #024137;
     font-weight: bold;
     text-decoration: none;
 }
@@ -103,7 +103,7 @@ form .rules {
 }
 
 form .rules a {
-    color: #3b6bfe;
+    color: #024137;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
@@ -120,14 +120,14 @@ form .btn {
 
 form .btn.btn-submit {
     color: #fff;
-    background-image: linear-gradient(to right, #7bcaff 0%, #3e9fff 100%);
+    background-image: linear-gradient(to right, #26a630 0%, #26a630 100%);
     border: none;
     font-weight: bold;
     transition: 1s ease;
 }
 
 form .btn.btn-submit:hover {
-    background-image: linear-gradient(to left, #7bcaff 0%, #3e9fff 100%);
+    background-image: linear-gradient(to left, #26a630 0%, #26a630 100%);
 }
 
 form .btn.btn-fb {
@@ -139,12 +139,12 @@ form .btn.btn-fb {
 }
 
 form .btn.btn-fb:hover {
-    color: #3b6bfe;
+    color: #024137;
 }
 form .btn.btn-fb i {
     position: absolute;
     top: 50%;
     right: 20px;
     transform: translateY(-50%);
-    color: #3e9fff;
+    color: #26a630;
 }

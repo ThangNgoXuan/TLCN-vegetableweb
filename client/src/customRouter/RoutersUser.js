@@ -13,6 +13,7 @@ import Register from '../pages/register'
 import UserProfile from '../pages/userProfile'
 import Order from '../pages/Order'
 import OrderHistory from '../pages/OrderHistory'
+import OrderDetail from '../pages/orderdetail'
 
 const RoutesUser = () => {
     return (
@@ -26,7 +27,8 @@ const RoutesUser = () => {
             <Route path='/my-profile' component={UserProfile} />
             <Route path='/order' exact component={Order} />
             <Route path='/order-history' exact component={OrderHistory} />
-
+            <Route path='/order-detail' exact component={OrderDetail} />
+            
             <Route path='/catalog/category/:category'
                 exact
                 component={Catalog}
