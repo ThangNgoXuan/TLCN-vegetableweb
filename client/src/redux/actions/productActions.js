@@ -110,8 +110,10 @@ export const topProductsRelate = (productId) => async (dispatch) => {
 
 export const listProductsAdmin = ({
   pageNumber = 1,
-  keyword = 'notset'
-}) => async (dispatch, getState) => {
+  keyword
+}
+) => async (dispatch, getState) => {
+  console.log(keyword)
   dispatch({
     type: PRODUCT_LIST_REQUEST,
   });

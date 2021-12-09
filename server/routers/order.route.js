@@ -8,6 +8,9 @@ router.route('/myOrder/:id').get(isAuth, orderController.getMyOrders);
 
 router.route('/sendmail').post(orderController.sendMailOrder);
 
+router.route('/admin')
+  .get(isAuth, isAdmin, orderController.adminGetOrders)
+
 router.route('/:id')
   .get(isAuth, orderController.getOrderById)
   .put(isAuth, orderController.adminUpdateOrder)
@@ -15,5 +18,6 @@ router.route('/:id')
 router.route('/')
   .get(isAuth, orderController.getOrders)
   .post(isAuth, orderController.newOrder)
+
 
 export const orderRouter = router;

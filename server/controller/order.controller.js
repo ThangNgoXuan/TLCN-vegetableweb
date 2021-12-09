@@ -1,7 +1,8 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/order.model.js'
 import { updateProductQuantity } from './product.controller.js';
-import { sendMail } from '../utils/sendMail.js'
+import { sendMail } from '../utils/sendMail.js';
+import mongoose from 'mongoose';
 
 // @desc    Create new order
 // @route   POST /v1/orders
@@ -96,7 +97,7 @@ const sendMailOrder = (req, res, next) => {
   const sub = 'Đơn hàng';
 
   let htmlContent = `<p>Chào ${userInfo.firstName},</p>
-  <p>Cảm ơn bạn đã đặt hàng tại Yummy Food. Dưới đây là chi tiết đơn hàng của bạn.</p>
+  <p>Cảm ơn bạn đã đặt hàng tại Nông sản hữu cơ. Dưới đây là chi tiết đơn hàng của bạn.</p>
   <table style="border: 1px solid black; border-collapse: collapse;">
       <thead>
           <tr>
@@ -124,7 +125,7 @@ const sendMailOrder = (req, res, next) => {
   htmlContent += `
   </tbody></table>
   <p>Cảm ơn bạn đã tin tưởng chúng tôi. Chúc bạn 1 ngày vui vẻ!</p>
-  <p>Yummy Food</p>`;
+  <p>Nông sản hữu cơ</p>`;
 
   try {
     sendMail(userInfo.email, sub, htmlContent);
@@ -165,7 +166,16 @@ const adminUpdateOrder = async (req, res) => {
 const adminGetOrders = async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
-  const keyword = req.query.keyword || '';
+  const keyword = req.query.keyword === 'undefined' ? '' : req.query.keyword;
+  //console.log(keyword)
+  let objectId = mongoose.Types.ObjectId;
+  if (objectId.isValid(keyword)) {
+    const kq = await Order.findById(keyword)
+    if (kq) {
+      res.json([kq]);
+      return
+    }
+  }
 
   const searchFilter = keyword ? {
     $or: [
@@ -184,23 +194,17 @@ const adminGetOrders = async (req, res) => {
       {
         mail: {
           $regex: keyword,
-          $options: "$i"
+          //$options: "$i"
+        }
+      },
+      {
+        status: {
+          $regex: keyword,
+          //$options: "$i"
         }
       },
       {
         phone: {
-          $regex: keyword,
-          $options: "$i"
-        }
-      },
-      {
-        description: {
-          $regex: keyword,
-          $options: "$i"
-        }
-      },
-      {
-        certification: {
           $regex: keyword,
           $options: "$i"
         }
@@ -215,17 +219,16 @@ const adminGetOrders = async (req, res) => {
   const orders = await Order.find({
     ...searchFilter,
   })
-    .populate({ path: 'category', select: 'name' })
-    .populate({ path: 'brand', select: 'name' })
-    .populate({ path: 'creator', select: 'name' })
+    .populate({ path: 'user', select: 'name' })
+    .sort({ 'createdAt': -1 })
     .skip(pageSize * (page - 1))
     .limit(pageSize);
 
   if (orders) {
-    res.send({ orders, page, pages: Math.ceil(count / pageSize) });
+    res.json({ orders, page, pages: Math.ceil(count / pageSize) });
   } else {
-    res.json({}).status(HttpStatusCode.NOT_FOUND);
-    throw new Error('Không tìm thấy sản phẩm');
+    res.json([]).status(HttpStatusCode.NOT_FOUND);
+    throw new Error('Không tìm thấy đơn hàng');
   }
 };
 
@@ -236,4 +239,5 @@ export const orderController = {
   newOrder,
   sendMailOrder,
   adminUpdateOrder,
+  adminGetOrders,
 };

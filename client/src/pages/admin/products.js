@@ -19,12 +19,16 @@ const Products = ({ history }) => {
     const [pageNumber, setPageNUmber] = useState(1);
     const myInfo = useSelector(state => state.userSignin);
     const { userInfo } = myInfo;
+
+    const [keyword, setKeyWord] = useState('');
+
     useEffect(() => {
 
         if (userInfo && userInfo.role === 'admin') {
             dispatch(listProductsAdmin({
                 pageNumber
-            }))
+            }
+            ))
         } else {
             history.push('/login')
         }
@@ -40,6 +44,13 @@ const Products = ({ history }) => {
     const handlePageChange = ({ newPage }) => {
         if (newPage) {
             setPageNUmber(newPage || page)
+        }
+    }
+
+    const handleSearch = () => {
+        console.log(keyword)
+        if (keyword !== '') {
+            dispatch(listProductsAdmin({ keyword: keyword }))
         }
     }
 
@@ -101,21 +112,27 @@ const Products = ({ history }) => {
                 newestOnTop={false}
             />
             <div className="row">
-                <div className="col-8">
+                <div className="col-6">
                     <h2 className="page-header">
                         Danh sách sản phẩm
                     </h2>
                 </div>
-                <div className="col-2">
-                    <h2 className="page-header">
-                        <Search />
-                    </h2>
+                <div className="col-4">
+                    <div style={{ display: 'flex' }}>
+                        <input type="text" placeholder="Tìm kiếm..." required
+                            style={{ height: '32px' }}
+                            onChange={(e) => setKeyWord(e.target.value)}
+                        />
+                        <button
+                            style={{ backgroundColor: '#cbd5cd', borderRadius: '5px', padding: '0 10px' }}
+                            type="button" onClick={() => handleSearch()}><span>Tìm</span></button>
+                    </div>
                 </div>
                 <div className="col-2">
                     <Link to='/admin/newproduct'>
                         <div className="slide__item">
                             <div className="sidebar__item-inner active flexcenter">
-                                <span>Thêm sản phẩm</span>
+                                <span>Thêm SP</span>
                             </div>
                         </div>
                     </Link>
