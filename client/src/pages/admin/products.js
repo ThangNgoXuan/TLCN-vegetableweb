@@ -114,7 +114,7 @@ const Products = ({ history }) => {
                     <Link to='/admin/newproduct'>
                         <div className="slide__item">
                             <div className="sidebar__item-inner active flexcenter">
-                                <span>Thêm sản phẩm</span>
+                                <span>Thêm mới</span>
                             </div>
                         </div>
                     </Link>

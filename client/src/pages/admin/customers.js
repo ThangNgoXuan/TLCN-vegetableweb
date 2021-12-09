@@ -76,7 +76,7 @@ const Customers = ({ history }) => {
                 newestOnTop={false}
             />
             <div className="row">
-                <div className="col-8">
+                <div className="col-10">
                     <h2 className="page-header">
                         Quản lý người dùng
                     </h2>
@@ -86,15 +86,7 @@ const Customers = ({ history }) => {
                         <Search/>
                     </h2>
                 </div>
-                <div className="col-2">
-                    <Link to='/admin/newuser'>
-                        <div className="slide__item">
-                            <div className="sidebar__item-inner active flexcenter">
-                                <span>Thêm mới</span>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
+                
             </div>
             <div className="row">
                 <div className="col-12">

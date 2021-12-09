@@ -14,6 +14,7 @@ function App() {
         <Route path="/admin" component={Layoutadmin} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
+        <Route path="/notfound" component={NotFound} />
         <Route path="/" component={Layoutuser} />
         <Route path="*" component={NotFound} />
       </Switch>

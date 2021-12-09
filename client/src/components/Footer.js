@@ -24,15 +24,15 @@ const footerAboutLinks = [
 const footerCustomerLinks = [
     {
         display: "Chính sách đổi trả",
-        path: "/about"
+        path: "/contact"
     },
     {
         display: "Chính sách bảo hành",
-        path: "/about"
+        path: "/contact"
     },
     {
         display: "Chính sách hoàn tiền",
-        path: "/about"
+        path: "/contact"
     }
 ]
 const Footer = () => {
@@ -100,7 +100,11 @@ const Footer = () => {
                             </Link>
                         </p>
                         <p>
-                            Lorem Ipsum is imply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                            Mã số thuế: 00000000 <br />
+                            Địa chỉ Nông trại: Số 1 Võ Văn Ngân <br />
+                            Email: nongsansach@gmail.com <br />
+                            Shopee: Nông Sảnh Sạch <br />
+                            Fanpage: Nông Sản Sạch
                         </p>
                     </div>
                 </Grid>
