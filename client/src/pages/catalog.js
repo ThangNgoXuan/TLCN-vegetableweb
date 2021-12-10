@@ -114,7 +114,7 @@ const Catalog = () => {
                             certificates.map(x =>
                                 <div className="catalog__filter__widget__content">
                                     <div className="catalog__filter__widget__content__item">
-                                        <Link className={certificate === 'x' ? 'active' : ''}
+                                        <Link className={certificate === x ? 'active' : ''}
                                             to={() => getFilterUrl({ certificate: x })}>
                                             {x}</Link>
                                     </div>
@@ -146,10 +146,10 @@ const Catalog = () => {
                     <br />
                     <br />
                     <br />
-                    
+
                     <div>
                         <Link to="/catalog" style={reset}>
-                                Reset
+                            Reset
                         </Link>
                     </div>
                 </div>

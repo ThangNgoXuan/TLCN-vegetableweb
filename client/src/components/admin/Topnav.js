@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 import Dropdown from './Dropdown'
 
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { userLogOutAction } from '../../redux/actions/userAction'
 
 
 
@@ -25,20 +26,11 @@ const renderUserToggle = (user) => (
     </div>
 )
 
-const renderUserMenu = (item, index) => (
-    <Link to='/' key={index}>
-        <div className="notification-item">
-            <i className={item.icon}></i>
-            <span>{item.content}</span>
-        </div>
-    </Link>
-)
-
 const Topnav = ({ history }) => {
 
     const userSignin = useSelector(state => state.userSignin);
     const { userInfo } = userSignin;
-
+    const dispatch = useDispatch();
 
     // useEffect(() => {
     //     if (userInfo && userInfo.role === 'admin') {
@@ -48,16 +40,31 @@ const Topnav = ({ history }) => {
     //     }
     // })
 
+    const signoutHandler = () => {
+        dispatch(userLogOutAction());
+    }
 
+    const renderUserMenu = (item, index) => (
+        <Link to={item.go} key={index}
+            onClick={() => { if (item.go === "") signoutHandler() }}
+        >
+            <div className="notification-item">
+                <i className={item.icon}></i>
+                <span>{item.content}</span>
+            </div>
+        </Link>
+    )
 
     const user_menu = [
         {
             "icon": "bx bx-user",
-            "content": "Tài khoản"
+            "content": "Tài khoản",
+            "go": '/admin/setting',
         },
         {
             "icon": "bx bx-log-out-circle bx-rotate-180",
-            "content": "Đăng xuất"
+            "content": "Đăng xuất",
+            "go": "",
         }
     ]
 

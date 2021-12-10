@@ -9,17 +9,16 @@ import Table from '../../components/admin/Table'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { listProductsAdmin, deleteProductAction } from '../../redux/actions/productActions'
-import Search from '../../components/Search'
 
 const Products = ({ history }) => {
 
     const dispatch = useDispatch();
     const productsList = useSelector(state => state.productList)
     const { loading, error, products, page, pages } = productsList
-    const [pageNumber, setPageNUmber] = useState(1);
     const myInfo = useSelector(state => state.userSignin);
     const { userInfo } = myInfo;
 
+    const [pageNumber, setPageNUmber] = useState(1);
     const [keyword, setKeyWord] = useState('');
 
     useEffect(() => {
@@ -93,12 +92,12 @@ const Products = ({ history }) => {
             <td style={{ minWidth: '140px' }}  >{item.description.substring(0, 32) + '...'}</td>
             <td>{item.createdAt || ''}</td>
             <td>{item.status ? 'active' : 'disable'}</td>
-            <td><Link to={`/admin/product/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+            <td><Link to={`/admin/product/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
             <td>
                 <nav style={{ cursor: 'pointer' }}
                     onClick={() => handleDelete(item._id)}
                 >
-                    <i class='bx bx-trash'></i>
+                    <i className='bx bx-trash'></i>
                 </nav>
             </td>
         </tr>

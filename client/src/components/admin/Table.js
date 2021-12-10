@@ -23,16 +23,16 @@ const Table = props => {
     // }
 
     const [currPage, setCurrPage] = useState(props.page || 1)
-    console.log(currPage)
+    // console.log(currPage)
 
-    const selectPage = page => {
-        const start = Number(props.limit) * page
-        const end = start + Number(props.limit)
+    // const selectPage = page => {
+    //     const start = Number(props.limit) * page
+    //     const end = start + Number(props.limit)
 
-        setDataShow(props.bodyData.slice(start, end))
+    //     setDataShow(props.bodyData.slice(start, end))
 
-        setCurrPage(page)
-    }
+    //     setCurrPage(page)
+    // }
 
     return (
         <div>

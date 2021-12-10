@@ -1,32 +1,34 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { updateUserProfile } from '../../redux/actions/userAction'
 import Table from '../../components/admin/Table'
 import { listUserAction } from '../../redux/actions/userAction'
-import Search from '../../components/Search';
+import SearchAdmin from '../../components/admin/SearchAdmin';
 
 const Customers = ({ history }) => {
 
     const userList = useSelector(state => state.userList)
-    const { loading, error, users } = userList;
+    const { loading, error, users, page, pages } = userList;
 
     const dispatch = useDispatch();
 
     const myInfo = useSelector(state => state.userSignin);
     const { userInfo } = myInfo;
 
+    const [pageNumber, setPageNUmber] = useState(1);
+
+
     useEffect(() => {
         if (userInfo && userInfo.role === 'admin') {
-            dispatch(listUserAction())
+            dispatch(listUserAction({ pageNumber }))
         } else {
             history.push('/login')
 
         }
-    }, [dispatch, history, userInfo])
+    }, [dispatch, history, userInfo, pageNumber])
 
     const customerTableHead = [
         'STT',
@@ -51,7 +53,7 @@ const Customers = ({ history }) => {
 
     const renderBody = (item, index) => (
         <tr key={index}>
-            <td>{index}</td>
+            <td>{index + 1}</td>
             <td>{item.role}</td>
             <td><img src={item.avatar} alt='Hình ảnh' style={{ width: '30px' }} /></td>
             <td>{item.lastName + ' ' + item.firstName}</td>
@@ -68,6 +70,20 @@ const Customers = ({ history }) => {
         </tr>
     )
 
+    const handleSearchData = (text) => {
+        if (text !== '') {
+            dispatch(listUserAction({ pageNumber: 1 || pageNumber, keyword: text }));
+        }
+    }
+
+    const handlePageChange = ({ newPage }) => {
+        if (newPage) {
+            setPageNUmber(newPage || page)
+            dispatch(listUserAction({ pageNumber: newPage || page }))
+
+        }
+    }
+
     return (
         <div>
             <ToastContainer
@@ -83,10 +99,11 @@ const Customers = ({ history }) => {
                 </div>
                 <div className="col-2">
                     <h2 className="page-header">
-                        <Search/>
+                        <SearchAdmin handleSearchData={handleSearchData} />
+
                     </h2>
                 </div>
-                
+
             </div>
             <div className="row">
                 <div className="col-12">
@@ -101,6 +118,9 @@ const Customers = ({ history }) => {
                                             renderHead={(item, index) => renderHead(item, index)}
                                             bodyData={users}
                                             renderBody={(item, index) => renderBody(item, index)}
+                                            page={page}
+                                            pages={pages}
+                                            handlePageChange={handlePageChange}
                                         />
                             }
                         </div>

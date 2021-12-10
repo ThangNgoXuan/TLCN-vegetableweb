@@ -61,21 +61,21 @@ const Register = (props) => {
                         <input type="text" placeholder="nva@gmail.com" required
                             onChange={e => setEmail(e.target.value)}
                         />
-                        <i class="far fa-envelope fa-2x"></i>
+                        <i className="far fa-envelope fa-2x"></i>
                     </div>
                     <div className="input-group">
                         <label htmlFor="">Mật khẩu</label>
                         <input type="password" required
                             onChange={e => setPassword(e.target.value)}
                         />
-                        <i class="fas fa-lock fa-2x"></i>
+                        <i className="fas fa-lock fa-2x"></i>
                     </div>
                     <div className="input-group">
                         <label htmlFor="">Nhập lại mật khẩu</label>
                         <input type="password" required
                             onChange={e => setconfirmPassword(e.target.value)}
                         />
-                        <i class="fas fa-lock fa-2x"></i>
+                        <i className="fas fa-lock fa-2x"></i>
                     </div>
                     <button className="btn btn-submit" type="submit">Đăng kí</button>
                     <p>Qay lại trang đăng nhập? <Link to="/login">Đăng nhập</Link></p>

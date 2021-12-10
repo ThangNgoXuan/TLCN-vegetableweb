@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Button from "./Button";
 
 const SearchPriceBox = ({ getFilterUrl }) => {
   const styles = {
@@ -34,9 +33,9 @@ const SearchPriceBox = ({ getFilterUrl }) => {
           onChange={(e) => setmax(+(e.target.value))}
         ></input>
       </div>
-      <Link 
+      <Link
         to={getFilterUrl({ min: min, max: max })}
-        style={apply}  
+        style={apply}
       >
         Áp dụng
       </Link>

@@ -21,10 +21,10 @@ const mainNav = [
         display: "Giới thiệu",
         path: "/intro"
     },
-     {
-         display: "Liên hệ",
-         path: "/contact"
-     }
+    {
+        display: "Liên hệ",
+        path: "/contact"
+    }
 ]
 
 const Header = () => {
@@ -33,7 +33,7 @@ const Header = () => {
     const dispatch = useDispatch();
     const { userInfo } = userSignin;
     const cart = useSelector((state) => state.cart);
-    const { cartItems, error } = cart;
+    const { cartItems } = cart;
 
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
@@ -78,18 +78,18 @@ const Header = () => {
 
     useEffect(() => {
 
-        window.addEventListener("scroll", () => {
-            if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-                console.log(headerRef.current)
-                headerRef.current.classList.add('shrink')
-            } else {
-                headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
-            }
-        })
+        // window.addEventListener("scroll", () => {
+        //     if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+        //         console.log(headerRef.current)
+        //         headerRef.current.classList.add('shrink')
+        //     } else {
+        //         headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
+        //     }
+        // })
 
-        return () => {
-            window.removeEventListener("scroll", () => { })
-        };
+        // return () => {
+        //     window.removeEventListener("scroll", () => { })
+        // };
 
     }, []);
 
@@ -174,7 +174,7 @@ const Header = () => {
                             {!userInfo ?
                                 <div style={{ fontSize: '14px' }}>
                                     <Link to="/login">Đăng nhập</Link>
-                                    <Link>| Đăng ký</Link>
+                                    <Link to="/register">| Đăng ký</Link>
                                 </div>
                                 : <div className="user-wrap">
                                     {/* <i className="bx bx-user"></i> */}

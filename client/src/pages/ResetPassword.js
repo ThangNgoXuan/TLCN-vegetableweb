@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import Helmet from '../components/Helmet'
 import { } from '../styles/login.css'
 import { resetPassword } from '../redux/actions/userAction'
-import axios from 'axios'
 
 const ResetPassword = (props) => {
   const [token, setToken] = useState('');
@@ -68,8 +67,8 @@ const ResetPassword = (props) => {
             <i className="bx bx-lock fa-2x i-login"></i>
           </div>
           <button className="btn btn-submit" type="submit">
-            Đăng nhập</button>
-          <div>  Quay lại trang<Link to="/login"> đăng nhập</Link></div>
+            Đổi mật khẩu</button>
+          <p>  Quay lại trang<Link to="/login"> đăng nhập</Link></p>
         </form>
       </div>
     </Helmet>

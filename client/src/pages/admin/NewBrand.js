@@ -9,7 +9,7 @@ const NewBrand = ({ match, history }) => {
 
   const [name, setName] = useState('')
   const brandCreate = useSelector(state => state.addBrand);
-  const { loading: loadingCreate, error: errorCreate, success: createdBrand } = brandCreate;
+  const { loading: loadingCreate, error: errorCreate } = brandCreate;
 
   const dispatch = useDispatch()
 
@@ -55,13 +55,13 @@ const NewBrand = ({ match, history }) => {
                   />
                 </div>
                 <br />
-              
+
                 <Link to="/admin/brands" className="userUpdateButton" >
                   <button className="userUpdateButton" type="submit">Trở về</button>
                 </Link>
                 <br /><br />
                 <button className="userUpdateButton" type="submit">Thêm mới</button>
-                
+
               </div>
             </form>
           </div>

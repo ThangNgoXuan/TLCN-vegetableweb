@@ -10,16 +10,12 @@ import {
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
-  ORDER_PAYMENT_METHOD,
   ORDER_LIST_FAIL,
   ORDER_LIST_REQUEST,
   ORDER_LIST_SUCCESS,
   ORDER_UPDATE_REQUEST,
   ORDER_UPDATE_SUCCESS,
   ORDER_UPDATE_FAIL,
-  GET_ORDER_BY_STATUS_REQUEST,
-  GET_ORDER_BY_STATUS_SUCCESS,
-  GET_ORDER_BY_STATUS_FAIL,
 
 } from '../constants/orderConstants';
 
@@ -78,8 +74,13 @@ const createOrder = (order) => async (dispatch, getState) => {
 export const orderDetail = (orderID) => async (dispatch, getState) => {
   dispatch({ type: ORDER_DETAILS_REQUEST });
   const { userSignin: { userInfo } } = getState();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    }
+  }
   try {
-    const { data } = await Axios.get('/api/orders/admin/orderDetail/' + orderID);
+    const { data } = await Axios.get('/v1/order/' + orderID, config);
     dispatch({ type: ORDER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -90,23 +91,8 @@ export const orderDetail = (orderID) => async (dispatch, getState) => {
   }
 
 }
-const paymentMethod = (action, userID) => async (dispatch, getState) => {
 
-  try {
-    if (action === "get") {
-      const { data } = await Axios.get('/api/users/get-account/' + userID)
-      dispatch({ type: ORDER_PAYMENT_METHOD, payload: data })
-    } else {
-      const { data } = await Axios.get('/api/users/get-account/' + userID)
-
-    }
-  } catch (error) {
-
-  }
-
-}
-
-export const orderListAction = () => async (dispatch, getState) => {
+export const orderListAction = ({ pageNumber = 1, keyword = '' }) => async (dispatch, getState) => {
 
   dispatch({ type: ORDER_LIST_REQUEST });
   const { userSignin: { userInfo } } = getState();
@@ -120,8 +106,9 @@ export const orderListAction = () => async (dispatch, getState) => {
       const { data } = await Axios.get('/v1/order', config);
       dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
     } else {
-      const { data } = await Axios.get('/v1/order/admin', config);
+      const { data } = await Axios.get(`/v1/order/admin?pageNumber=${pageNumber}&keyword=${keyword}`, config);
       dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
+      //console.log(data)
     }
   } catch (error) {
     const message =
@@ -178,73 +165,4 @@ export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getS
   }
 };
 
-const getOrderByDeliveryStatus = (diliveryStatus) => async (dispatch) => {
-  dispatch({ type: GET_ORDER_BY_STATUS_REQUEST });
-  try {
-    if (diliveryStatus === 'Tất cả') {
-      const { data } = await Axios.get('/api/orders');
-      dispatch({ type: GET_ORDER_BY_STATUS_SUCCESS, payload: data });
-    } else {
-      const { data } = await Axios.post('/api/orders/order-by-delivery-status', { diliveryStatus });
-      dispatch({ type: GET_ORDER_BY_STATUS_SUCCESS, payload: data });
-    }
-  } catch (error) {
-    dispatch({ type: GET_ORDER_BY_STATUS_FAIL, payload: error.message });
-  }
-}
-
-export const orderDeliverySuccess = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_REQUEST });
-  // const { userSignin: { userInfo } } = getState();
-  try {
-    const { data } = await Axios.get('/api/orders/shipper/DaGiao');
-    // console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    dispatch({ type: ORDER_LIST_FAIL, payload: message });
-  }
-};
-
-export const orderDeliveryFail = () => async (dispatch, getState) => {
-  dispatch({ type: ORDER_LIST_REQUEST });
-  // const { userSignin: { userInfo } } = getState();
-  try {
-    const { data } = await Axios.get('/api/orders/shipper/fail');
-    // console.log("data:" + data);
-    dispatch({ type: ORDER_LIST_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    dispatch({ type: ORDER_LIST_FAIL, payload: message });
-  }
-};
-
-const account = (action, userID) => async (dispatch, getState) => {
-  try {
-    console.log("availableBalanceNew: ");
-    if (action === "get") {
-      const { data } = await Axios.get('/api/users/get-account/' + userID);
-      dispatch({ type: ORDER_PAYMENT_METHOD, payload: data });
-    } else {
-      const { account: { availableBalance } } = getState();
-      const { cart: { cartItems } } = getState();
-      const total = cartItems.reduce((a, c) => a + c.price * c.qty, 0) + 15000;
-      const availableBalanceNew = availableBalance - total;
-      console.log("availableBalanceNew: " + availableBalance);
-      const { data } = await Axios.patch('/api/users/update-account/' + userID, { availableBalanceNew })
-      dispatch({ type: ORDER_PAYMENT_METHOD, payload: data });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-
-};
-
-
-export { createOrder, account, getOrderByDeliveryStatus };
+export { createOrder };

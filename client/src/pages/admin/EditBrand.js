@@ -16,7 +16,7 @@ const EditBrand = ({ match, history }) => {
 
   const [name, setName] = useState('')
   const brandUpdate = useSelector(state => state.updateBrand);
-  const { loading: loadingUpdate, error: errorUpdate, success: updatedBrand } = brandUpdate;
+  const { loading: loadingUpdate, error: errorUpdate } = brandUpdate;
 
   const dispatch = useDispatch()
   const myInfo = useSelector(state => state.userSignin);

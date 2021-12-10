@@ -23,11 +23,11 @@ const Order = (props) => {
   const [mail, setMail] = useState('')
   const [address, setAddress] = useState('')
   const [note, setNote] = useState('')
-  const [onlinePayment, setOnlinePayment] = useState("");
+  //const [onlinePayment, setOnlinePayment] = useState("");
   const [codPayment, setCodPayment] = useState("COD");
 
-  console.log(codPayment)
-  console.log(onlinePayment)
+  //console.log(codPayment)
+  //console.log(onlinePayment)
 
 
   let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
@@ -145,7 +145,7 @@ const Order = (props) => {
                     <div className="order__list-product-name">{item.name}</div>
                     <div className="order__list-product-quantity">x{item.quantity}</div>
                   </span>
-                  <div className="order__list-product-price">{numberWithCommas(item.price)}đ</div>
+                  <div className="order__list-product-price">{numberWithCommas(item.price * item.quantity)}đ</div>
 
                 </li>
               ))
@@ -164,7 +164,8 @@ const Order = (props) => {
 
             <div className="order__payment-item">
               <input checked={codPayment === 'COD'} type="radio" id="COD" name="pay" value="COD"
-                onChange={() => setCodPayment(codPayment !== 'COD' && 'COD')}
+                // onChange={() => setCodPayment(codPayment !== 'COD' && 'COD')}
+                onChange={() => setCodPayment('COD')}
               />
               <label for="COD">Thanh toán khi nhận hàng</label>
             </div>

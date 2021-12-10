@@ -47,10 +47,10 @@ const Slides = ({ history }) => {
       /></td>
       <td>{item.name}</td>
       <td>{item.status ? 'Active' : 'Dissable'}</td>
-      <td><Link to={`/admin/slides/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+      <td><Link to={`/admin/slides/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
       <td>
         <div style={{ cursor: 'pointer' }} onClick={() => handleDelete(item._id)} >
-          <i class='bx bx-trash'></i>
+          <i className='bx bx-trash'></i>
         </div>
       </td>
     </tr>
@@ -65,7 +65,7 @@ const Slides = ({ history }) => {
         </div>
         <div className="col-2">
           <h2 className="page-header">
-            <Search/>
+            <Search />
           </h2>
         </div>
         <div className="col-2">

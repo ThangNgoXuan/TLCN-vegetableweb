@@ -45,7 +45,7 @@ export const userLogOutAction = () => (dispatch) => {
   document.location.href = "/";
 }
 
-export const listUserAction = () => async (dispatch, getState) => {
+export const listUserAction = ({ pageNumber = 1, keyword = '' }) => async (dispatch, getState) => {
   dispatch({ type: USER_LIST_REQUEST });
   const {
     userSignin: { userInfo },
@@ -57,7 +57,7 @@ export const listUserAction = () => async (dispatch, getState) => {
     },
   }
   try {
-    const { data } = await Axios.get('/v1/user', config);
+    const { data } = await Axios.get(`/v1/user?pageNumber=${pageNumber}&keyword=${keyword}`, config);
     dispatch({ type: USER_LIST_SUCCESS, payload: data })
   } catch (error) {
     dispatch({
@@ -144,7 +144,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     });
     dispatch({ type: USER_UPDATE_PROFILE_SUCCESS });
     // dispatch({ type: USER_SIGNIN_SUCCESS });
-    dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
+    // dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
     toast.success("Cập nhật thành công")
     localStorage.setItem('userInfo', JSON.stringify(data));
   } catch (error) {

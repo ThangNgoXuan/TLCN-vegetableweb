@@ -34,7 +34,7 @@
     --main-color-orange: #d68102;
     --second-color-orange: #fca11a;
 
-    --sidebar-width: 300px;
+    --sidebar-width: 220px;
     --border-radius: 15px;
     --topnav-height: 110px;
     --transition-cubic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -93,7 +93,7 @@ input:focus {
 }
 
 .card {
-    padding: 30px;
+    padding: 26px;
     margin-bottom: 30px;
     background-color: var(--main-bg);
     box-shadow: var(--box-shadow);
@@ -156,8 +156,6 @@ input:focus {
     color: #fff;
 }
 
-
-
 @import "./components/badge";
 @import "./components/dropdown";
 @import "./components/layout";
@@ -170,4 +168,3 @@ input:focus {
 @import "./grid";
 @import "./theme";
 @import "./components/user";
-

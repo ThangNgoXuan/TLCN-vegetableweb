@@ -117,6 +117,8 @@ const EditProduct = ({ history, match }) => {
       />
       <h2 className="page-header">Chỉnh sửa sản phẩm</h2>
       <div className="row">
+        {loading && <div>Loading...</div>}
+        {error && <div>{error}</div>}
         <div className="col-10">
           <div className="card full-height">
             <form action="" className="userUpdateForm" onSubmit={handleSubmit}>

@@ -21,6 +21,7 @@ const Setting = ({ history }) => {
     const [passwordAgain, setPasswordAgain] = useState('')
     const [address, setAddress] = useState('')
     const [image, setImage] = useState('');
+    const [matchedPassword, setMatchedPassword] = useState(true);
 
     useEffect(() => {
 
@@ -48,8 +49,6 @@ const Setting = ({ history }) => {
         formData.append("file", e.target.files[0]);
         formData.append("upload_preset", uploadPreset);
 
-        console.log(formData)
-
         axios.post(`https://api.cloudinary.com/v1_1/${cloundName}/upload`, formData)
             .then(res => {
                 setImage(res.data.url)
@@ -58,14 +57,13 @@ const Setting = ({ history }) => {
                 console.log(error)
             )
     }
-    const checkPasswordMatch = () => {
-        if (Boolean(password) && Boolean(passwordAgain) && password === passwordAgain) {
-            return true;
-        }
-        return false;
-    }
     const handleSubmit = () => {
-        if (checkPasswordMatch()) {
+        if (password !== passwordAgain) {
+            setMatchedPassword(false);
+        }
+        else {
+            setMatchedPassword(true);
+
             dispatch(updateUserProfile({
                 _id: user._id,
                 firstName: fname,
@@ -82,7 +80,7 @@ const Setting = ({ history }) => {
         <div>
             <ToastContainer
                 position="top-right"
-                autoClose={1400}
+                autoClose={1800}
                 hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick
@@ -208,30 +206,34 @@ const Setting = ({ history }) => {
                                         className="userUpdateInput"
                                         onChange={(e) => setPasswordAgain(e.target.value)}
                                     />
-                                    {!checkPasswordMatch() && <div style={{ color: "red" }}>Mật khẩu không khớp</div>}
+                                    {/* {!checkPasswordMatch() && <div style={{ color: "red" }}>Mật khẩu không khớp</div>} */}
+                                    {(!matchedPassword) && <div style={{ color: "red" }}>Mật khẩu không khớp!</div>}
+                                </div>
+
+                                <div className="userUpdateRight pt-15">
+                                    <div className="userUpdateUpload">
+                                        <img
+                                            className="userUpdateImg"
+                                            src={image || imageDefault}
+                                            alt=""
+                                        />
+                                        <label htmlFor="file" >
+                                            <i className="bx bx-upload bx-sm userUpdateIcon"></i>
+                                        </label>
+
+                                        <input type="file" id="file" style={{ display: "none" }}
+                                            onChange={uploadImage}
+                                        />
+
+                                        <button className="userUpdateButton mt-15" type="button"
+                                            onClick={() => handleSubmit()}
+                                        >Update</button>
+                                    </div>
                                 </div>
                             </div>
 
 
-                            <div className="userUpdateRight">
-                                <div className="userUpdateUpload">
-                                    <img
-                                        className="userUpdateImg"
-                                        src={image || imageDefault}
-                                        alt=""
-                                    />
-                                    {/* <label htmlFor="file" onClick={uploadImage}>
-                                        <i className="bx bx-upload bx-sm userUpdateIcon"></i>
-                                    </label> */}
-                                    
-                                    <input type="file" id="file"
-                                        onChange={uploadImage}
-                                    />
-                                </div>
-                                <button className="userUpdateButton" type="button"
-                                    onClick={() => handleSubmit()}
-                                >Update</button>
-                            </div>
+
                         </form>
                     </div>
                 </div>

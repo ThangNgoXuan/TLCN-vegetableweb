@@ -27,7 +27,7 @@ const InfinityList = ({ loading, error, products, page, pages }) => {
         window.addEventListener("scroll", () => {
             if (listRef && listRef.current) {
                 if (window.scrollY + window.innerHeight >= listRef.current.clientHeight + listRef.current.offsetTop + 200) {
-                    console.log("bottom reach")
+                    // console.log("bottom reach")
                     setLoad(true)
                 }
             }

@@ -6,7 +6,7 @@ import { detailsUser, updateUserProfile } from '../redux/actions/userAction';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const UserProfile = ({ location, history }) => {
+const UserProfile = ({ history }) => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -15,6 +15,7 @@ const UserProfile = ({ location, history }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  const [matchedPassword, setMatchedPassword] = useState(true);
   const [image, setImage] = useState('');
 
   const myInfo = useSelector(state => state.userSignin);
@@ -25,7 +26,6 @@ const UserProfile = ({ location, history }) => {
 
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const {
-    success: successUpdate,
     error: errorUpdate,
     loading: loadingUpdate,
   } = userUpdateProfile;
@@ -56,9 +56,11 @@ const UserProfile = ({ location, history }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // dispatch update profile
+
     if (password !== confirmPassword) {
-      alert('Mật khẩu nhập lại không khớp');
+      setMatchedPassword(false);
     } else {
+      setMatchedPassword(true);
       dispatch(
         updateUserProfile({
           _id: user._id,
@@ -156,9 +158,10 @@ const UserProfile = ({ location, history }) => {
                     type="text"
                     placeholder="Ngo Xuan"
                     className="userUpdateInput"
-                    value={user && user.lastName}
                     onChange={e => setLastName(e.target.value)}
+                    value={lastName}
                   />
+                  {console.log(lastName)}
                 </div>
                 <div className="userUpdateItem">
                   <label>Tên</label>
@@ -166,7 +169,7 @@ const UserProfile = ({ location, history }) => {
                     type="text"
                     placeholder="Thang"
                     className="userUpdateInput"
-                    value={user && user.firstName}
+                    value={firstName}
                     onChange={e => setFirstName(e.target.value)}
                   />
                 </div>
@@ -176,7 +179,7 @@ const UserProfile = ({ location, history }) => {
                     type="text"
                     placeholder="+01 23456789"
                     className="userUpdateInput"
-                    value={user && user.phone}
+                    value={phone}
                     onChange={e => setPhone(e.target.value)}
                   />
                 </div>
@@ -186,7 +189,7 @@ const UserProfile = ({ location, history }) => {
                     type="email"
                     placeholder="mail@gmail.com"
                     className="userUpdateInput"
-                    value={user && user.email}
+                    value={email}
                     onChange={e => setEmail(e.target.value)}
                   />
                 </div>
@@ -196,7 +199,7 @@ const UserProfile = ({ location, history }) => {
                     type="text"
                     placeholder="Địa chỉ"
                     className="userUpdateInput"
-                    value={user && user.address}
+                    value={address}
                     onChange={e => setAddress(e.target.value)}
                   />
                 </div>
@@ -210,6 +213,8 @@ const UserProfile = ({ location, history }) => {
                     placeholder="password"
                     className="userUpdateInput"
                     onChange={e => setPassword(e.target.value)}
+                    title="Mật khẩu phải chứa ít nhất một số và một chữ cái viết hoa và viết thường và ít nhất 8 ký tự trở lên"
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                   />
                 </div>
                 <div className="userUpdateItem">
@@ -220,6 +225,7 @@ const UserProfile = ({ location, history }) => {
                     className="userUpdateInput"
                     onChange={e => setConfirmPassword(e.target.value)}
                   />
+                  {(!matchedPassword) && <div>Mật khẩu không khớp!</div>}
                 </div>
               </div>
 

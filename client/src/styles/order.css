@@ -97,7 +97,7 @@
 .order__shipping {
   display: flex;
   justify-content: space-between;
-  margin: 24px 0;
+  margin: 10px 0;
 }
 
 .order__shipping-title {
@@ -112,7 +112,7 @@
 .order__price {
   display: flex;
   justify-content: space-between;
-  margin-top: 36px;
+  margin-top: 26px;
 }
 
 .order__price-title {

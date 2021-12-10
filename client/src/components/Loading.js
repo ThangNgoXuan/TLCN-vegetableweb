@@ -4,7 +4,7 @@ import { } from '../styles/loading.css'
 
 const Loading = () => {
   return (
-    <div class="dashed-loading"></div>
+    <div className="dashed-loading"></div>
   )
 }
 

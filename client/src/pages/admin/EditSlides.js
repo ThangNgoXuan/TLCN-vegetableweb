@@ -94,6 +94,8 @@ const EditSlide = ({ match, history }) => {
           <div className="card full-height">
             {loading && <div>Loading...</div>}
             {error && <div>{error}</div>}
+            {loadingUpdate && <div>Loading...</div>}
+            {erorUpdate && <div>{erorUpdate}</div>}
             <form action="" className="userUpdateForm" onSubmit={handleSubmit}>
               <div className="userUpdateLeft">
                 <div className="userUpdateItem">

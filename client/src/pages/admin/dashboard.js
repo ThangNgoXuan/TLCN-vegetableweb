@@ -1,45 +1,44 @@
 import React, { useEffect } from 'react'
-import Chart from 'react-apexcharts'
-import { Link } from 'react-router-dom'
+// import Chart from 'react-apexcharts'
 import Loading from '../../components/Loading'
 
 import numberWithCommas from '../../utils/numberWithCommas'
 import Table from '../../components/admin/Table'
 import StatusCard from '../../components/admin/StatusCart'
-import Badge from '../../components/admin/Badge'
+//import Badge from '../../components/admin/Badge'
 import { useDispatch, useSelector } from 'react-redux'
 import { statisticAllAction, topCustomersAction } from '../../redux/actions/statisticActions'
 
-const chartOptions = {
-    series: [{
-        name: 'Online Customers',
-        data: [40, 70, 20, 90, 36, 80, 30, 91, 60]
-    }, {
-        name: 'Store Customers',
-        data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10]
-    }],
-    options: {
-        color: ['#6ab04c', '#2980b9'],
-        chart: {
-            background: 'transparent'
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-        },
-        legend: {
-            position: 'top'
-        },
-        grid: {
-            show: false
-        }
-    }
-}
+// const chartOptions = {
+//     series: [{
+//         name: 'Online Customers',
+//         data: [40, 70, 20, 90, 36, 80, 30, 91, 60]
+//     }, {
+//         name: 'Store Customers',
+//         data: [40, 30, 70, 80, 40, 16, 40, 20, 51, 10]
+//     }],
+//     options: {
+//         color: ['#6ab04c', '#2980b9'],
+//         chart: {
+//             background: 'transparent'
+//         },
+//         dataLabels: {
+//             enabled: false
+//         },
+//         stroke: {
+//             curve: 'smooth'
+//         },
+//         xaxis: {
+//             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
+//         },
+//         legend: {
+//             position: 'top'
+//         },
+//         grid: {
+//             show: false
+//         }
+//     }
+// }
 
 const topCustomerTableHeader = [
     'user',
@@ -60,28 +59,21 @@ const renderCusomerBody = (item, index) => (
     </tr>
 )
 
-const orderStatus = {
-    "shipping": "primary",
-    "pending": "warning",
-    "paid": "success",
-    "refund": "danger"
-}
+// const renderOrderHead = (item, index) => (
+//     <th key={index}>{item}</th>
+// )
 
-const renderOrderHead = (item, index) => (
-    <th key={index}>{item}</th>
-)
-
-const renderOrderBody = (item, index) => (
-    <tr key={index}>
-        <td>{item.id}</td>
-        <td>{item.user}</td>
-        <td>{item.price}</td>
-        <td>{item.date}</td>
-        <td>
-            <Badge type={orderStatus[item.status]} content={item.status} />
-        </td>
-    </tr>
-)
+// const renderOrderBody = (item, index) => (
+//     <tr key={index}>
+//         <td>{item.id}</td>
+//         <td>{item.user}</td>
+//         <td>{item.price}</td>
+//         <td>{item.date}</td>
+//         <td>
+//             <Badge type={orderStatus[item.status]} content={item.status} />
+//         </td>
+//     </tr>
+// )
 
 const Dashboard = ({ history }) => {
 
@@ -138,7 +130,7 @@ const Dashboard = ({ history }) => {
                                 <div className="col-4" >
                                     <StatusCard
                                         icon='bx bxl-product-hunt'
-                                        
+
                                         count={summary.totalCategories}
                                         title="Tổng danh mục sản phẩm"
                                     />
@@ -154,7 +146,7 @@ const Dashboard = ({ history }) => {
                                 <div className="col-4" >
                                     <StatusCard
                                         icon='bx bx-dollar-circle'
-                                        count={summary.revenueOrder[0].totalRevenue}
+                                        count={summary.revenueOrder && numberWithCommas(summary.revenueOrder[0].totalRevenue)}
                                         title="Tổng doanh thu"
                                     />
                                 </div>
@@ -181,18 +173,20 @@ const Dashboard = ({ history }) => {
                         />
                     </div>
                 </div> */}
-                <div className="col-6">
+                <div className="col-12">
                     <div className="card">
                         <div className="card__header">
                             <h3>top khách hàng</h3>
                         </div>
                         <div className="card__body">
+                            {loadingCustomers && <div>Loading...</div>}
+                            {errorCustomers && <div>{errorCustomers}</div>}
                             {
                                 customers ? (
                                     <Table
                                         headData={topCustomerTableHeader}
                                         renderHead={(item, index) => renderCusomerHead(item, index)}
-                                        bodyData={customers}
+                                        bodyData={customers && customers}
                                         renderBody={(item, index) => renderCusomerBody(item, index)}
                                     />
                                 ) : ""

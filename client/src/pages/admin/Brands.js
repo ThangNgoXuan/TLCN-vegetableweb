@@ -38,8 +38,8 @@ const Brands = ({ history }) => {
       <td>{index}</td>
       <td>{item._id}</td>
       <td>{item.name}</td>
-      <td><Link to={`/admin/brand/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
-      <td><div style={{ cursor: 'pointer' }} onClick={() => handleDelete(item._id)} ><i class='bx bx-trash'></i></div></td>
+      <td><Link to={`/admin/brand/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
+      <td><div style={{ cursor: 'pointer' }} onClick={() => handleDelete(item._id)} ><i className='bx bx-trash'></i></div></td>
     </tr>
   )
 

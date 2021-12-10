@@ -50,12 +50,12 @@ const Categories = ({ history }) => {
             <td style={{ width: '90px' }}>{item.displayOrder}</td>
             <td>{item.name}</td>
             <td>{item.status ? 'active' : 'disable'}</td>
-            <td><Link to={`/admin/categories/${item._id}`} ><i class='bx bxs-edit'></i></Link> </td>
+            <td><Link to={`/admin/categories/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
             <td>
                 <nav style={{ cursor: 'pointer' }}
                     onClick={() => handleDelete(item._id)}
                 >
-                    <i class='bx bx-trash'></i>
+                    <i className='bx bx-trash'></i>
                 </nav>
             </td>
         </tr>

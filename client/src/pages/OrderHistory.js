@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import Button from '../components/Button'
 
 import Table from '../components/admin/Table'
 import { myOrders as myOrdersAction } from '../redux/actions/orderAction'
@@ -35,14 +33,16 @@ const OrderHistory = ({ history }) => {
 
   const renderHead = (item, index) => <th key={index}>{item}</th>
 
+  const trangthai = { 'DANG_XU_LY': 'Đang xử lý', 'CHO_GIAO': 'Chờ giao hàng', 'DANG_GIAO': 'Đang giao hàng', 'DA_GIAO': 'Đã giao hàng', 'DA_HUY': 'Đã hủy' }
+
   const renderBody = (item, index) => (
     <tr key={index}>
       <td>{item._id}</td>
       <td>{item.createdAt.substr(0, 10).split('-').reverse().join('/')}</td>
-      <td>{item.orderItems[0].product.name}</td>
+      <td>{item.orderItems[0].product && item.orderItems[0].product.name}</td>
       <td>{item.totalPrice}</td>
-      <td>{item.status}</td>
-      <td><Link>Chi tiết</Link> </td>
+      <td>{trangthai[item.status]}</td>
+      <td><span onClick={() => { history.push('/order-detail/' + item._id) }}>Chi tiết</span> </td>
     </tr>
   )
 
@@ -55,16 +55,18 @@ const OrderHistory = ({ history }) => {
           <div className="card">
             <h3>Đơn hàng của tôi</h3>
             <div className="card__body">
-              {
-                loading ? <div>Loading...</div> : error ? <div>{error}</div>
-                  : orders && orders.length <= 0 ? <div>Không có đơn hàng nào</div> :
-                    <Table
-                      limit='10'
-                      headData={customerTableHead}
-                      renderHead={(item, index) => renderHead(item, index)}
-                      bodyData={orders}
-                      renderBody={(item, index) => renderBody(item, index)}
-                    />
+              {loading && <div>Loading...</div>}
+              {error && <div>{error}</div>}
+
+              {!orders && <div>Không có đơn hàng nào</div>}
+              {(orders && orders.length >= 0) &&
+                (<Table
+                  limit='10'
+                  headData={customerTableHead}
+                  renderHead={(item, index) => renderHead(item, index)}
+                  bodyData={orders && orders}
+                  renderBody={(item, index) => renderBody(item, index)}
+                />)
               }
             </div>
           </div>

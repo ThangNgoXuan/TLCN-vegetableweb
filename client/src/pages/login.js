@@ -32,8 +32,13 @@ const Login = (props) => {
     const { userInfo, loading, error } = userSignin;
 
     useEffect(() => {
+
         if (userInfo) {
-            props.history.push(redirect);
+            if (userInfo.role === 'admin') {
+                props.history.push('/admin')
+            } else {
+                props.history.push(redirect);
+            }
         }
 
     }, [props.history, redirect, userInfo]);
@@ -59,7 +64,7 @@ const Login = (props) => {
                     </div>
                     <button className="btn btn-submit" type="submit">
                         Đăng nhập</button>
-                    <p>Quên mật khẩu ? <Link to="#">Nhấn vào đây</Link></p>
+                    <p>Quên mật khẩu ? <Link to="/get-token">Nhấn vào đây</Link></p>
                     <p>Bạn chưa có tài khoản chưa?<Link to="/register">Đăng ký</Link> </p>
                     <p>Hoặc</p>
                     <GoogleLogin

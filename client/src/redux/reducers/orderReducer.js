@@ -68,7 +68,7 @@ const OrderApprove = (state = { orders: [] }, action) => {
 
   }
 };
-const OrderDetailReducer = (state = { order: { billDetail: [] } }, action) => {
+const OrderDetailReducer = (state = { order: { orderItems: [] } }, action) => {
   switch (action.type) {
     case ORDER_DETAILS_REQUEST:
       return { loading: true };
@@ -87,7 +87,12 @@ const OrderListReducer = (state = { orders: [] }, action) => {
       return { loading: true };
     case ORDER_LIST_SUCCESS:
       console.log(action.payload)
-      return { loading: false, orders: action.payload };
+      return {
+        loading: false,
+        orders: action.payload.orders,
+        pages: action.payload.pages,
+        page: action.payload.page,
+      };
     case ORDER_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
