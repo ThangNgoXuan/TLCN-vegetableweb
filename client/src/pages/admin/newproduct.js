@@ -22,7 +22,7 @@ const NewProduct = ({ history }) => {
   const [image1, setImage1] = useState('');
   const [image2, setImage2] = useState('');
   const [brand, setbrand] = useState('');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('618dde0eb74f7288232092b9');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
   const [qtyInStock, setQtyInStock] = useState(0);
