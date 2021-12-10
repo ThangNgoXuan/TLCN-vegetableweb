@@ -11,16 +11,77 @@ import crypto from 'crypto'
 // @desc    Get all users
 // @route   GET /v1/user
 // @access  Private/Admin
+// const getUsers = async (req, res) => {
+//   try {
+//     const users = await User.find({});
+//     if (!users) {
+//       res.status(HttpStatusCode.NOT_FOUND);
+//       throw new Error('Không tìm thấy users');
+//     }
+//     res.json(users);
+//   } catch (error) {
+//     res.send({ message: error.message });
+//   }
+// };
+
 const getUsers = async (req, res) => {
-  try {
-    const users = await User.find({});
-    if (!users) {
-      res.status(HttpStatusCode.NOT_FOUND);
-      throw new Error('Không tìm thấy users');
-    }
-    res.json(users);
-  } catch (error) {
-    res.send({ message: error.message });
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword === 'undefined' ? '' : req.query.keyword;
+  //console.log(keyword)
+  // let objectId = mongoose.Types.ObjectId;
+  // if (objectId.isValid(keyword)) {
+  //   const kq = await User.findById(keyword)
+  //   if (kq) {
+  //     res.json([kq]);
+  //     return
+  //   }
+  // }
+
+  const searchFilter = keyword ? {
+    $or: [
+      {
+        firstName: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        lastName: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        email: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+      {
+        phone: {
+          $regex: keyword,
+          $options: "$i"
+        }
+      },
+    ]
+  } : {}
+
+  const count = await User.count({
+    ...searchFilter,
+  });
+
+  const users = await User.find({
+    ...searchFilter,
+  })
+    .skip(pageSize * (page - 1))
+    .limit(pageSize);
+
+  if (users) {
+    res.json({ users, page, pages: Math.ceil(count / pageSize) });
+  } else {
+    res.json([]).status(HttpStatusCode.NOT_FOUND);
+    throw new Error('Không tìm thấy tài khoản');
   }
 };
 
@@ -53,7 +114,7 @@ const signinUser = async (req, res) => {
   try {
 
     const user = await User.findOne({ email: req.body.email });
-    if (user.status === false) {
+    if (user && user.status === false) {
       res.status(401)
       throw new Error('Tài khoản của bạn đang bị khóa');
     }
@@ -181,6 +242,7 @@ const registUser = async (req, res) => {
         role: userCreate.role,
         avatar: userCreate.avatar,
         phone: userCreate.phone,
+        token: generateToken(userCreate._id),
       });
     }
     else {
@@ -259,6 +321,7 @@ const updateUserProfile = async (req, res) => {
       address: updatedUser.address,
       avatar: updatedUser.avatar,
       role: updatedUser.role,
+      token: generateToken(updatedUser._id),
     });
     console.log("user update")
 

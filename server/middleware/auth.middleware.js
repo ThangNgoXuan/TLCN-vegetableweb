@@ -30,20 +30,26 @@ import User from '../models/user.model.js';
 // };
 
 const isAuth = async (req, res, next) => {
-  const authorization = req.headers.authorization;
-
-  if (authorization) {
+  try {
+    const authorization = req.headers.authorization;
+    // console.log(authorization)
     const token = authorization.slice(7, authorization.length); // Bearer XXXXXX
+    if (authorization !== 'Bearer undefined' && (token !== undefined)) {
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-    req.user = await User.findById(decoded.id).select('-password')
+      req.user = await User.findById(decoded.id).select('-password')
 
-    next()
+      next()
 
-  } else {
-    res.status(401).send({ message: 'No Token' });
+    } else {
+      res.status(401).send({ message: 'No token' });
+    }
+  } catch (error) {
+    //res.send({ message: error.message });
+    console.log(error)
   }
+
 };
 
 const isAdmin = (req, res, next) => {

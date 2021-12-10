@@ -61,9 +61,8 @@ const getOrderById = asyncHandler(async (req, res) => {
     populate(
       'user',
       'name email'
-    ).
-    populate('category')
-
+    )
+    .populate('orderItems.product', 'name images')
   if (order) {
     res.json(order)
   } else {
@@ -76,7 +75,7 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @route   GET /v1/order/myOrder/:id
 // @access  Private
 const getMyOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.params.id }).populate('orderItems.product')
+  const orders = await Order.find({ user: req.params.id }).populate('orderItems.product').sort({ "createdAt": -1 })
   res.json(orders)
 });
 
