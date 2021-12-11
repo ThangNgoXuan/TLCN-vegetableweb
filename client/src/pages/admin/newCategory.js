@@ -101,7 +101,9 @@ const NewCategory = ({ match, history }) => {
                     value={image}
                     onChange={e => setImage(e.target.value)}
                   /> */}
-                  <img src={image} alt="Hình ảnh" />
+                  <img src={image} alt="Hình ảnh"
+                    style={{ maxWidth: '200px' }}
+                  />
                   <input type="file" id="file"
                     onChange={uploadImage}
                   />
@@ -112,7 +114,7 @@ const NewCategory = ({ match, history }) => {
                 <br />
                 <br />
                 <Link to="/admin/categories">
-                <button className="userUpdateButton">Trở về</button>
+                  <button className="userUpdateButton">Trở về</button>
                 </Link>
               </div>
               {/* <div className="userUpdateLeft">

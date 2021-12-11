@@ -21,7 +21,10 @@ const ProductCard = props => {
                     {/* {numberWithCommas(props.price)} */}
                     {numberWithCommas(props.price)}đ
                     <span className="product-card__price__old">
-                        <del>{numberWithCommas(props.price)}đ</del>
+                        {/* {alert(props.discount)} */}
+
+                        <del>{numberWithCommas(Math.floor(props.price * (1 + props.discount / 100)))}đ</del>
+
                     </span>
                 </div>
             </Link>

@@ -48,7 +48,7 @@ const Product = props => {
                     <Link to="/">Quay về trang chủ</Link>
                     <div>{error}</div>
                 </>) :
-                <Helmet title={product.title}>
+                <Helmet title={product.name}>
                     <Section>
                         <SectionBody>
                             <ProductView product={product} />
@@ -80,6 +80,7 @@ const Product = props => {
                                                             name={item.name}
                                                             price={Number(item.price)}
                                                             _id={item._id}
+                                                            discount={item.discount || 0}
                                                         />
                                                     ))}
                                             </Grid>

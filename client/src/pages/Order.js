@@ -66,7 +66,7 @@ const Order = (props) => {
 
   return (
 
-    <Helmet title="Giỏ hàng">
+    <Helmet title="Đặt hàng">
 
       <form className="order" onSubmit={handleSubmitOrder}>
         <div className="order__info-shipping">

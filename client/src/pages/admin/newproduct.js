@@ -8,6 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { Link } from 'react-router-dom';
+import Button from '../../components/Button';
 
 const NewProduct = ({ history }) => {
 
@@ -209,7 +211,12 @@ const NewProduct = ({ history }) => {
                   </label>
                   <input onChange={handleUploadImage} type="file" id="file" multiple="multiple" style={{ display: "none" }} />
                 </div>
-                <button type="submit" className="userUpdateButton">Tạo mới</button>
+                <span style={{ display: 'flex', justifyContent: 'space-around' }}>
+                  <button style={{ width: '30%' }} className="userUpdateButton"
+                    onClick={() => { history.push('/admin/products') }}
+                  >Trở về</button>
+                  <button style={{ width: '30%' }} type="submit" className="userUpdateButton">Tạo mới</button>
+                </span>
               </div>
 
               {/* <div className="userUpdateRight">
