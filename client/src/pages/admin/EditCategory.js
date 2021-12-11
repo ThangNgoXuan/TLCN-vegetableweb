@@ -115,7 +115,9 @@ const EditCategory = ({ match, history }) => {
                 </div>
                 <div className="userUpdateItem">
                   <label>Hình ảnh</label>
-                  <img src={image} alt="hình ảnh" />
+                  <img src={image} alt="hình ảnh"
+                    style={{ maxWidth: '200px' }}
+                  />
                   <div>Tải hình ảnh từ máy tính</div>
                   <input type="file" id="file"
                     onChange={handleUploadImage}

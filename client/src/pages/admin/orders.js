@@ -22,7 +22,7 @@ const Orders = ({ history }) => {
 
     useEffect(() => {
         if (userInfo && userInfo.role === 'admin') {
-            dispatch(orderListAction({}))
+            dispatch(orderListAction({ keyword: 'DANG_XU_LY' }))
         } else {
             history.push('/login')
         }
@@ -82,6 +82,9 @@ const Orders = ({ history }) => {
         }
     }
 
+    const handleSelect = (keyword) => {
+        dispatch(orderListAction({ keyword: keyword }))
+    }
     return (
         <div>
             <ToastContainer
@@ -92,13 +95,22 @@ const Orders = ({ history }) => {
             <div className="row">
                 <div className="col-10">
                     <h2 className="page-header">
-                        Orders
+                        Đơn hàng
                     </h2>
                 </div>
                 <div className="col-2">
                     <h2 className="page-header">
                         <SearchAdmin handleSearchData={handleSearchData} />
                     </h2>
+                    <select onChange={(e) => handleSelect(e.target.value)}
+                        style={{ margin: '0 -10px 30px -20px' }}
+                    >
+                        <option value='DANG_XU_LY'>Đơn hàng mới</option>
+                        <option value='CHO_GIAO'>Đơn hàng chờ giao</option>
+                        <option value='DANG_GIAO'>Đơn hàng đang giao</option>
+                        <option value='DA_GIAO'>Đơn hàng đã giao</option>
+                        <option value='DA_HUY'>Đơn hàng đã hủy</option>
+                    </select>
                 </div>
             </div>
             <div className="row">

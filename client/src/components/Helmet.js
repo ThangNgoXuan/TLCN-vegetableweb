@@ -3,10 +3,10 @@ import PropTypes from 'prop-types'
 
 const Helmet = props => {
 
-    document.title = 'Yolo - ' + props.title
+    document.title = 'NSHC - ' + props.title
 
     React.useEffect(() => {
-        window.scrollTo(0,0)
+        window.scrollTo(0, 0)
     }, [])
 
     return (

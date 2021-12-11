@@ -171,7 +171,7 @@ const createProduct = asyncHandler(async (req, res) => {
   product.qtyInStock = req.body.qtyInStock || 0;
   product.certification = req.body.certification;
   product.discount = req.body.discount;
-  product.status = req.body.status;
+  product.status = req.body.status || true;
 
 
   const createdProduct = await product.save();
