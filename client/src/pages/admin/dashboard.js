@@ -110,7 +110,7 @@ const Dashboard = ({ history }) => {
                 <div className="col-12">
                     <div className="row">
 
-                        {loading ? <Loading /> : error ? <div>{error}</div> : summary ? (
+                        {loading ? <div></div> : error ? <div>{error}</div> : summary ? (
                             <>
                                 {console.log(summary)}
                                 <div className="col-4" >

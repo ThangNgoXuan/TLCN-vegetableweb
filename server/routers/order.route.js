@@ -11,9 +11,12 @@ router.route('/sendmail').post(orderController.sendMailOrder);
 router.route('/admin')
   .get(isAuth, isAdmin, orderController.adminGetOrders)
 
+router.route('/online-pay/:id').put(isAuth, orderController.paypalPayment)
+
 router.route('/:id')
   .get(isAuth, orderController.getOrderById)
   .put(isAuth, orderController.adminUpdateOrder)
+
 
 router.route('/')
   .get(isAuth, orderController.getOrders)

@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import numberWithCommas from '../utils/numberWithCommas'
 
 import Table from '../components/admin/Table'
-import { orderDetail } from '../redux/actions/orderAction'
+import { orderDetail, payOrder } from '../redux/actions/orderAction'
+import axios from 'axios'
+import { PayPalButton } from 'react-paypal-button-v2';
+import { ORDER_PAY_RESET } from '../redux/constants/orderConstants'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const OrderDetail = ({ history, match }) => {
@@ -16,6 +21,9 @@ const OrderDetail = ({ history, match }) => {
 
   const oDetail = useSelector(state => state.orderDetail);
   const { order, loading, error } = oDetail;
+
+  const [sdkReady, setSdkReady] = useState(false);
+  const VND_To_USD = 23000;
 
   const dispatch = useDispatch();
 
@@ -29,9 +37,38 @@ const OrderDetail = ({ history, match }) => {
     if (!userInfo) {
       history.push('/login')
     } else {
-      dispatch(orderDetail(orderId))
+      const addPayPalScript = async () => {
+        const { data } = await axios.get('/v1/config/paypal');
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+        script.async = true;
+        script.onload = () => {
+          setSdkReady(true);
+        };
+        document.body.appendChild(script);
+      };
+
+      if (!order || (order && (order.orderItems.length === 0 || order._id !== orderId))) {
+        // alert('233') 
+        dispatch({ type: ORDER_PAY_RESET });
+        dispatch(orderDetail(orderId))
+      }
+      else if (order && !order.isPaid) {
+        if (!window.paypal) {
+          addPayPalScript();
+        } else {
+          setSdkReady(true);
+        }
+      }
+
     }
-  }, [dispatch, userInfo, history, orderId])
+  }, [dispatch, userInfo, history, orderId, sdkReady, order])
+
+  const successPaymentHnadler = (paymentResult) => {
+    console.log(paymentResult)
+    dispatch(payOrder(order, paymentResult))
+  };
 
   const customerTableHead = [
     'Hình ảnh',
@@ -56,9 +93,16 @@ const OrderDetail = ({ history, match }) => {
       <td>{item.price && item.quantity && numberWithCommas(item.price * item.quantity)}đ</td>
     </tr>
   )
-  console.log(order)
+  //console.log(order)
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={10000}
+        hideProgressBar={true}
+        newestOnTop={false}
+      />
+
       <div className="row">
         <div className="col-8">
           <div className="card">
@@ -105,21 +149,47 @@ const OrderDetail = ({ history, match }) => {
             </div>
             <div className="order__payment">
               <div className="order__payment-item">
-                <label for="COD">Trạng thái: {order && trangthai[order.status]}</label>
+                <label for="COD">Trạng thái giao hàng: {order && trangthai[order.status]}</label>
               </div>
               <div className="order__payment-item">
-                <label for="COD">Thanh toán khi nhận hàng</label>
+                <label for="COD">Thanh toán: {order && order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</label>
+                <br />
+                <label for="COD">Thời gian: {order && order.paidAt ? order.paidAt : ''}</label>
+              </div>
+              <div className="order__payment-item">
+                <label for="COD">Loại thanh toán: {order && order.paymentMethod}</label>
+              </div>
+              <div className="">
+
+                {order && order.paymentMethod === 'Online' && !order.isPaid && (
+                  <div>
+                    <span style={{ color: 'red' }}>Xin mời quý khách thanh toán để hoàn tất đơn hàng</span>
+                    <ul>
+                      <li>
+                        {!sdkReady ? (
+                          <div>Loading...</div>
+                        ) : (
+                          <PayPalButton
+                            amount={(order.totalPrice / VND_To_USD).toFixed(2)}
+                            onSuccess={successPaymentHnadler}
+                          ></PayPalButton>
+                        )}
+                      </li>
+                    </ul>
+                  </div>
+                )}
               </div>
               <div className="order__button">
-                <button className="order__button-checkout" onClick={() => { history.push(link) }}>Trở về</button>
-
+                <button className="order__button-checkout" onClick={() => { history.push(link) }}>Đơn hàng đã mua</button>
+                <button className="order__button-checkout" onClick={() => { history.push('/catalog') }}>Tiếp tục mua hàng</button>
               </div>
-
             </div>
+
           </div>
         </div>
       </div>
     </div>
+
   )
 }
 

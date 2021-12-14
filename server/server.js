@@ -16,6 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/v1', apiv1);
 
+app.get('/v1/config/paypal', (req, res) => {
+  res.send(process.env.PAYPAL_CLIENT_ID || 'sb')
+})
+
 app.listen(port, () => {
   console.log(`App listening at http://${env.HOST}:${port}`);
 });

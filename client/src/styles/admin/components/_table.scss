@@ -1,5 +1,5 @@
 .table-wrapper {
-    overflow-y: auto;
+    overflow: auto;
 }
 
 table {
@@ -23,8 +23,8 @@ td {
 }
 
 tbody > tr:hover {
-    background-color: var(--main-color);
-    color: var(--txt-white);
+    background-color: var(--hover-color);
+    //  color: var(--txt-white);
 }
 
 .table__pagination {

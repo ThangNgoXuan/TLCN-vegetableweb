@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import Table from '../components/admin/Table'
 import { myOrders as myOrdersAction } from '../redux/actions/orderAction'
-
+import numberWithCommas from '../utils/numberWithCommas'
 
 const OrderHistory = ({ history }) => {
 
@@ -40,7 +40,7 @@ const OrderHistory = ({ history }) => {
       <td>{item._id}</td>
       <td>{item.createdAt.substr(0, 10).split('-').reverse().join('/')}</td>
       <td>{item.orderItems[0].product && item.orderItems[0].product.name}</td>
-      <td>{item.totalPrice}</td>
+      <td>{item.totalPrice && numberWithCommas(item.totalPrice)}đ</td>
       <td>{trangthai[item.status]}</td>
       <td><span onClick={() => { history.push('/order-detail/' + item._id) }}>Chi tiết</span> </td>
     </tr>
@@ -54,7 +54,9 @@ const OrderHistory = ({ history }) => {
 
           <div className="card">
             <h3>Đơn hàng của tôi</h3>
-            <div className="card__body">
+            <div className="card__body"
+              style={{ maxHeight: '500px', overflowY: 'scroll' }}
+            >
               {loading && <div>Loading...</div>}
               {error && <div>{error}</div>}
 

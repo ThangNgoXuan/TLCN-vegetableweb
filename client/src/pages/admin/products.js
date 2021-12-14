@@ -55,17 +55,13 @@ const Products = ({ history }) => {
 
     const customerTableHead = [
         'STT',
-        'Mã số',
         'Ảnh',
         'Tên',
         'Loại',
         'Giá',
-        'Giảm giá(%)',
         'Trong kho',
         'Đã bán',
         'Thương hiệu',
-        'Mô tả',
-        'Ngày tạo',
         'Trạng thái',
         'Sửa',
         'Xóa'
@@ -77,20 +73,18 @@ const Products = ({ history }) => {
     const renderBody = (item, index) => (
         <tr key={index}>
             <td>{index + 1}</td>
-            <td style={{ maxWidth: '90px', overflowWrap: 'break-word' }}
-            >{item._id}</td>
             <td><img src={item.images[0]} alt="Hình ảnh"
                 style={{ maxWidth: '40px' }}
             /></td>
             <td style={{ minWidth: '110px' }}>{item.name}</td>
             <td style={{ minWidth: '110px' }} >{(item.category && item.category.name) || ''}</td>
             <td>{numberWithCommas(item.price)}</td>
-            <td>{item.discount + '%'}</td>
+            {/* <td>{item.discount + '%'}</td> */}
             <td>{item.qtyInStock}</td>
             <td>{item.sold}</td>
             <td>{item.brand.name}</td>
-            <td style={{ minWidth: '140px' }}  >{item.description.substring(0, 32) + '...'}</td>
-            <td>{item.createdAt || ''}</td>
+            {/* <td style={{ minWidth: '140px' }}  >{item.description.substring(0, 32) + '...'}</td> */}
+            {/* <td>{item.createdAt || ''}</td> */}
             <td>{item.status ? 'active' : 'disable'}</td>
             <td><Link to={`/admin/product/${item._id}`} ><i className='bx bxs-edit'></i></Link> </td>
             <td>
@@ -139,20 +133,22 @@ const Products = ({ history }) => {
             </div>
             <div className="row">
                 <div className="col-12">
+                    {loading && <div></div>}
+                    {error && <div>{error.message}</div>}
                     <div className="card">
                         <div className="card__body">
                             {
-                                loading ? <div>Loading...</div> : error ? <div>{error.message}</div> :
-                                    <Table
-                                        limit='10'
-                                        headData={customerTableHead}
-                                        renderHead={(item, index) => renderHead(item, index)}
-                                        bodyData={products}
-                                        renderBody={(item, index) => renderBody(item, index)}
-                                        page={page}
-                                        pages={pages}
-                                        handlePageChange={handlePageChange}
-                                    />
+                                products &&
+                                <Table
+                                    limit='10'
+                                    headData={customerTableHead}
+                                    renderHead={(item, index) => renderHead(item, index)}
+                                    bodyData={products}
+                                    renderBody={(item, index) => renderBody(item, index)}
+                                    page={page}
+                                    pages={pages}
+                                    handlePageChange={handlePageChange}
+                                />
 
                             }
 

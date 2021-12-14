@@ -49,9 +49,15 @@ const orderSchema = mongoose.Schema(
       required: true,
       default: 'COD'
     },
-    paymentResult: {
+    isPaid: {
       type: Boolean,
       default: false
+    },
+    onlinePaymentResult: {
+      id: String,
+      status: String,
+      update_time: String,
+      email_address: String,
     },
     paidAt: {
       type: Date,

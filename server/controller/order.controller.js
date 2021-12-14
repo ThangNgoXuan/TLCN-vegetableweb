@@ -57,6 +57,7 @@ const newOrder = asyncHandler(async (req, res) => {
 // @route   GET /v1/orders/:id
 // @access  Private
 const getOrderById = asyncHandler(async (req, res) => {
+  //console.log('ok')
   const order = await Order.findById(req.params.id).
     populate(
       'user',
@@ -141,7 +142,7 @@ const adminUpdateOrder = async (req, res) => {
 
     if (order) {
       if (status === 'DA_GIAO') {
-        order.paymentResult = true;
+        order.isPaid = true;
         order.paidAt = Date.now();
         order.status = status;
       } else {
@@ -231,6 +232,31 @@ const adminGetOrders = async (req, res) => {
   }
 };
 
+const paypalPayment = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+      order.isPaid = true;
+      order.paidAt = Date.now();
+      order.paymentResult = {
+        id: req.body.id,
+        status: req.body.status,
+        update_time: req.body.update_time,
+        email_address: req.body.email_address,
+      };
+      const updatedOrder = await order.save();
+      // console.log(updatedOrder)
+      res.send({ message: 'Đã thanh toán', order: updatedOrder });
+    } else {
+      res.status(404).send({ message: 'Không tìm thấy đơn hàng' })
+    }
+
+  } catch (error) {
+    res.send({ message: error.message })
+  }
+}
+
 export const orderController = {
   getOrders,
   getOrderById,
@@ -239,4 +265,5 @@ export const orderController = {
   sendMailOrder,
   adminUpdateOrder,
   adminGetOrders,
+  paypalPayment,
 };

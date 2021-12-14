@@ -32,11 +32,9 @@ const Customers = ({ history }) => {
 
     const customerTableHead = [
         'STT',
-        'Phân loại',
         'Avatar',
         'Tên',
         'Email',
-        'SĐT',
         'Địa chỉ',
         'Trạng thái',
         'chỉnh sửa',
@@ -54,11 +52,11 @@ const Customers = ({ history }) => {
     const renderBody = (item, index) => (
         <tr key={index}>
             <td>{index + 1}</td>
-            <td>{item.role}</td>
+            {/* <td>{item.role}</td> */}
             <td><img src={item.avatar} alt='Hình ảnh' style={{ width: '30px' }} /></td>
             <td>{item.lastName + ' ' + item.firstName}</td>
             <td>{item.email}</td>
-            <td>{item.phone}</td>
+            {/* <td>{item.phone}</td> */}
             <td>{item.address}</td>
             <td>{item.status ? 'Hoạt động' : 'Đang khóa'}</td>
             <td>
@@ -107,24 +105,26 @@ const Customers = ({ history }) => {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <div className="card">
-                        <div className="card__body">
-                            {
-                                loading ? <div>Loading...</div> : error ? <div>{error}</div>
-                                    : users && users.length <= 0 ? <div>Không có người dùng nào</div> :
-                                        <Table
-                                            limit='10'
-                                            headData={customerTableHead}
-                                            renderHead={(item, index) => renderHead(item, index)}
-                                            bodyData={users}
-                                            renderBody={(item, index) => renderBody(item, index)}
-                                            page={page}
-                                            pages={pages}
-                                            handlePageChange={handlePageChange}
-                                        />
-                            }
-                        </div>
-                    </div>
+                    {loading && <div></div>}
+                    {error && <div>{error}</div>}
+                    {
+                        users ?
+                            <div className="card">
+                                <div className="card__body">
+                                    <Table
+                                        limit='10'
+                                        headData={customerTableHead}
+                                        renderHead={(item, index) => renderHead(item, index)}
+                                        bodyData={users}
+                                        renderBody={(item, index) => renderBody(item, index)}
+                                        page={page}
+                                        pages={pages}
+                                        handlePageChange={handlePageChange}
+                                    /> :
+
+                                </div>
+                            </div> : ''
+                    }
                 </div>
             </div>
         </div>

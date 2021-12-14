@@ -91,7 +91,7 @@ const Header = () => {
         //     window.removeEventListener("scroll", () => { })
         // };
 
-    }, []);
+    }, [cartItems]);
 
     const menuLeft = useRef(null)
 

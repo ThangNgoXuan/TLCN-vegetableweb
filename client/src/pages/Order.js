@@ -8,6 +8,7 @@ import numberWithCommas from '../utils/numberWithCommas'
 import { } from '../styles/order.css'
 import axios from 'axios'
 import { createOrder } from '../redux/actions/orderAction'
+import { CART_RESET } from '../redux/constants/cartConstants'
 
 const Order = (props) => {
 
@@ -17,18 +18,16 @@ const Order = (props) => {
   const cart = useSelector(state => state.cart);
   const { cartItems } = cart
 
+  const orderCreate = useSelector(state => state.createOrder);
+  const { order, loading, error } = orderCreate;
+
   const [fname, setFname] = useState('')
   const [lname, setLname] = useState('')
   const [phone, setPhone] = useState('')
   const [mail, setMail] = useState('')
   const [address, setAddress] = useState('')
   const [note, setNote] = useState('')
-  //const [onlinePayment, setOnlinePayment] = useState("");
-  const [codPayment, setCodPayment] = useState("COD");
-
-  //console.log(codPayment)
-  //console.log(onlinePayment)
-
+  const [paymentMethod, setPaymentMethod] = useState("COD");
 
   let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
 
@@ -38,28 +37,28 @@ const Order = (props) => {
       setLname(userInfo.lastName)
       setPhone(userInfo.phone)
       setMail(userInfo.email)
+      if (order && Object.keys(order).length !== 0) {
+        props.history.push('/order-detail/' + order._id);
+      } else if (error) {
+        alert('Đăt hàng không thành công, xin hãy đặt lại. Rất xin lỗi quý khách vì sự bất tiện này!')
+      }
     } else {
       props.history.push('/login?redirect=order');
     }
-  }, [props.history, userInfo])
+  }, [props.history, userInfo, order, cartItems, error])
 
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
     if (userInfo && cartItems.length > 0) {
-      if (codPayment === "COD") {
-        if (window.confirm('Xác nhận đặt hàng')) {
-          await dispatch(
-            createOrder({
-              user: userInfo._id, totalPrice: total, shipAddress: address, paymentMethod: codPayment,
-              paymentResult: false, mail, firstName: fname, lastName: lname,
-              message: note, phone, orderItems: cartItems,
-            })
-          );
-
-          await axios.post('/v1/order/sendmail', { userInfo, cartItems })
-          localStorage.setItem("cartItems", '');
-          props.history.push('/order-history');
-        }
+      if (window.confirm('Xác nhận đặt hàng')) {
+        dispatch(
+          createOrder({
+            user: userInfo._id, totalPrice: total, shipAddress: address, paymentMethod: paymentMethod,
+            paymentResult: false, mail, firstName: fname, lastName: lname,
+            message: note, phone, orderItems: cartItems,
+          })
+        );
+        // console.log(order)
       }
     }
   }
@@ -163,24 +162,26 @@ const Order = (props) => {
           <div className="order__payment">
 
             <div className="order__payment-item">
-              <input checked={codPayment === 'COD'} type="radio" id="COD" name="pay" value="COD"
-                // onChange={() => setCodPayment(codPayment !== 'COD' && 'COD')}
-                onChange={() => setCodPayment('COD')}
+              <input defaultChecked={paymentMethod === 'COD'} type="radio" id="COD" name="pay" value="COD"
+                onClick={(e) => setPaymentMethod(e.target.value)}
               />
               <label for="COD">Thanh toán khi nhận hàng</label>
             </div>
             <div className="order__payment-item">
-              <input checked={false} type="radio" id="online" name="pay" value="Online" />
-              {/* onChange={() => setOnlinePayment(onlinePayment !== 'online' && 'online')} */}
-
-              <label for="online">Thánh toán online(Chưa hỗ trợ)</label>
+              <input type="radio" id="online" name="pay" value="Online"
+                onClick={(e) => setPaymentMethod(e.target.value)}
+              />
+              <label for="online">Thánh toán qua PayPal</label>
             </div>
 
             <div className="order__button">
               <button type="submit" className="order__button-checkout">Đặt hàng</button>
               <button className="order__button-return" onClick={() => props.history.push('/catalog')}>Tiếp tục mua hàng</button>
             </div>
-
+            <div className="order__button">
+              {loading && <div>Đang xử lý...</div>}
+              {error && <div>Error</div>}
+            </div>
           </div>
         </div>
       </form>

@@ -55,7 +55,8 @@ const Orders = ({ history }) => {
             <td>{numberWithCommas(item.totalPrice)}</td>
             {/* <td>{item.status}</td> */}
             <td>{item.shipAddress}</td>
-            <td><Link to={"/order-detail/" + item._id}><p>Chi tiết</p></Link></td>
+            <td onClick={() => history.push('/order-detail/' + item._id)}><i class='bx bx-detail'></i></td>
+
             <td>
                 <select onChange={(e) => handleChangeOrderState(item._id, e.target.value)}>
                     <option selected={item.status === "DANG_XU_LY"} value="DANG_XU_LY">Đang xử lý</option>
@@ -115,9 +116,12 @@ const Orders = ({ history }) => {
             </div>
             <div className="row">
                 <div className="col-12">
+
                     <div className="card">
-                        <div className="card__body">
-                            {loading ? <div>Loading...</div> : error ? <div>{error}</div> :
+                        {loading && <div></div>}
+                        {error && <div>{error}</div>}
+                        {orders ?
+                            <div className="card__body">
                                 <Table
                                     limit='10'
                                     headData={customerTableHead}
@@ -128,10 +132,11 @@ const Orders = ({ history }) => {
                                     pages={pages}
                                     handlePageChange={handlePageChange}
                                 />
-                            }
 
-                        </div>
+                            </div> : ''
+                        }
                     </div>
+
                 </div>
             </div>
         </div>

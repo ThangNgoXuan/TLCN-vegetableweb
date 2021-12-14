@@ -241,6 +241,7 @@ const EditProduct = ({ history, match }) => {
                     onChange={(e) => setImage1(e.target.value)}
                     value={image1}
                     required
+                    className='userUpdateInput'
                   ></input>
                   <span>Hoặc tải lên</span>
                   <label htmlFor="file">
@@ -253,6 +254,7 @@ const EditProduct = ({ history, match }) => {
                   <input placeholder="Nhập url hình ảnh"
                     onChange={(e) => setImage2(e.target.value)}
                     value={image2}
+                    className='userUpdateInput'
                   ></input>
                   <span>Hoặc tải lên</span>
                   <label htmlFor="file">
@@ -260,8 +262,14 @@ const EditProduct = ({ history, match }) => {
                   </label>
                   <input onChange={handleUploadImage} type="file" id="file" multiple="multiple" style={{ display: "none" }} />
                 </div>
-                <Link to="/admin/products" className="userUpdateButton">Trở về</Link>
-                <button type="submit" className="userUpdateButton">Cập nhật</button>
+                <span style={{ display: 'flex', justifyContent: 'space-around' }}>
+                  <button onClick={() => { history.push('/admin/products') }} className="userUpdateButton"
+                    style={{ width: '30%' }}
+                  >Trở về</button>
+                  <button type="submit" className="userUpdateButton"
+                    style={{ width: '30%' }}
+                  >Cập nhật</button>
+                </span>
               </div>
 
               {/* <div className="userUpdateRight">

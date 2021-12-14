@@ -41,7 +41,7 @@ const topCustomers = async (req, res) => {
   try {
 
     const customers = await Order.aggregate([
-      { $match: { paymentResult: true } },
+      { $match: { isPaid: true } },
       {
         $group: {
           _id: "$user",

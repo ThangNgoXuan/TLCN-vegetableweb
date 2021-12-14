@@ -133,19 +133,21 @@
 }
 
 .order__button {
+  display: flex;
   margin-top: 30px;
+  justify-content: space-between;
 }
 .order__button-checkout {
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 8px 8px;
+  font-size: 14px;
   background-color: #024137;
   color: #fff;
   border-radius: 3px;
   margin-right: 16px;
 }
 .order__button-return {
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 8px 8px;
+  font-size: 14px;
   background-color: #024137;
   color: #fff;
   border-radius: 3px;

@@ -13,7 +13,7 @@ import {
 import { cartReducer } from './reducers/cartReducer';
 import { categoryList, addCategoryReducer, updateCategoryReducer, deleteCategoryReducer, detailCategoryReducer } from './reducers/categoryReducers';
 import { brandListReducer, brandCreateReducer, brandDeleteReducer, brandUpdateReducer, brandDetailReducer } from './reducers/brandReducer';
-import { findUserOrderReducer, OrderDetailReducer, OrderListReducer, updateOrderReducer } from './reducers/orderReducer';
+import { createOrderReducer, findUserOrderReducer, OrderDetailReducer, OrderListReducer, updateOrderReducer } from './reducers/orderReducer';
 import { statisticAll, getRevenueByReducer, getTopCustomersReducer } from './reducers/statisticReducer';
 
 const initialState = {
@@ -72,6 +72,7 @@ const reducer = combineReducers({
     orderList: OrderListReducer,
     updateOrder: updateOrderReducer,
     orderDetail: OrderDetailReducer,
+    createOrder: createOrderReducer,
 
     statisticAll: statisticAll,
     revenueBy: getRevenueByReducer,

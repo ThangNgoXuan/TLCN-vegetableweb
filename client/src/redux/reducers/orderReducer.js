@@ -18,9 +18,10 @@ import {
   ORDER_UPDATE_REQUEST,
   ORDER_UPDATE_SUCCESS,
   ORDER_UPDATE_FAIL,
-  GET_ORDER_BY_STATUS_REQUEST,
-  GET_ORDER_BY_STATUS_SUCCESS,
-  GET_ORDER_BY_STATUS_FAIL,
+  ORDER_PAY_REQUEST,
+  ORDER_PAY_SUCCESS,
+  ORDER_PAY_FAIL,
+  ORDER_PAY_RESET,
 } from '../constants/orderConstants';
 
 const findUserOrderReducer = (state = { orders: [] }, action) => {
@@ -68,7 +69,7 @@ const OrderApprove = (state = { orders: [] }, action) => {
 
   }
 };
-const OrderDetailReducer = (state = { order: { orderItems: [] } }, action) => {
+const OrderDetailReducer = (state = { loading: true, order: { orderItems: [] } }, action) => {
   switch (action.type) {
     case ORDER_DETAILS_REQUEST:
       return { loading: true };
@@ -121,21 +122,23 @@ const updateOrderReducer = (state = { orders: [] }, action) => {
   }
 }
 
-const getOrderByDeliveryStatusReducer = (state = { orders: [] }, action) => {
+const orderPayReducer = (state = {}, action) => {
   switch (action.type) {
-    case GET_ORDER_BY_STATUS_REQUEST:
+    case ORDER_PAY_REQUEST:
       return { loading: true };
-    case GET_ORDER_BY_STATUS_SUCCESS:
-      return { loading: false, orders: action.payload };
-    case GET_ORDER_BY_STATUS_FAIL:
+    case ORDER_PAY_SUCCESS:
+      return { loading: false, success: true };
+    case ORDER_PAY_FAIL:
       return { loading: false, error: action.payload };
+    case ORDER_PAY_RESET:
+      return {};
     default:
       return state;
   }
-}
+};
 
 export {
   createOrderReducer, findUserOrderReducer,
   OrderApprove, OrderDetailReducer, OrderListReducer,
-  accountReducer, updateOrderReducer, getOrderByDeliveryStatusReducer,
+  accountReducer, updateOrderReducer, orderPayReducer
 };

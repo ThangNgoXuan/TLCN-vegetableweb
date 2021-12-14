@@ -43,7 +43,7 @@ const Product = props => {
     return (
 
         <>
-            {loading ? <div>Loading...</div> : error ?
+            {loading ? <div></div> : error ?
                 (<>
                     <Link to="/">Quay về trang chủ</Link>
                     <div>{error}</div>

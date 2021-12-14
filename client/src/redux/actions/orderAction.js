@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { toast } from 'react-toastify';
+import { CART_RESET } from '../constants/cartConstants';
 import {
   ORDER_MINE_LIST_FAIL,
   ORDER_MINE_LIST_SUCCESS,
@@ -16,6 +17,9 @@ import {
   ORDER_UPDATE_REQUEST,
   ORDER_UPDATE_SUCCESS,
   ORDER_UPDATE_FAIL,
+  ORDER_PAY_REQUEST,
+  ORDER_PAY_SUCCESS,
+  ORDER_PAY_FAIL,
 
 } from '../constants/orderConstants';
 
@@ -44,7 +48,7 @@ export const myOrders = () => async (dispatch, getState) => {
 };
 
 const createOrder = (order) => async (dispatch, getState) => {
-
+  console.log('lan 1')
   try {
     dispatch({ type: ORDER_CREATE_REQUEST });
 
@@ -60,14 +64,27 @@ const createOrder = (order) => async (dispatch, getState) => {
     const { data } = await Axios.post('/v1/order',
       order, config
     );
-    dispatch({
-      type: ORDER_CREATE_SUCCESS,
-      payload: data
-    });
-    toast.success('Đặt hàng thành công');
+
+
+    if (data) {
+      // Axios.post('/v1/order/sendmail', { userInfo, cartItems: order.orderItems })
+      dispatch({
+        type: ORDER_CREATE_SUCCESS,
+        payload: data
+      });
+
+      await localStorage.setItem("cartItems", '');
+      dispatch({ type: CART_RESET })
+      console.log(data)
+      if (data.paymentMethod === 'COD') {
+        toast.success('Đặt hàng thành công');
+      }
+    }
 
   } catch (error) {
+    console.log(error)
     dispatch({ type: ORDER_CREATE_FAIL, payload: error.message });
+    toast.error('Đặt hàng không thành công')
   }
 };
 
@@ -81,6 +98,7 @@ export const orderDetail = (orderID) => async (dispatch, getState) => {
   }
   try {
     const { data } = await Axios.get('/v1/order/' + orderID, config);
+    console.log(data)
     dispatch({ type: ORDER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -151,7 +169,7 @@ export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getS
         type: ORDER_UPDATE_SUCCESS,
         payload: data
       });
-      dispatch(orderListAction())
+      dispatch(orderListAction({ pageNumber: 1 }))
       toast.success('Cập nhật đơn hàng thành công')
     }
 
@@ -162,6 +180,31 @@ export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getS
         : error.message;
     dispatch({ type: ORDER_UPDATE_FAIL, payload: message });
     toast.error(message);
+  }
+};
+
+export const payOrder = (order, paymentResult) => async (
+  dispatch,
+  getState
+) => {
+  dispatch({ type: ORDER_PAY_REQUEST, payload: { order, paymentResult } });
+  const {
+    userSignin: { userInfo },
+  } = getState();
+  try {
+    const { data } = Axios.put(`/v1/order/online-pay/${order._id}`, paymentResult, {
+      headers: { Authorization: `Bearer ${userInfo.token}` },
+    });
+    dispatch({ type: ORDER_PAY_SUCCESS, payload: data });
+    dispatch(orderDetail(order._id));
+    toast.success('Thanh toán thành công, Cảm ơn quý khách đã mua hàng!')
+
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({ type: ORDER_PAY_FAIL, payload: message });
   }
 };
 

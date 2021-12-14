@@ -23,7 +23,7 @@ const NewProduct = ({ history }) => {
   const [name, setName] = useState('');
   const [image1, setImage1] = useState('');
   const [image2, setImage2] = useState('');
-  const [brand, setbrand] = useState('');
+  const [brand, setbrand] = useState('619e43058b9769d52dd8e171');
   const [category, setCategory] = useState('618dde0eb74f7288232092b9');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
@@ -157,7 +157,7 @@ const NewProduct = ({ history }) => {
                 <div className="userUpdateItem">
                   <label>Thương hiệu:</label>
 
-                  <select onChange={e => setbrand(e.target.value)} required>
+                  <select onChange={e => setbrand(e.target.value)} >
                     {loadingBrands ? '' : errorBrands ? '' :
                       brands &&
                       brands.map((item, index) =>
@@ -192,6 +192,7 @@ const NewProduct = ({ history }) => {
                     onChange={(e) => setImage1(e.target.value)}
                     value={image1}
                     required
+                    className='userUpdateInput'
                   ></input>
                   <span>Hoặc tải lên</span>
                   <label htmlFor="file">
@@ -204,6 +205,7 @@ const NewProduct = ({ history }) => {
                   <input placeholder="Nhập url hình ảnh"
                     onChange={(e) => setImage2(e.target.value)}
                     value={image2}
+                    className='userUpdateInput'
                   ></input>
                   <span>Hoặc tải lên</span>
                   <label htmlFor="file">

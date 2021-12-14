@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import Grid from './Grid'
 import ProductCard from './ProductCard'
-import Loading from './Loading'
+// import Loading from './Loading'
 
 const InfinityList = ({ loading, error, products, page, pages }) => {
 
@@ -61,7 +61,7 @@ const InfinityList = ({ loading, error, products, page, pages }) => {
                 gap={20}
             >
                 {
-                    loading ? <Loading /> : error ? <div>{error}</div> :
+                    loading ? <div></div> : error ? <div>{error}</div> :
                         products.length === 0 ? <div>Không có sản phẩm nào</div> :
                             products.map((item) => (
                                 <ProductCard
@@ -71,6 +71,7 @@ const InfinityList = ({ loading, error, products, page, pages }) => {
                                     name={item.name}
                                     price={item.price}
                                     _id={item._id}
+                                    discount={item.discount}
                                 />
                             ))
                 }
