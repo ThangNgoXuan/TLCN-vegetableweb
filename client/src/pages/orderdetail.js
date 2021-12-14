@@ -94,6 +94,9 @@ const OrderDetail = ({ history, match }) => {
     </tr>
   )
   //console.log(order)
+  const fullAddress = (order) => {
+    return order.detail + ', ' + order.ward + ', ' + order.district + ', ' + order.province
+  }
   return (
     <div>
       <ToastContainer
@@ -130,7 +133,7 @@ const OrderDetail = ({ history, match }) => {
               <div className="order__shipping-title">{order && (order.lastName + ' ' + order.firstName)}</div>
             </div>
             <div className="order__price">
-              <div className="order__price-title">Địa chỉ: {order && order.shipAddress}</div>
+              <div className="order__price-title">Địa chỉ: {order && order.address && fullAddress(order.address)}</div>
             </div>
             <div className="order__payment">
               <div className="order__payment-item">

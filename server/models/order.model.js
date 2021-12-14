@@ -41,8 +41,13 @@ const orderSchema = mongoose.Schema(
     },
     shipAddress: {
       type: String,
-      required: true,
       trim: true
+    },
+    address: {
+      province: { type: String },
+      district: { type: String },
+      ward: { type: String },
+      detail: { type: String },
     },
     paymentMethod: {
       type: String,
