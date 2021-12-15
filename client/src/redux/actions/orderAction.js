@@ -153,7 +153,7 @@ export const orderDelivery = () => async (dispatch, getState) => {
   }
 };
 
-export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getState) => {
+export const updateStatusOrderAction = ({ id, status, pageNumber }) => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_UPDATE_REQUEST });
     const { userSignin: { userInfo } } = getState();
@@ -169,7 +169,12 @@ export const updateStatusOrderAction = ({ id, status }) => async (dispatch, getS
         type: ORDER_UPDATE_SUCCESS,
         payload: data
       });
-      dispatch(orderListAction({ pageNumber: 1 }))
+      let page = pageNumber || 1
+      if (pageNumber) {
+        dispatch(orderListAction({ pageNumber: page }))
+      } else {
+        dispatch(orderDetail(id))
+      }
       toast.success('Cập nhật đơn hàng thành công')
     }
 

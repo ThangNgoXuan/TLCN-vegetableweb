@@ -36,10 +36,10 @@ const Order = (props) => {
   const [ward, setWard] = useState([]);
 
   let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
-  const token = '27430fe2-5cc5-11ec-bde8-6690e1946f41'
 
   useEffect(() => {
     if (userInfo) {
+      console.log(userInfo)
       setFname(userInfo.firstName)
       setLname(userInfo.lastName)
       setPhone(userInfo.phone)
@@ -110,7 +110,7 @@ const Order = (props) => {
       ward: ward,
       detail: housseNumber,
     }
-    console.log(address)
+
     if (userInfo && cartItems.length > 0) {
       if (window.confirm('Xác nhận đặt hàng')) {
         dispatch(
@@ -179,9 +179,9 @@ const Order = (props) => {
             <div className="order__info-item-half">
               <div className="order__info-form-item half">
                 <label className="order__info-input-label">Tỉnh, thành phố</label>
-                <select onChange={onChangeProvince}>
+                <select onChange={onChangeProvince} required>
                   {/* {console.log(provinces)} */}
-                  <option>Chọn Tỉnh, Thành phố</option>
+                  <option value="">Chọn Tỉnh, Thành phố</option>
                   {provinces && provinces.map((item) => (
                     <option value={item.ProvinceName} key={item.ProvinceID}>{item.ProvinceName}</option>
                   ))}
@@ -189,9 +189,9 @@ const Order = (props) => {
               </div>
               <div className="order__info-form-item half">
                 <label className="order__info-input-label">Quận, huyện</label>
-                <select onChange={onChangeDistrict}>
+                <select onChange={onChangeDistrict} required>
                   {/* {console.log(provinces)} */}
-                  <option>Quận, huyện</option>
+                  <option value="">Quận, huyện</option>
                   {districts.map((item) => (
                     <option value={item.DistrictName} key={item.DistrictID}>{item.DistrictName}</option>
                   ))}
@@ -201,17 +201,17 @@ const Order = (props) => {
             <div className="order__info-item-half">
               <div className="order__info-form-item half">
                 <label className="order__info-input-label">Xã phường</label>
-                <select onChange={(e) => setWard(e.target.value)}>
+                <select onChange={(e) => setWard(e.target.value)} required>
                   {/* {console.log(provinces)} */}
-                  <option>Xã,phường</option>
+                  <option value="">Xã,phường</option>
                   {wards.map((item) => (
                     <option value={item.WardName} key={item.WardCode}>{item.WardName}</option>
                   ))}
                 </select>
               </div>
               <div className="order__info-form-item half">
-                <label className="order__info-input-label">Số nhà</label>
-                <input className='order__info-input' onChange={(e) => setHouseNumber}></input>
+                <label className="order__info-input-label">Số nhà, thôn/xóm</label>
+                <input className='order__info-input' required onChange={(e) => setHouseNumber(e.target.value)}></input>
               </div>
             </div>
             <div className="order__info-item">
