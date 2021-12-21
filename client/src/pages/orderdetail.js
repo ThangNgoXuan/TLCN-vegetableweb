@@ -8,7 +8,7 @@ import { orderDetail, payOrder } from '../redux/actions/orderAction'
 import axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2';
 import { ORDER_PAY_RESET } from '../redux/constants/orderConstants'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -27,11 +27,8 @@ const OrderDetail = ({ history, match }) => {
 
   const dispatch = useDispatch();
 
-  let isAdmin = (userInfo && userInfo.role === 'admin') ? true : false;
+
   let link = '/order-history';
-  if (isAdmin) {
-    link = '/admin/orders'
-  }
 
   useEffect(() => {
     if (!userInfo) {
@@ -64,6 +61,13 @@ const OrderDetail = ({ history, match }) => {
 
     }
   }, [dispatch, userInfo, history, orderId, sdkReady, order])
+
+  useEffect(() => {
+    if (order && order.paymentMethod === 'Online' && !order.isPaid) {
+      toast.info('Xin mời quý khách thanh toán để hoàn tất đơn hàng!')
+    }
+
+  }, [])
 
   const successPaymentHnadler = (paymentResult) => {
     console.log(paymentResult)
@@ -152,13 +156,27 @@ const OrderDetail = ({ history, match }) => {
             </div>
             <div className="order__payment">
               <div className="order__payment-item">
-                <label for="COD">Trạng thái giao hàng: {order && trangthai[order.status]}</label>
+                <label >Trạng thái giao hàng: {order && trangthai[order.status]}</label>
+                {
+                  order && order.status === 'DANG_XU_LY' &&
+                  <>
+                    <span style={{ margin: '4px' }}>|</span>
+                    <button style={{ fontWeight: 500, backgroundColor: '#024137', color: '#fff', padding: '1px 4px', borderRadius: '3px' }}>
+                      Hủy</button>
+                  </>
+                }
               </div>
               <div className="order__payment-item">
-                <label for="COD">Thanh toán: {order && order.isPaid ? `Đã thanh toán (${order.paidAt.substr(0, 10).split('-').reverse().join('/')})` : 'Chưa thanh toán'}</label>
+                <label>Thanh toán:
+                  {order && order.isPaid ?
+                    <span style={{ color: 'red' }}>
+                      {`Đã thanh toán (${order.paidAt.substr(0, 10).split('-').reverse().join('/')})`}
+                    </span> : 'Chưa thanh toán'
+                  }
+                </label>
               </div>
               <div className="order__payment-item">
-                <label for="COD">Loại thanh toán: {order && order.paymentMethod}</label>
+                <label >Loại thanh toán: {order && order.paymentMethod}</label>
               </div>
               <div className="">
 

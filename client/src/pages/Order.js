@@ -8,7 +8,6 @@ import numberWithCommas from '../utils/numberWithCommas'
 import { } from '../styles/order.css'
 import axios from 'axios'
 import { createOrder } from '../redux/actions/orderAction'
-import { CART_RESET } from '../redux/constants/cartConstants'
 
 const Order = (props) => {
 

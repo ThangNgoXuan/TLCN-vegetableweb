@@ -65,7 +65,7 @@ const ProductView = props => {
         <div className="product">
             <ToastContainer
                 position="top-left"
-                autoClose={2000}
+                autoClose={3000}
                 hideProgressBar={true}
                 newestOnTop={false}
             />
@@ -99,12 +99,18 @@ const ProductView = props => {
             </div>
             <div className="product__info">
                 <h1 className="product__info__title">{product.name}</h1>
+                {product.qtyInStock &&
+                    <span style={{ lineHeight: '30px', marginLeft: '10px', fontSize: '14px' }}>
+                        <span style={{ fontWeight: 'bold' }}>{product.qtyInStock}</span> sản phẩm có sẵn | <span style={{ fontWeight: 'bold' }}>{product.sold}</span> đã bán</span>
+                }
                 <div className="product__info__item">
                     <span className="product__info__item__price">
-                        {numberWithCommas(product.price)}
+                        {numberWithCommas(product.price)}đ
                     </span>
                 </div>
+
                 <div className="product__info__item">
+
                     <div className="product__info__item__title">
                         Số lượng
                     </div>
@@ -118,6 +124,7 @@ const ProductView = props => {
                         <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('plus')}>
                             <i className="bx bx-plus"></i>
                         </div>
+
                     </div>
                 </div>
                 <div className="product__info__item">

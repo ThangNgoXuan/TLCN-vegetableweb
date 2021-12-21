@@ -13,12 +13,15 @@ import SearchPriceBox from '../components/SearchPriceBox'
 
 const Catalog = () => {
     const reset = {
-        padding: '20px',
-        height: '30px',
-        width: '150px',
+        display: 'block',
+        padding: '0px',
+        textAlign: 'center',
+        lineHeight: '30px',
+        width: '80%',
         backgroundColor: '#39834b',
         color: '#fff',
-        marginTop: '20px'
+        marginTop: '10px',
+        maxWidth: '140px',
     }
 
     const {
@@ -122,6 +125,7 @@ const Catalog = () => {
                             )
                         }
                     </div>
+
                     <div className="catalog__filter__widget">
                         <div className="catalog__filter__widget__title">
                             Thương hiệu
@@ -143,9 +147,6 @@ const Catalog = () => {
                     </div>
 
                     <SearchPriceBox getFilterUrl={getFilterUrl} />
-                    <br />
-                    <br />
-                    <br />
 
                     <div>
                         <Link to="/catalog" style={reset}>
