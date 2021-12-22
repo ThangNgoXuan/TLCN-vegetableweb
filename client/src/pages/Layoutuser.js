@@ -10,17 +10,16 @@ import RoutesUser from '../customRouter/RoutersUser';
 
 const Layoutuser = () => {
     return (
-        <Route render={props => (
-            <div>
-                <Header {...props} />
-                <div className="container">
-                    <div className="main">
-                        <RoutesUser />
-                    </div>
+        <>
+            <Header />
+            <div className="container">
+                <div className="main">
+                    <RoutesUser />
                 </div>
-                <Footer />
             </div>
-        )} />
+            <Footer />
+        </>
+
     );
 }
 

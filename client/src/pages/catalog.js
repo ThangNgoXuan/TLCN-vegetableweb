@@ -10,6 +10,7 @@ import { listBrandAction } from '../redux/actions/brandActions'
 import { categoryAction } from '../redux/actions/categoryActions'
 import { Link, useParams } from 'react-router-dom'
 import SearchPriceBox from '../components/SearchPriceBox'
+import Loading from '../components/Loading'
 
 const Catalog = () => {
     const reset = {
@@ -84,6 +85,7 @@ const Catalog = () => {
 
     return (
         <Helmet title="Sản phẩm">
+            {loading && <Loading />}
             <div className="catalog">
                 <div className="catalog__filter" ref={filterRef}>
                     <div className="catalog__filter__close" onClick={() => showHideFilter()}>

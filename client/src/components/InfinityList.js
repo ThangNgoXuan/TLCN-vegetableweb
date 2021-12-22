@@ -62,7 +62,7 @@ const InfinityList = ({ loading, error, products, page, pages }) => {
             >
                 {
                     loading ? <div></div> : error ? <div>{error}</div> :
-                        products.length === 0 ? <div>Không có sản phẩm nào</div> :
+                        products.length === 0 ? <div style={{ fontSize: '20px', paddingTop: '40px' }}>Không tìm thấy sản phẩm</div> :
                             products.map((item) => (
                                 <ProductCard
                                     key={item._id}

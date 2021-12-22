@@ -12,14 +12,13 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/admin" component={Layoutadmin} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/reset_password" component={ResetPassword} />
         <Route path="/get-token" component={GetToken} />
         <Route path="/notfound" component={NotFound} />
+        <Route path="/admin" component={Layoutadmin} />
         <Route path="/" component={Layoutuser} />
-        <Route path="*" component={NotFound} />
       </Switch>
     </BrowserRouter>
   );

@@ -7,6 +7,7 @@
 
     &__filter {
         width: 20%;
+        min-width: 198px;
 
         @include tablet {
             width: max-content;
