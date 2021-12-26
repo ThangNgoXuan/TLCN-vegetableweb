@@ -46,6 +46,9 @@
 
                 &__item {
                     margin-bottom: 13px;
+                    :hover {
+                        cursor: pointer;
+                    }
                 }
             }
         }
@@ -78,7 +81,7 @@
     }
 }
 
-a.active {
+span.active {
     color: #008a00;
     font-weight: 600;
 }

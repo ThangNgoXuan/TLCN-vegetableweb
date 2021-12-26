@@ -63,7 +63,6 @@ const OrderHistory = ({ history }) => {
               {!orders && <div>Không có đơn hàng nào</div>}
               {(orders && orders.length >= 0) &&
                 (<Table
-                  limit='10'
                   headData={customerTableHead}
                   renderHead={(item, index) => renderHead(item, index)}
                   bodyData={orders && orders}

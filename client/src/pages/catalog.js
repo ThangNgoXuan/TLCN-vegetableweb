@@ -12,7 +12,7 @@ import { Link, useParams } from 'react-router-dom'
 import SearchPriceBox from '../components/SearchPriceBox'
 import Loading from '../components/Loading'
 
-const Catalog = () => {
+const Catalog = ({ history }) => {
     const reset = {
         display: 'block',
         padding: '0px',
@@ -97,35 +97,26 @@ const Catalog = () => {
                         </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                loadingCategories ? <div>Loading...</div> : errorCategories ? <div></div>
+                                loadingCategories ? <div></div> : errorCategories ? <div></div>
                                     : !categories ? <div></div> :
                                         categories.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
-                                                <Link className={item._id === category ? 'active' : ''}
-                                                    to={() => getFilterUrl({ category: item._id })}>
+
+                                                <span className={item._id === category ? 'active' : ''}
+                                                    onClick={() => {
+                                                        if (category === 'all' || category !== item._id)
+                                                            history.push(getFilterUrl({ category: item._id }))
+                                                        else
+                                                            history.push(getFilterUrl({ category: 'all' }))
+                                                    }
+                                                    }
+                                                >
                                                     {item.name}
-                                                </Link>
+                                                </span>
                                             </div>
                                         ))
                             }
                         </div>
-                    </div>
-
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            Chứng nhận
-                        </div>
-                        {!certificates ? <div></div> :
-                            certificates.map(x =>
-                                <div className="catalog__filter__widget__content">
-                                    <div className="catalog__filter__widget__content__item">
-                                        <Link className={certificate === x ? 'active' : ''}
-                                            to={() => getFilterUrl({ certificate: x })}>
-                                            {x}</Link>
-                                    </div>
-                                </div>
-                            )
-                        }
                     </div>
 
                     <div className="catalog__filter__widget">
@@ -134,20 +125,55 @@ const Catalog = () => {
                         </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                loadingBrand ? <div>Loading...</div> : errorBrand ? <div></div>
+                                loadingBrand ? <div></div> : errorBrand ? <div></div>
                                     : !brands ? <div></div> :
                                         brands.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
-                                                <Link className={item._id === brand ? 'active' : ''}
+                                                {/* <Link className={item._id === brand ? 'active' : ''}
                                                     to={() => getFilterUrl({ brand: item._id })}>
                                                     {item.name}
-                                                </Link>
+                                                </Link> */}
+                                                <span className={item._id === brand ? 'active' : ''}
+                                                    onClick={() => {
+                                                        if (brand === 'all' || brand !== item._id)
+                                                            history.push(getFilterUrl({ brand: item._id }))
+                                                        else
+                                                            history.push(getFilterUrl({ brand: 'all' }))
+                                                    }
+                                                    }
+                                                >
+                                                    {item.name}
+                                                </span>
                                             </div>
                                         ))
                             }
                         </div>
                     </div>
+                    <div className="catalog__filter__widget">
+                        <div className="catalog__filter__widget__title">
+                            Chứng nhận
+                        </div>
+                        {!certificates ? <div></div> :
+                            certificates.map(x =>
+                                <div className="catalog__filter__widget__content">
+                                    <div className="catalog__filter__widget__content__item">
 
+                                        <span className={certificate === x ? 'active' : ''}
+                                            onClick={() => {
+                                                if (certificate === 'all' || certificate !== x)
+                                                    history.push(getFilterUrl({ certificate: x }))
+                                                else
+                                                    history.push(getFilterUrl({ certificate: 'all' }))
+                                            }
+                                            }
+                                        >
+                                            {x}
+                                        </span>
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </div>
                     <SearchPriceBox getFilterUrl={getFilterUrl} />
 
                     <div>

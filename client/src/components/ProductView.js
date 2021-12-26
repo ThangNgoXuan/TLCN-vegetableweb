@@ -64,8 +64,8 @@ const ProductView = props => {
     return (
         <div className="product">
             <ToastContainer
-                position="top-left"
-                autoClose={3000}
+                position="top-right"
+                autoClose={4000}
                 hideProgressBar={true}
                 newestOnTop={false}
             />
@@ -121,7 +121,13 @@ const ProductView = props => {
                         <div className="product__info__item__quantity__input">
                             {quantity}
                         </div>
-                        <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('plus')}>
+                        <div className="product__info__item__quantity__btn" onClick={() => {
+                            if (quantity >= product.qtyInStock) {
+                                toast.warning('Cửa hàng chỉ còn ' + product.qtyInStock + ' sản phẩm')
+                            } else
+                                updateQuantity('plus')
+                        }
+                        }>
                             <i className="bx bx-plus"></i>
                         </div>
 

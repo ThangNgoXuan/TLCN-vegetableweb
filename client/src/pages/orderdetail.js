@@ -60,14 +60,16 @@ const OrderDetail = ({ history, match }) => {
       }
 
     }
+
+    // return () => {
+    //   if (order && order.paymentMethod === 'Online' && !order.isPaid) {
+    //     toast.info('Xin mời quý khách thanh toán để hoàn tất đơn hàng!')
+    //     console.log('134')
+    //   }
+    // }
   }, [dispatch, userInfo, history, orderId, sdkReady, order])
 
-  useEffect(() => {
-    if (order && order.paymentMethod === 'Online' && !order.isPaid) {
-      toast.info('Xin mời quý khách thanh toán để hoàn tất đơn hàng!')
-    }
 
-  }, [])
 
   const successPaymentHnadler = (paymentResult) => {
     console.log(paymentResult)
@@ -101,6 +103,14 @@ const OrderDetail = ({ history, match }) => {
   const fullAddress = (order) => {
     return order.detail + ', ' + order.ward + ', ' + order.district + ', ' + order.province
   }
+
+  useEffect(() => {
+    if (order && order.paymentMethod === 'Online' && !order.isPaid) {
+      toast.info('Xin mời quý khách thanh toán để hoàn tất đơn hàng!')
+      console.log('134')
+    }
+
+  }, [])
   return (
     <div>
       <ToastContainer
