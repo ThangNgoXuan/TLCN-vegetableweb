@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import numberWithCommas from '../utils/numberWithCommas'
 
 import Table from '../components/admin/Table'
-import { orderDetail, payOrder } from '../redux/actions/orderAction'
+import { orderDetail, payOrder, userUpdateOrderAction } from '../redux/actions/orderAction'
 import axios from 'axios'
 import { PayPalButton } from 'react-paypal-button-v2';
 import { ORDER_PAY_RESET } from '../redux/constants/orderConstants'
@@ -111,6 +111,13 @@ const OrderDetail = ({ history, match }) => {
     }
 
   }, [])
+
+  const handleBtnCancelOrder = (id) => {
+    if (window.confirm('Bạn muốn hủy đơn hàng này?')) {
+      dispatch(userUpdateOrderAction({ id, status: 'DA_HUY' }));
+    }
+  }
+
   return (
     <div>
       <ToastContainer
@@ -171,7 +178,8 @@ const OrderDetail = ({ history, match }) => {
                   order && order.status === 'DANG_XU_LY' &&
                   <>
                     <span style={{ margin: '4px' }}>|</span>
-                    <button style={{ fontWeight: 500, backgroundColor: '#024137', color: '#fff', padding: '1px 4px', borderRadius: '3px' }}>
+                    <button onClick={() => handleBtnCancelOrder(order._id)}
+                      style={{ fontWeight: 500, backgroundColor: '#024137', color: '#fff', padding: '1px 4px', borderRadius: '3px' }}>
                       Hủy</button>
                   </>
                 }

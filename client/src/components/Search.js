@@ -19,7 +19,7 @@ const Search = (props) => {
       <input type="text" placeholder="Tìm kiếm..." required
         onChange={(e) => setText(e.target.value)}
       />
-      <button type="submit"><i class='bx bx-search'></i></button>
+      <button type="submit"><i className='bx bx-search'></i></button>
     </form>
   )
 }

@@ -160,6 +160,28 @@ const adminUpdateOrder = async (req, res) => {
   }
 };
 
+
+const userUpdateOrder = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
+
+    if (order) {
+      if (order.status === 'DANG_XU_LY' && status === 'DA_HUY') {
+        order.status = status;
+      }
+      const updatedOrder = await order.save();
+
+      res.status(200).json(updatedOrder);
+    } else {
+      res.status(404);
+      throw new Error('Không tìm thấy đơn hàng');
+    }
+  } catch (error) {
+    res.json({ message: error.message });
+  }
+};
+
 // @desc    Fetch all orders
 // @route   GET /v1/order
 // @access  Private / admin/staff
@@ -266,4 +288,5 @@ export const orderController = {
   adminUpdateOrder,
   adminGetOrders,
   paypalPayment,
+  userUpdateOrder,
 };

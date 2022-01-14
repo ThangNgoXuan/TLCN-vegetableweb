@@ -72,8 +72,8 @@ const ProductView = props => {
             <div className="product__images">
                 <div className="product__images__list">
                     {
-                        product.images.map(item => (
-                            <div className="product__images__list__item" onClick={() => setPreviewImg(item)}>
+                        product.images.map((item, x) => (
+                            <div key={x} className="product__images__list__item" onClick={() => setPreviewImg(item)}>
                                 <img src={item} alt="" />
                             </div>
 
@@ -99,7 +99,7 @@ const ProductView = props => {
             </div>
             <div className="product__info">
                 <h1 className="product__info__title">{product.name}</h1>
-                {product.qtyInStock &&
+                {product.qtyInStock >= 0 &&
                     <span style={{ lineHeight: '30px', marginLeft: '10px', fontSize: '14px' }}>
                         <span style={{ fontWeight: 'bold' }}>{product.qtyInStock}</span> sản phẩm có sẵn | <span style={{ fontWeight: 'bold' }}>{product.sold}</span> đã bán</span>
                 }

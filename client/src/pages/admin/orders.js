@@ -61,7 +61,7 @@ const Orders = ({ history }) => {
                     <option selected={item.status === "DA_HUY"} value="DA_HUY">Đã hủy</option>
                 </select>
             </td>
-            <td onClick={() => history.push('/admin/order/' + item._id)}><i class='bx bx-detail'></i></td>
+            <td onClick={() => history.push('/admin/order/' + item._id)}><i className='bx bx-detail'></i></td>
         </tr>
     )
 

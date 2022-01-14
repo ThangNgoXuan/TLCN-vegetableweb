@@ -42,7 +42,8 @@ const OrderHistory = ({ history }) => {
       <td>{item.orderItems[0].product && item.orderItems[0].product.name}</td>
       <td>{item.totalPrice && numberWithCommas(item.totalPrice)}đ</td>
       <td>{trangthai[item.status]}</td>
-      <td><span onClick={() => { history.push('/order-detail/' + item._id) }}>Chi tiết</span> </td>
+      <td style={{ cursor: 'pointer', color: 'GrayText' }}
+      ><span onClick={() => { history.push('/order-detail/' + item._id) }}>Chi tiết</span> </td>
     </tr>
   )
 

@@ -4,7 +4,8 @@ import { isAdmin, isAuth } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.route('/myOrder/:id').get(isAuth, orderController.getMyOrders);
+router.route('/myOrder/:id').get(isAuth, orderController.getMyOrders)
+  .put(isAuth, orderController.userUpdateOrder)
 
 router.route('/sendmail').post(orderController.sendMailOrder);
 
@@ -16,7 +17,6 @@ router.route('/online-pay/:id').put(isAuth, orderController.paypalPayment)
 router.route('/:id')
   .get(isAuth, orderController.getOrderById)
   .put(isAuth, orderController.adminUpdateOrder)
-
 
 router.route('/')
   .get(isAuth, orderController.getOrders)
