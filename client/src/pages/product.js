@@ -8,6 +8,7 @@ import Grid from '../components/Grid'
 import ProductCard from '../components/ProductCard'
 import ProductView from '../components/ProductView'
 import { detailsProduct, topProductsRelate } from '../redux/actions/productActions'
+import Loading from '../components/Loading'
 
 
 const Product = props => {
@@ -43,7 +44,7 @@ const Product = props => {
     return (
 
         <>
-            {loading ? <div></div> : error ?
+            {loading ? <Loading /> : error ?
                 (<>
                     <Link to="/">Quay về trang chủ</Link>
                     <div>{error}</div>

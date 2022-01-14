@@ -1,7 +1,7 @@
 /* You can remove these code below*/
 :root {
   --primary: #08aeea;
-  --secondary: #13d2b8;
+  --secondary: #bdebe5;
   --purple: #bd93f9;
   --pink: #ff6bcb;
   --blue: #8be9fd;
@@ -21,37 +21,37 @@ textarea {
 }
 /* Main code */
 
-.dashed-loading {
-  position: relative;
-  height: 50px;
+.loading-container {
+  background: rgba(0, 0, 0, 0.02);
+  z-index: 100;
+  width: 100%;
+  height: 100vh;
+  inset: 0;
+  position: fixed;
+  display: flex;
 }
-.dashed-loading:after,
-.dashed-loading:before {
+
+.circle-loading {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 5rem;
+  position: relative;
+  margin: auto;
+}
+.circle-loading:before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  border: 0.5rem solid white;
+  border-right-color: var(--secondary);
+  border-bottom-color: var(--secondary);
+  animation: circleLoading 0.6s forwards infinite linear;
 }
-.dashed-loading:before {
-  z-index: 5;
-  border: 3px dashed var(--blue);
-  border-left: 3px solid transparent;
-  border-bottom: 3px solid transparent;
-  -webkit-animation: dashed 1s linear infinite;
-  animation: dashed 1s linear infinite;
-}
-.dashed-loading:after {
-  z-index: 10;
-  border: 3px solid var(--blue);
-  border-left: 3px solid transparent;
-  border-bottom: 3px solid transparent;
-  -webkit-animation: dashed 1s ease infinite;
-  animation: dashed 1s ease infinite;
-}
-@keyframes dashed {
+@keyframes circleLoading {
   to {
     transform: rotate(360deg);
   }

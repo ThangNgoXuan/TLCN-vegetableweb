@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateStatusOrderAction } from '../../redux/actions/orderAction'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom'
 import SearchAdmin from '../../components/admin/SearchAdmin'
 
 
@@ -32,16 +31,15 @@ const Orders = ({ history }) => {
     const customerTableHead = [
         'Mã đơn',
         'Người đặt',
-        'email',
-        'Số điện thoại',
         'Tổng tiền ',
         'Địa chỉ giao ',
+        'Thanh toán',
+        'Trạng thái',
         'Chi tiết',
-        'Trạng thái'
     ]
 
     const handleChangeOrderState = (id, status) => {
-        dispatch(updateStatusOrderAction({ status, id }))
+        dispatch(updateStatusOrderAction({ status, id, pageNumber }))
     }
 
     const renderHead = (item, index) => <th key={index}>{item}</th>
@@ -50,12 +48,9 @@ const Orders = ({ history }) => {
         <tr key={index}>
             <td>{item._id}</td>
             <td style={{ minWidth: '180px' }}>{item.lastName + ' ' + item.firstName}</td>
-            <td>{item.mail}</td>
-            <td>{item.phone}</td>
             <td>{numberWithCommas(item.totalPrice)}</td>
-            {/* <td>{item.status}</td> */}
             <td>{item.shipAddress}</td>
-            <td onClick={() => history.push('/order-detail/' + item._id)}><i class='bx bx-detail'></i></td>
+            <td>{item.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
 
             <td>
                 <select onChange={(e) => handleChangeOrderState(item._id, e.target.value)}>
@@ -66,6 +61,7 @@ const Orders = ({ history }) => {
                     <option selected={item.status === "DA_HUY"} value="DA_HUY">Đã hủy</option>
                 </select>
             </td>
+            <td onClick={() => history.push('/admin/order/' + item._id)}><i className='bx bx-detail'></i></td>
         </tr>
     )
 
@@ -89,7 +85,7 @@ const Orders = ({ history }) => {
     return (
         <div>
             <ToastContainer
-                autoClose={2000}
+                autoClose={5000}
                 hideProgressBar={true}
                 newestOnTop={false}
             />

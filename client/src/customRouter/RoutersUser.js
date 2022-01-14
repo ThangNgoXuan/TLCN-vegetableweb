@@ -14,6 +14,7 @@ import UserProfile from '../pages/userProfile'
 import Order from '../pages/Order'
 import OrderHistory from '../pages/OrderHistory'
 import OrderDetail from '../pages/orderdetail'
+import NotFound from '../components/NotFound'
 
 const RoutesUser = () => {
     return (
@@ -59,6 +60,8 @@ const RoutesUser = () => {
             />
 
             <Route path='/' exact component={Home} />
+            <Route path="*" component={NotFound} />
+
         </Switch>
     )
 }

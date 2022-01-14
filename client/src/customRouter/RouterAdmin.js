@@ -19,6 +19,7 @@ import Slides from '../pages/admin/Slides'
 import EditSlide from '../pages/admin/EditSlides'
 import NewSlide from '../pages/admin/NewSlide'
 import EditProduct from '../pages/admin/EditProdutc'
+import OrderDetail from '../pages/admin/OrderDetail'
 
 const RouterAdmin = () => {
     return (
@@ -41,6 +42,7 @@ const RouterAdmin = () => {
             <Route path='/admin/slides/:id' exact component={EditSlide} />
             <Route path='/admin/newSlide' exact component={NewSlide} />
             <Route path='/admin/product/:id' exact component={EditProduct} />
+            <Route path='/admin/order/:id' exact component={OrderDetail} />
             <Route path='/admin' exact component={Dashboard} />
         </Switch>
     )

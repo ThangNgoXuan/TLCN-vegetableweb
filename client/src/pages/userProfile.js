@@ -97,7 +97,7 @@ const UserProfile = ({ history }) => {
     <div>
       <ToastContainer
         position="top-left"
-        autoClose={2000}
+        autoClose={5000}
         hideProgressBar={true}
         newestOnTop={false}
       />

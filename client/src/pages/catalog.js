@@ -10,15 +10,19 @@ import { listBrandAction } from '../redux/actions/brandActions'
 import { categoryAction } from '../redux/actions/categoryActions'
 import { Link, useParams } from 'react-router-dom'
 import SearchPriceBox from '../components/SearchPriceBox'
+import Loading from '../components/Loading'
 
-const Catalog = () => {
+const Catalog = ({ history }) => {
     const reset = {
-        padding: '20px',
-        height: '30px',
-        width: '150px',
+        display: 'block',
+        padding: '0px',
+        textAlign: 'center',
+        lineHeight: '30px',
+        width: '80%',
         backgroundColor: '#39834b',
         color: '#fff',
-        marginTop: '20px'
+        marginTop: '10px',
+        maxWidth: '140px',
     }
 
     const {
@@ -81,6 +85,7 @@ const Catalog = () => {
 
     return (
         <Helmet title="Sản phẩm">
+            {loading && <Loading />}
             <div className="catalog">
                 <div className="catalog__filter" ref={filterRef}>
                     <div className="catalog__filter__close" onClick={() => showHideFilter()}>
@@ -92,20 +97,58 @@ const Catalog = () => {
                         </div>
                         <div className="catalog__filter__widget__content">
                             {
-                                loadingCategories ? <div>Loading...</div> : errorCategories ? <div></div>
+                                loadingCategories ? <div></div> : errorCategories ? <div></div>
                                     : !categories ? <div></div> :
                                         categories.map((item) => (
                                             <div key={item._id} className="catalog__filter__widget__content__item">
-                                                <Link className={item._id === category ? 'active' : ''}
-                                                    to={() => getFilterUrl({ category: item._id })}>
+
+                                                <span className={item._id === category ? 'active' : ''}
+                                                    onClick={() => {
+                                                        if (category === 'all' || category !== item._id)
+                                                            history.push(getFilterUrl({ category: item._id }))
+                                                        else
+                                                            history.push(getFilterUrl({ category: 'all' }))
+                                                    }
+                                                    }
+                                                >
                                                     {item.name}
-                                                </Link>
+                                                </span>
                                             </div>
                                         ))
                             }
                         </div>
                     </div>
 
+                    <div className="catalog__filter__widget">
+                        <div className="catalog__filter__widget__title">
+                            Thương hiệu
+                        </div>
+                        <div className="catalog__filter__widget__content">
+                            {
+                                loadingBrand ? <div></div> : errorBrand ? <div></div>
+                                    : !brands ? <div></div> :
+                                        brands.map((item) => (
+                                            <div key={item._id} className="catalog__filter__widget__content__item">
+                                                {/* <Link className={item._id === brand ? 'active' : ''}
+                                                    to={() => getFilterUrl({ brand: item._id })}>
+                                                    {item.name}
+                                                </Link> */}
+                                                <span className={item._id === brand ? 'active' : ''}
+                                                    onClick={() => {
+                                                        if (brand === 'all' || brand !== item._id)
+                                                            history.push(getFilterUrl({ brand: item._id }))
+                                                        else
+                                                            history.push(getFilterUrl({ brand: 'all' }))
+                                                    }
+                                                    }
+                                                >
+                                                    {item.name}
+                                                </span>
+                                            </div>
+                                        ))
+                            }
+                        </div>
+                    </div>
                     <div className="catalog__filter__widget">
                         <div className="catalog__filter__widget__title">
                             Chứng nhận
@@ -114,38 +157,24 @@ const Catalog = () => {
                             certificates.map(x =>
                                 <div className="catalog__filter__widget__content">
                                     <div className="catalog__filter__widget__content__item">
-                                        <Link className={certificate === x ? 'active' : ''}
-                                            to={() => getFilterUrl({ certificate: x })}>
-                                            {x}</Link>
+
+                                        <span className={certificate === x ? 'active' : ''}
+                                            onClick={() => {
+                                                if (certificate === 'all' || certificate !== x)
+                                                    history.push(getFilterUrl({ certificate: x }))
+                                                else
+                                                    history.push(getFilterUrl({ certificate: 'all' }))
+                                            }
+                                            }
+                                        >
+                                            {x}
+                                        </span>
                                     </div>
                                 </div>
                             )
                         }
                     </div>
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            Thương hiệu
-                        </div>
-                        <div className="catalog__filter__widget__content">
-                            {
-                                loadingBrand ? <div>Loading...</div> : errorBrand ? <div></div>
-                                    : !brands ? <div></div> :
-                                        brands.map((item) => (
-                                            <div key={item._id} className="catalog__filter__widget__content__item">
-                                                <Link className={item._id === brand ? 'active' : ''}
-                                                    to={() => getFilterUrl({ brand: item._id })}>
-                                                    {item.name}
-                                                </Link>
-                                            </div>
-                                        ))
-                            }
-                        </div>
-                    </div>
-
                     <SearchPriceBox getFilterUrl={getFilterUrl} />
-                    <br />
-                    <br />
-                    <br />
 
                     <div>
                         <Link to="/catalog" style={reset}>

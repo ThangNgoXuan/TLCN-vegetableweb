@@ -78,18 +78,19 @@ const Header = () => {
 
     useEffect(() => {
 
-        // window.addEventListener("scroll", () => {
-        //     if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-        //         console.log(headerRef.current)
-        //         headerRef.current.classList.add('shrink')
-        //     } else {
-        //         headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
-        //     }
-        // })
+        const isScroll = () => {
+            if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
+                headerRef.current.classList.add('shrink')
+            } else {
+                headerRef.current.classList.item('shrink') && headerRef.current.classList.remove('shrink')
+            }
+        }
 
-        // return () => {
-        //     window.removeEventListener("scroll", () => { })
-        // };
+        window.addEventListener("scroll", isScroll)
+
+        return () => {
+            window.removeEventListener("scroll", isScroll)
+        };
 
     }, [cartItems]);
 

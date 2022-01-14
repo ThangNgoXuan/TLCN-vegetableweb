@@ -63,7 +63,7 @@ const Footer = () => {
                     </div>
                     <div>
                         <div className="footer__title">
-                            Về Yolo
+                            Về NSHC
                         </div>
                         <div className="footer__content">
                             {

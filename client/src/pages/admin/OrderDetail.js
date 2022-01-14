@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import numberWithCommas from '../utils/numberWithCommas'
+import numberWithCommas from '../../utils/numberWithCommas'
 
-import Table from '../components/admin/Table'
-import { orderDetail, payOrder, userUpdateOrderAction } from '../redux/actions/orderAction'
-import axios from 'axios'
-import { PayPalButton } from 'react-paypal-button-v2';
-import { ORDER_PAY_RESET } from '../redux/constants/orderConstants'
-import { ToastContainer, toast } from 'react-toastify';
+import Table from '../../components/admin/Table'
+import { orderDetail, updateStatusOrderAction } from '../../redux/actions/orderAction'
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -22,59 +19,19 @@ const OrderDetail = ({ history, match }) => {
   const oDetail = useSelector(state => state.orderDetail);
   const { order, loading, error } = oDetail;
 
-  const [sdkReady, setSdkReady] = useState(false);
-  const VND_To_USD = 23000;
-
   const dispatch = useDispatch();
-
-
-  let link = '/order-history';
 
   useEffect(() => {
     if (!userInfo) {
       history.push('/login')
     } else {
-      const addPayPalScript = async () => {
-        const { data } = await axios.get('/v1/config/paypal');
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
-        script.async = true;
-        script.onload = () => {
-          setSdkReady(true);
-        };
-        document.body.appendChild(script);
-      };
 
       if (!order || (order && (order.orderItems.length === 0 || order._id !== orderId))) {
-        // alert('233') 
-        dispatch({ type: ORDER_PAY_RESET });
         dispatch(orderDetail(orderId))
-      }
-      else if (order && !order.isPaid) {
-        if (!window.paypal) {
-          addPayPalScript();
-        } else {
-          setSdkReady(true);
-        }
       }
 
     }
-
-    // return () => {
-    //   if (order && order.paymentMethod === 'Online' && !order.isPaid) {
-    //     toast.info('Xin mời quý khách thanh toán để hoàn tất đơn hàng!')
-    //     console.log('134')
-    //   }
-    // }
-  }, [dispatch, userInfo, history, orderId, sdkReady, order])
-
-
-
-  const successPaymentHnadler = (paymentResult) => {
-    console.log(paymentResult)
-    dispatch(payOrder(order, paymentResult))
-  };
+  }, [dispatch, userInfo, history, orderId, order])
 
   const customerTableHead = [
     'Hình ảnh',
@@ -99,23 +56,13 @@ const OrderDetail = ({ history, match }) => {
       <td>{item.price && item.quantity && numberWithCommas(item.price * item.quantity)}đ</td>
     </tr>
   )
-  //console.log(order)
+
   const fullAddress = (order) => {
     return order.detail + ', ' + order.ward + ', ' + order.district + ', ' + order.province
   }
 
-  useEffect(() => {
-    if (order && order.paymentMethod === 'Online' && !order.isPaid) {
-      toast.info('Xin mời quý khách thanh toán để hoàn tất đơn hàng!')
-      console.log('134')
-    }
-
-  }, [])
-
-  const handleBtnCancelOrder = (id) => {
-    if (window.confirm('Bạn muốn hủy đơn hàng này?')) {
-      dispatch(userUpdateOrderAction({ id, status: 'DA_HUY' }));
-    }
+  const handleChangeOrderState = (id, status) => {
+    dispatch(updateStatusOrderAction({ status, id }))
   }
 
   return (
@@ -131,7 +78,7 @@ const OrderDetail = ({ history, match }) => {
         <div className="col-8">
           <div className="card">
             <h3 style={{ marginBottom: "20px" }}>Chi tiết đơn hàng</h3>
-            <p style={{ marginBottom: "4px" }}>Mã đơn hàng: #{order && order._id}</p>
+            <p style={{ marginBottom: "4px" }}>Mã đơn hàng: #{order && order._id} - {order && trangthai[order.status]}</p>
             <p style={{ marginBottom: "10px" }}>Ngày đặt: {order && order.createdAt && order.createdAt.substr(0, 10).split('-').reverse().join('/')}</p>
             <div className="card__body">
               {
@@ -173,52 +120,33 @@ const OrderDetail = ({ history, match }) => {
             </div>
             <div className="order__payment">
               <div className="order__payment-item">
-                <label >Trạng thái giao hàng: {order && trangthai[order.status]}</label>
-                {
-                  order && order.status === 'DANG_XU_LY' &&
-                  <>
-                    <span style={{ margin: '4px' }}>|</span>
-                    <button onClick={() => handleBtnCancelOrder(order._id)}
-                      style={{ fontWeight: 500, backgroundColor: '#024137', color: '#fff', padding: '1px 4px', borderRadius: '3px' }}>
-                      Hủy</button>
-                  </>
-                }
-              </div>
-              <div className="order__payment-item">
-                <label>Thanh toán:
-                  {order && order.isPaid ?
-                    <span style={{ color: 'red' }}>
-                      {`Đã thanh toán (${order.paidAt.substr(0, 10).split('-').reverse().join('/')})`}
-                    </span> : 'Chưa thanh toán'
+                <label for="COD">Trạng thái:
+                  {order && order.status &&
+                    <select onChange={(e) => handleChangeOrderState(order._id, e.target.value)}>
+                      <option selected={order.status === "DANG_XU_LY"} value="DANG_XU_LY">Đang xử lý</option>
+                      <option selected={order.status === "CHO_GIAO"} value="CHO_GIAO">Chờ giao hàng</option>
+                      <option selected={order.status === "DANG_GIAO"} value="DANG_GIAO">Đang giao hàng</option>
+                      <option selected={order.status === "DA_GIAO"} value="DA_GIAO">Đã giao hàng</option>
+                      <option selected={order.status === "DA_HUY"} value="DA_HUY">Đã hủy</option>
+                    </select>
                   }
                 </label>
               </div>
+              <br />
               <div className="order__payment-item">
-                <label >Loại thanh toán: {order && order.paymentMethod}</label>
+                <label for="COD">Thanh toán: {order && order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</label>
+                <br />
+                {order && order.isPaid &&
+                  <label for="COD">Thời gian: {order && order.paidAt ? order.paidAt.substr(0, 10).split('-').reverse().join('/') : ''}</label>
+                }
               </div>
-              <div className="">
+              <div className="order__payment-item">
+                <label for="COD">Loại thanh toán: {order && order.paymentMethod}</label>
+              </div>
 
-                {order && order.paymentMethod === 'Online' && !order.isPaid && (
-                  <div>
-                    <span style={{ color: 'red' }}>Xin mời quý khách thanh toán để hoàn tất đơn hàng</span>
-                    <ul>
-                      <li>
-                        {!sdkReady ? (
-                          <div>Loading...</div>
-                        ) : (
-                          <PayPalButton
-                            amount={(order.totalPrice / VND_To_USD).toFixed(2)}
-                            onSuccess={successPaymentHnadler}
-                          ></PayPalButton>
-                        )}
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
               <div className="order__button">
-                <button className="order__button-checkout" onClick={() => { history.push(link) }}>Đơn hàng đã mua</button>
-                <button className="order__button-checkout" onClick={() => { history.push('/catalog') }}>Tiếp tục mua hàng</button>
+                <button className="order__button-checkout" onClick={() => { history.push('/admin/orders') }}>Trở về</button>
+
               </div>
             </div>
 

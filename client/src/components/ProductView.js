@@ -64,16 +64,16 @@ const ProductView = props => {
     return (
         <div className="product">
             <ToastContainer
-                position="top-left"
-                autoClose={2000}
+                position="top-right"
+                autoClose={4000}
                 hideProgressBar={true}
                 newestOnTop={false}
             />
             <div className="product__images">
                 <div className="product__images__list">
                     {
-                        product.images.map(item => (
-                            <div className="product__images__list__item" onClick={() => setPreviewImg(item)}>
+                        product.images.map((item, x) => (
+                            <div key={x} className="product__images__list__item" onClick={() => setPreviewImg(item)}>
                                 <img src={item} alt="" />
                             </div>
 
@@ -99,12 +99,18 @@ const ProductView = props => {
             </div>
             <div className="product__info">
                 <h1 className="product__info__title">{product.name}</h1>
+                {product.qtyInStock >= 0 &&
+                    <span style={{ lineHeight: '30px', marginLeft: '10px', fontSize: '14px' }}>
+                        <span style={{ fontWeight: 'bold' }}>{product.qtyInStock}</span> sản phẩm có sẵn | <span style={{ fontWeight: 'bold' }}>{product.sold}</span> đã bán</span>
+                }
                 <div className="product__info__item">
                     <span className="product__info__item__price">
-                        {numberWithCommas(product.price)}
+                        {numberWithCommas(product.price)}đ
                     </span>
                 </div>
+
                 <div className="product__info__item">
+
                     <div className="product__info__item__title">
                         Số lượng
                     </div>
@@ -115,9 +121,16 @@ const ProductView = props => {
                         <div className="product__info__item__quantity__input">
                             {quantity}
                         </div>
-                        <div className="product__info__item__quantity__btn" onClick={() => updateQuantity('plus')}>
+                        <div className="product__info__item__quantity__btn" onClick={() => {
+                            if (quantity >= product.qtyInStock) {
+                                toast.warning('Cửa hàng chỉ còn ' + product.qtyInStock + ' sản phẩm')
+                            } else
+                                updateQuantity('plus')
+                        }
+                        }>
                             <i className="bx bx-plus"></i>
                         </div>
+
                     </div>
                 </div>
                 <div className="product__info__item">

@@ -8,7 +8,6 @@ import numberWithCommas from '../utils/numberWithCommas'
 import { } from '../styles/order.css'
 import axios from 'axios'
 import { createOrder } from '../redux/actions/orderAction'
-import { CART_RESET } from '../redux/constants/cartConstants'
 
 const Order = (props) => {
 
@@ -25,14 +24,21 @@ const Order = (props) => {
   const [lname, setLname] = useState('')
   const [phone, setPhone] = useState('')
   const [mail, setMail] = useState('')
-  const [address, setAddress] = useState('')
+  const [housseNumber, setHouseNumber] = useState('')
   const [note, setNote] = useState('')
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [province, setProvince] = useState([]);
+  const [district, setDistrict] = useState([]);
+  const [ward, setWard] = useState([]);
 
   let total = cartItems.reduce((a, c) => a + c.price * c.quantity, 0) + 30000;
 
   useEffect(() => {
     if (userInfo) {
+      console.log(userInfo)
       setFname(userInfo.firstName)
       setLname(userInfo.lastName)
       setPhone(userInfo.phone)
@@ -42,18 +48,73 @@ const Order = (props) => {
       } else if (error) {
         alert('Đăt hàng không thành công, xin hãy đặt lại. Rất xin lỗi quý khách vì sự bất tiện này!')
       }
+
     } else {
       props.history.push('/login?redirect=order');
     }
   }, [props.history, userInfo, order, cartItems, error])
 
+  const getProvince = async () => {
+    const { data: { data } } = await axios.get('https://online-gateway.ghn.vn/shiip/public-api/master-data/province', {
+      headers: {
+        token: '27430fe2-5cc5-11ec-bde8-6690e1946f41',
+      }
+    })
+
+    setProvinces(data.reduce((list, item) => {
+      list.push({
+        ProvinceID: item.ProvinceID,
+        ProvinceName: item.ProvinceName
+      });
+      return list.sort((first, second) => first.ProvinceID - second.ProvinceID);
+    }, []));
+  }
+  const getDistrict = async (ProvinceID) => {
+    const { data: { data } } = await axios.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${ProvinceID}`, {
+      headers: {
+        token: '27430fe2-5cc5-11ec-bde8-6690e1946f41',
+      }
+    })
+    setDistricts(data);
+
+  }
+  const getWard = async (districtID) => {
+    const { data: { data } } = await axios.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=${districtID}`, {
+      headers: {
+        token: '27430fe2-5cc5-11ec-bde8-6690e1946f41',
+      }
+    })
+    setWards(data);
+  }
+  const onChangeProvince = (e) => {
+    const name = e.target.value;
+    setProvince(name)
+    const province = provinces.find(item => item.ProvinceName === name);
+    getDistrict(province.ProvinceID);
+    console.log('change district')
+  }
+
+  const onChangeDistrict = (e) => {
+    const name = e.target.value;
+    setDistrict(name)
+    const district = districts.find(item => item.DistrictName === name);
+    getWard(district.DistrictID);
+  }
+
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
+    const address = {
+      province: province,
+      district: district,
+      ward: ward,
+      detail: housseNumber,
+    }
+
     if (userInfo && cartItems.length > 0) {
       if (window.confirm('Xác nhận đặt hàng')) {
         dispatch(
           createOrder({
-            user: userInfo._id, totalPrice: total, shipAddress: address, paymentMethod: paymentMethod,
+            user: userInfo._id, totalPrice: total, address, paymentMethod: paymentMethod,
             paymentResult: false, mail, firstName: fname, lastName: lname,
             message: note, phone, orderItems: cartItems,
           })
@@ -62,7 +123,9 @@ const Order = (props) => {
       }
     }
   }
-
+  useEffect(() => {
+    getProvince()
+  }, [])
   return (
 
     <Helmet title="Đặt hàng">
@@ -112,14 +175,42 @@ const Order = (props) => {
                 />
               </div>
             </div>
-            <div className="order__info-item">
-              <div className="order__info-form-item">
-                <label className="order__info-input-label">Địa chỉ</label>
-                <input className="order__info-input"
-                  required
-                  value={address}
-                  onChange={e => setAddress(e.target.value)}
-                />
+            <div className="order__info-item-half">
+              <div className="order__info-form-item half">
+                <label className="order__info-input-label">Tỉnh, thành phố</label>
+                <select onChange={onChangeProvince} required>
+                  {/* {console.log(provinces)} */}
+                  <option value="">Chọn Tỉnh, Thành phố</option>
+                  {provinces && provinces.map((item) => (
+                    <option value={item.ProvinceName} key={item.ProvinceID}>{item.ProvinceName}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="order__info-form-item half">
+                <label className="order__info-input-label">Quận, huyện</label>
+                <select onChange={onChangeDistrict} required>
+                  {/* {console.log(provinces)} */}
+                  <option value="">Quận, huyện</option>
+                  {districts.map((item) => (
+                    <option value={item.DistrictName} key={item.DistrictID}>{item.DistrictName}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="order__info-item-half">
+              <div className="order__info-form-item half">
+                <label className="order__info-input-label">Xã phường</label>
+                <select onChange={(e) => setWard(e.target.value)} required>
+                  {/* {console.log(provinces)} */}
+                  <option value="">Xã,phường</option>
+                  {wards.map((item) => (
+                    <option value={item.WardName} key={item.WardCode}>{item.WardName}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="order__info-form-item half">
+                <label className="order__info-input-label">Số nhà, thôn/xóm</label>
+                <input className='order__info-input' required onChange={(e) => setHouseNumber(e.target.value)}></input>
               </div>
             </div>
             <div className="order__info-item">
