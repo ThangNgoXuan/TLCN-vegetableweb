@@ -79,17 +79,17 @@ const selectBy = (by) => {
   d.setSeconds(0)
   switch (by) {
     case "day":
-      return { createdAt: { $gte: d } }
+      return { paidAt: { $gte: d } }
     case "week":
       d.setDate(d.getDate() - d.getDay());
-      return { createdAt: { $gte: d } }
+      return { paidAt: { $gte: d } }
     case "month":
       d.setDate(1);
-      return { createdAt: { $gte: d } }
+      return { paidAt: { $gte: d } }
     case "year":
       d.setDate(1);
       d.setMonth(1)
-      return { createdAt: { $gte: d } }
+      return { paidAt: { $gte: d } }
     default:
       return {}
   }
@@ -99,7 +99,7 @@ const getRevenue = async (req, res) => {
   const by = req.params.by
 
   // let label = { $dayOfWeek: "$createdAt" }
-  let label = { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+  let label = { $dateToString: { format: "%Y-%m-%d", date: "$paidAt" } }
   let type = "week"
   switch (by) {
     case "day":
@@ -109,7 +109,7 @@ const getRevenue = async (req, res) => {
       type = "month"
       break;
     case "month-of-year":
-      label = { $dateToString: { format: "%Y-%m", date: "$createdAt" } }
+      label = { $dateToString: { format: "%Y-%m", date: "$paidAt" } }
       type = "year"
       break;
   }
@@ -119,7 +119,7 @@ const getRevenue = async (req, res) => {
 
   try {
     const Revenue = await Order.aggregate([
-      { $match: { ...query, paymentResult: true } },
+      { $match: { ...query, isPaid: true } },
 
       {
         $group: {

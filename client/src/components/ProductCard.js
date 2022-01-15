@@ -20,12 +20,14 @@ const ProductCard = props => {
                 <div className="product-card__price">
                     {/* {numberWithCommas(props.price)} */}
                     {numberWithCommas(props.price)}đ
-                    <span className="product-card__price__old">
-                        {/* {alert(props.discount)} */}
+                    {props.discount !== 0 &&
+                        <span className="product-card__price__old">
+                            {/* {alert(props.discount)} */}
 
-                        <del>{numberWithCommas(Math.floor(props.price * (1 + props.discount / 100)))}đ</del>
+                            <del>{numberWithCommas(Math.floor(props.price * (1 + props.discount / 100)))}đ</del>
 
-                    </span>
+                        </span>
+                    }
                 </div>
             </Link>
             {/* <div className="product-card__btn">

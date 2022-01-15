@@ -66,7 +66,7 @@ const Analytics = ({ history }) => {
     const renderBody = (item, index) => (
         <tr key={index}>
             <td>{index}</td>
-            <td>{item.label}</td>
+            <td>{item.label && (item.label.split('-').reverse().join('-'))}</td>
             <td>{item.orders}</td>
             <td>{numberWithCommas(item.value)}đ</td>
 
