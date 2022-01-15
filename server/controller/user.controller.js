@@ -462,7 +462,7 @@ const sentCodeResetPassword = async (req, res) => {
 
 // [POST] - /api/auth/reset-password
 const resetPassword = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
 
   const { code, password, _id } = req.body;
   try {
@@ -493,7 +493,23 @@ const resetPassword = async (req, res) => {
 
   } catch (error) {
     res.send({ message: error.message });
-    console.log({ message: error.message })
+    // console.log({ message: error.message })
+  }
+}
+
+const findUserByPhone = async (req, res) => {
+  try {
+    const phone = req.params.phone;
+    if (phone) {
+      const user = await User.findOne({ phone }).select('-password')
+      if (user) {
+        res.send(user);
+      }
+    } else {
+      res.send('Không tìm thấy người dùng')
+    }
+  } catch (error) {
+    res.send({ error: error.mesage })
   }
 }
 
@@ -511,4 +527,5 @@ export const userController =
   updatePassword,
   sentCodeResetPassword,
   resetPassword,
+  findUserByPhone,
 };

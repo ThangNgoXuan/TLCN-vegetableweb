@@ -38,6 +38,11 @@ const Orders = ({ history }) => {
         'Chi tiết',
     ]
 
+    const fullAddress = (item) => {
+        // console.log(item)
+        return item.detail + ', ' + item.ward + ', ' + item.district + ', ' + item.province
+    }
+
     const handleChangeOrderState = (id, status) => {
         dispatch(updateStatusOrderAction({ status, id, pageNumber }))
     }
@@ -49,7 +54,8 @@ const Orders = ({ history }) => {
             <td>{item._id}</td>
             <td style={{ minWidth: '180px' }}>{item.lastName + ' ' + item.firstName}</td>
             <td>{numberWithCommas(item.totalPrice)}</td>
-            <td>{item.shipAddress}</td>
+            {/* {console.log(item)} */}
+            <td>{(item.address && fullAddress(item.address)) || (item.shipAddress)}</td>
             <td>{item.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</td>
 
             <td>
@@ -82,6 +88,7 @@ const Orders = ({ history }) => {
     const handleSelect = (keyword) => {
         dispatch(orderListAction({ keyword: keyword }))
     }
+
     return (
         <div>
             <ToastContainer

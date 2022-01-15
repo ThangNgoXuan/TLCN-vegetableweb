@@ -52,13 +52,23 @@ const ProductView = props => {
 
 
     const handleAddToCart = () => {
-        if (dispatch(addToCart(product._id, quantity))) {
+        if (product.qtyInStock <= 0) {
+            toast.info('Sản phẩm đã hết hàng')
+        } else if (quantity > product.qtyInStock) {
+            toast.info('Trong kho không còn đủ hàng')
+        }
+        else if (dispatch(addToCart(product._id, quantity))) {
             toast.success("Đã thêm vào giỏ hàng");
         }
     }
 
     const handleGoToCart = () => {
-        props.history.push(`/cart/${product._id}?qty=${quantity}`)
+        if (product.qtyInStock <= 0) {
+            toast.info('Sản phẩm đã hết hàng')
+        } else if (quantity > product.qtyInStock) {
+            toast.info('Trong kho không còn đủ hàng')
+        } else
+            props.history.push(`/cart/${product._id}?qty=${quantity}`)
     }
 
     return (

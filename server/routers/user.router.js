@@ -17,14 +17,16 @@ router.route('/:id')
   .put(isAuth, userController.updateUser)
   .delete(isAuth, userController.deleteUser)
 
+
 router.route('/register')
   .post(userController.registUser);
 
 router.route('/send-code-reset-password').post(userController.sentCodeResetPassword)
 router.route('/reset-password').post(userController.resetPassword)
 
+router.route('/find/:phone').get(userController.findUserByPhone)
+
 router.route('/')
   .get(isAuth, isAdmin, userController.getUsers)
-
 
 export const userRouter = router;
